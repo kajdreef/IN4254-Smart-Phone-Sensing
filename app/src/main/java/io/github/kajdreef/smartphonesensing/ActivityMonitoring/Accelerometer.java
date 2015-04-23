@@ -27,7 +27,7 @@ public class Accelerometer extends abstractSensor{
     public void addToFile(double x, double y, double z){
         System.out.println("x-coord: " + x);
         System.out.println("y-coord: " + y);
-        System.out.println("z-coord: " + z);
+        System.out.println("z-cooord: " + z);
     }
 
     @Override
