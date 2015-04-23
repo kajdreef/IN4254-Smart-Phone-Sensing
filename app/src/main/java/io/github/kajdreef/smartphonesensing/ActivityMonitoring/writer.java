@@ -1,50 +1,44 @@
 package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
 
-
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.String;
 
 /**
- * Writes data to the file specified.
- */
+* Writes data to the file specified.
+*/
 public class writer {
     private static final String wr_e = "Writer";
 
-    File file;
-    String fileName;
-    String filePath;
-    DataOutputStream fOutStream = null;
+    private File file;
+    private int i = 0;
+    private DataOutputStream fOutStream;
 
     public writer(String fileName){
-        this.fileName = fileName;
-        this.filePath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)+ "/" + fileName;
-        file = new File(filePath);
+        file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), fileName);
         file.setWritable(true);
+
+        try {
+            fOutStream = new DataOutputStream(new FileOutputStream(file));
+            Log.d(wr_e, file.getAbsolutePath());
+        } catch(FileNotFoundException e ){
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * Write data to the created file.
-     */
-    public void appendData(double x, double  y, double z){
+    public void appendData(double x, double y, double z,  ActivityType state) {
         try {
-            fOutStream = new DataOutputStream(new FileOutputStream(filePath));
-            fOutStream.writeDouble(x);
+            fOutStream.write(("x: \t " + state.toString() + "\t" + x + "\n").getBytes());
+            fOutStream.write(("y: \t " + state.toString() + "\t" + y + "\n").getBytes());
+            fOutStream.write(("z: \t " + state.toString() + "\t" + z + "\n").getBytes());
             fOutStream.flush();
-        } catch (FileNotFoundException e) {
-                e.printStackTrace();
-
         } catch (IOException e) {
-                e.printStackTrace();
+            e.printStackTrace();
         }
-
-        System.out.println("x-coord: " + x);
-        System.out.println("y-coord: " + y);
-        System.out.println("z-coord: " + z);
     }
 }

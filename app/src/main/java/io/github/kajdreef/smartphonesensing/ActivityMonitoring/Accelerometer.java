@@ -36,7 +36,7 @@ public class Accelerometer extends abstractSensor{
             z=event.values[2];
 
             // Add data to File
-            wr.appendData(x,y,z);
+            wr.appendData(x,y,z, ActivityType.WALK);
         }
     }
 }
