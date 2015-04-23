@@ -68,6 +68,6 @@ public class MainMenu extends ActionBarActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        sm.unregisterListener(accelerometer);
+        accelerometer.unregister();
     }
 }

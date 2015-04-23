@@ -5,6 +5,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 
+/**
+ * Abstract class for sensor implementation.
+ */
 public abstract class abstractSensor implements SensorEventListener {
 
     protected Sensor type;
