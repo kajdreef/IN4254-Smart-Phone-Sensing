@@ -11,6 +11,7 @@ import android.widget.Button;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Accelerometer;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Reader;
 
 
 public class MainMenu extends ActionBarActivity {
