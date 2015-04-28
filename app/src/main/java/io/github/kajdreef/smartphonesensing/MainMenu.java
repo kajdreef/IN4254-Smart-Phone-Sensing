@@ -5,15 +5,21 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Accelerometer;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.abstractSensor;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 
 
 public class MainMenu extends ActionBarActivity {
 
     SensorManager sm;
-    abstractSensor accelerometer;
+    AbstractSensor accelerometer;
+
+    Button walking;
+    Button queueing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,22 @@ public class MainMenu extends ActionBarActivity {
 
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = new Accelerometer(sm);
+
+        // Create walk button, when clicked on the button state will change state to WALK.
+        walking = (Button) findViewById(R.id.walking);
+        walking.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Accelerometer.setState(ActivityType.WALK);
+            }
+        });
+
+        // Create queueing button, when clicked on the button state will change state to QUEUE.
+        queueing = (Button) findViewById(R.id.queueing);
+        queueing.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Accelerometer.setState(ActivityType.QUEUE);
+            }
+        });
     }
 
     @Override

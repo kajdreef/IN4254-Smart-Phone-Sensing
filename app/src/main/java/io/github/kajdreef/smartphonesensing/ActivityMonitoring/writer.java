@@ -10,16 +10,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+* Created by kajdreef on 23/04/15.
 * Writes data to the file specified.
 */
-public class writer {
+public class Writer {
     private static final String wr_e = "Writer";
 
     private File file;
-    private int i = 0;
     private DataOutputStream fOutStream;
 
-    public writer(String fileName){
+    public Writer(String fileName){
         file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), fileName);
         file.setWritable(true);
 
@@ -33,9 +33,9 @@ public class writer {
 
     public void appendData(double x, double y, double z,  ActivityType state) {
         try {
-            fOutStream.write(("x: \t " + state.toString() + "\t" + x + "\n").getBytes());
-            fOutStream.write(("y: \t " + state.toString() + "\t" + y + "\n").getBytes());
-            fOutStream.write(("z: \t " + state.toString() + "\t" + z + "\n").getBytes());
+            fOutStream.write((state.toString() + " x: " + x + " y: " + y + " z: " + z + "\n").getBytes());
+//            fOutStream.write(("y: \t " + state.toString() + "\t" + y + "\n").getBytes());
+//            fOutStream.write(("z: \t " + state.toString() + "\t" + z + "\n").getBytes());
             fOutStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
