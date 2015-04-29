@@ -24,7 +24,6 @@ public class Writer {
 
     public Writer(String fileName){
         file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), fileName);
-        file.setWritable(true);
 
         this.date = new Date();
         this.startTime = new Date();

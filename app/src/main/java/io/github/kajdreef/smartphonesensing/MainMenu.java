@@ -3,6 +3,7 @@ package io.github.kajdreef.smartphonesensing;
 import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,10 +68,11 @@ public class MainMenu extends ActionBarActivity {
 
     public void initReader(){
         read = new Reader("accelerometerData.txt");
-        ArrayList<Float> test = read.readString();
-        while(read.available()){
-            read.readString();
-        }
+        read.readAll();
+        Log.d("Writer - States", read.getAllStates().toString());
+        Log.d("Writer - X", read.getAllX().toString());
+        Log.d("Writer - Y", read.getAllY().toString());
+        Log.d("Writer - Z", read.getAllZ().toString());
     }
 
 
@@ -81,7 +83,7 @@ public class MainMenu extends ActionBarActivity {
 
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 
-        initAccelerometerAndButtons();
+//        initAccelerometerAndButtons();
 
         initReader();
     }
