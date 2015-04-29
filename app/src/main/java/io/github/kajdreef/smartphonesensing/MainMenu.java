@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
+
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Accelerometer;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
@@ -22,12 +24,11 @@ public class MainMenu extends ActionBarActivity {
     Button walking;
     Button queueing;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+    boolean initAccel = false;
+    Reader read;
 
-        sm =(SensorManager)getSystemService(SENSOR_SERVICE);
+    private void initAccelerometerAndButtons(){
+        initAccel = true;
         accelerometer = new Accelerometer(sm);
 
         // Create walk button, when clicked on the button state will change state to WALK.
@@ -35,6 +36,14 @@ public class MainMenu extends ActionBarActivity {
         walking.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Accelerometer.setState(ActivityType.WALK);
+                if(initAccel) {
+                    accelerometer.register();
+                    initAccel = false;
+                }
+                else{
+                    accelerometer.unregister();
+                    initAccel = true;
+                }
             }
         });
 
@@ -43,26 +52,54 @@ public class MainMenu extends ActionBarActivity {
         queueing.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Accelerometer.setState(ActivityType.QUEUE);
+                if(initAccel) {
+                    accelerometer.register();
+                    initAccel = false;
+                }
+                else{
+                    accelerometer.unregister();
+                    initAccel = true;
+                }
             }
         });
+    }
+
+
+    public void initReader(){
+        read = new Reader("accelerometerData.txt");
+        ArrayList<Float> test = read.readString();
+        while(read.available()){
+            read.readString();
+        }
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_menu);
+
+        sm =(SensorManager)getSystemService(SENSOR_SERVICE);
+
+        initAccelerometerAndButtons();
+
+        initReader();
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        accelerometer.register();
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        accelerometer.register();
+
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        accelerometer.unregister();
     }
 
 
@@ -91,6 +128,7 @@ public class MainMenu extends ActionBarActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        accelerometer.unregister();
+        if(initAccel)
+            accelerometer.unregister();
     }
 }

@@ -43,9 +43,6 @@ public class Accelerometer extends AbstractSensor {
             y=event.values[1];
             z=event.values[2];
 
-            // Log accelerometer data to the console output.
-            Log.d("State: \t\t" + Accelerometer.state, "Accelerometer");
-
             // Add data to File
             wr.appendData(x, y, z, Accelerometer.state);
         }
