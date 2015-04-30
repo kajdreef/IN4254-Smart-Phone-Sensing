@@ -1,11 +1,10 @@
 package io.github.kajdreef.smartphonesensing.Classification;
 
-import java.sql.Array;
+import java.util.ArrayList;
 
-public class FeatureExtractor {
-    public FeatureSet extractFeatures(Array rawData){
-        //Filter Data
-        //Extract Features
-        return null;
+public abstract class FeatureExtractor {
+    public abstract FeatureSet extractFeatures(ArrayList<Float> x,ArrayList<Float> y,ArrayList<Float> z);
+    public LabeledFeatureSet addLabel(FeatureSet f, Label l){
+        return new LabeledFeatureSet(f,l);
     }
 }
