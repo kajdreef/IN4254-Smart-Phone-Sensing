@@ -7,7 +7,7 @@ public class FeatureExtractorSD extends FeatureExtractor {
     public FeatureSet extractFeatures(ArrayList<Float> x, ArrayList<Float> y, ArrayList<Float> z) {
         ArrayList<Double> magnitude = new ArrayList<>(x.size());
         for (int i = 0;i<x.size();i++){
-            magnitude.set(i,Math.sqrt(Math.pow(x.get(i),2.0)+Math.pow(y.get(i),2.0)+Math.pow(z.get(i),2.0)));
+            magnitude.add(i,Math.sqrt(Math.pow(x.get(i),2.0)+Math.pow(y.get(i),2.0)+Math.pow(z.get(i),2.0)));
         }
         double mean = sum(magnitude)/x.size();
         double SD = 0;
