@@ -69,10 +69,10 @@ public class MainMenu extends ActionBarActivity {
     public void initReader(){
         read = new Reader("accelerometerData.txt");
         read.readAll();
-        Log.d("Writer - States", read.getAllStates().toString());
-        Log.d("Writer - X", read.getAllX().toString());
-        Log.d("Writer - Y", read.getAllY().toString());
-        Log.d("Writer - Z", read.getAllZ().toString());
+        Log.d("Reader - States", read.getAllStates().toString());
+        Log.d("Reader - X", read.getAllX().toString());
+        Log.d("Reader - Y", read.getAllY().toString());
+        Log.d("Reader - Z", read.getAllZ().toString());
     }
 
 
