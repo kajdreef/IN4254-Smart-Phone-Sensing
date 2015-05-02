@@ -8,7 +8,7 @@ public class FeatureExtractorMean extends FeatureExtractor {
         ArrayList<Float> magnitude = new ArrayList<>(x.size());
 
         for (int i = 0;i<x.size();i++){
-            magnitude.add(i,(float)Math.sqrt(Math.pow(x.get(i),2.0)+Math.pow(y.get(i),2.0)+Math.pow(z.get(i),2.0)));
+            magnitude.add(i, (float)(Math.sqrt(Math.pow(x.get(i),2.0) + Math.pow(y.get(i),2.0) + Math.pow(z.get(i),2.0))));
         }
         return new FeatureSet(sum(magnitude)/x.size());
     }
@@ -16,7 +16,7 @@ public class FeatureExtractorMean extends FeatureExtractor {
     private float sum(ArrayList<Float> in){
         float s = 0 ;
         for(Float f : in){
-            s = s+f;
+            s += f;
         }
         return s;
     }

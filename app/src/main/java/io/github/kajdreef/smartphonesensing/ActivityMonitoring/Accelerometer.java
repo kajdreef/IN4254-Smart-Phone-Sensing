@@ -3,7 +3,8 @@ package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
-import android.util.Log;
+
+import io.github.kajdreef.smartphonesensing.Utils.Writer;
 
 
 /**

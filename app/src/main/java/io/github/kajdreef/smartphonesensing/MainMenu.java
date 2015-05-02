@@ -3,19 +3,15 @@ package io.github.kajdreef.smartphonesensing;
 import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
-
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Accelerometer;
-import io.github.kajdreef.smartphonesensing.Classification.*;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Reader;
+import io.github.kajdreef.smartphonesensing.Utils.Reader;
 
 
 public class MainMenu extends ActionBarActivity {
@@ -70,10 +66,6 @@ public class MainMenu extends ActionBarActivity {
     public void initReader(){
         read = new Reader("accelerometerData.txt");
         read.readAll();
-        Log.d("Reader - States", read.getAllStates().toString());
-        Log.d("Reader - X", read.getAllX().toString());
-        Log.d("Reader - Y", read.getAllY().toString());
-        Log.d("Reader - Z", read.getAllZ().toString());
     }
 
 

@@ -10,7 +10,7 @@ public class FeatureSet {
         this.data = data;
     }
     public float getData() {
-        return data;
+        return this.data;
     }
     public float distance(FeatureSet feat){
         return Math.abs(this.data - feat.getData());

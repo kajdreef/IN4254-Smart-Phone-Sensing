@@ -1,7 +1,10 @@
-package io.github.kajdreef.smartphonesensing.Classification.TestClassification;
+package ClassificationTest;
 
-import android.test.ActivityTestCase;
 import android.util.Log;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -13,10 +16,11 @@ import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
 
 
-public class testClassification extends ActivityTestCase {
+public class ClassificationTest {
     private KNN knn;
-    @Override
-    protected void setUp() throws Exception  {
+
+    @Before
+    public void setUp() {
         //Get data from files as 3 arraylists for 1 training point (15-20 points?)
         int step = 3;
         ArrayList<ActivityType> labels = new ArrayList<>();
@@ -38,6 +42,8 @@ public class testClassification extends ActivityTestCase {
         ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels,x,y,z,new FeatureExtractorSD(),step);
         knn = new KNN(5,train);
     }
+
+    @Test
     public void testClassification(){
         int step = 3;
         ArrayList<ActivityType> labels = new ArrayList<>();
@@ -50,6 +56,7 @@ public class testClassification extends ActivityTestCase {
             y.add((float) 1+i/300);
             z.add((float) 1-i/500);
         }
+
         for (int i = 0; i < 10; i++) {
             labels.add(ActivityType.WALK);
             x.add(new Random().nextFloat());
@@ -58,6 +65,8 @@ public class testClassification extends ActivityTestCase {
         }
         ArrayList<LabeledFeatureSet> test = FeatureExtractor.generateDataSet(labels,x,y,z,new FeatureExtractorSD(),step);
         float correct = knn.test(test);
-        Log.i("testResults",Float.toString(correct));
+
+        System.out.println(Float.toString(correct));
+        Assert.assertTrue(correct > (float) 0.5);
     }
 }

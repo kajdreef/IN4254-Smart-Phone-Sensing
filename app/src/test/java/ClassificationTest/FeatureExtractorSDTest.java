@@ -1,21 +1,27 @@
-package io.github.kajdreef.smartphonesensing.Classification.TestClassification;
+package ClassificationTest;
 
 import android.test.ActivityTestCase;
+
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 
 
-public class testFeatureExtractorSD extends ActivityTestCase {
+public class FeatureExtractorSDTest {
     private FeatureExtractorSD FESD;
 
-    @Override
-    protected void setUp() throws Exception  {
+    @Before
+    public void setUp() {
         this.FESD = new FeatureExtractorSD();
     }
 
-    public void testFeatureMean(){
+    @Test
+    public void FeatureSDTest(){
         ArrayList<Float> x = new ArrayList<>();
         x.add((float)0.0);
         x.add((float)0.0);
@@ -30,6 +36,7 @@ public class testFeatureExtractorSD extends ActivityTestCase {
         z.add((float) 0.0);
         z.add((float) 0.0);
         z.add((float) 2.0);
-        assertEquals((float) 1,FESD.extractFeatures(x,y,z).getData());
+        float result =  FESD.extractFeatures(x, y, z).getData();
+        Assert.assertTrue(0.81 < result && result < 0.82);
     }
 }

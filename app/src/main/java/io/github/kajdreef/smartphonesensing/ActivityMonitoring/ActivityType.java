@@ -41,4 +41,14 @@ public enum ActivityType {
         }
         return result;
     }
+
+    public static ActivityType fromInt(int num) {
+        ActivityType result = null;
+        for(ActivityType t : ActivityType.values()){
+            if(t.ordinal() == num) {
+                return result;
+            }
+        }
+        return ActivityType.NONE;
+    }
 }

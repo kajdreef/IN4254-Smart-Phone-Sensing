@@ -1,6 +1,10 @@
-package io.github.kajdreef.smartphonesensing.Classification.TestClassification;
+package ClassificationTest;
 
 import android.test.ActivityTestCase;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -9,14 +13,14 @@ import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
 
-public class TestKNN extends ActivityTestCase {
+public class KNNTest {
     private KNN knnc1;
     private KNN knnc3;
     private KNN knnc5;
     private KNN knnc7;
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+
+    @Before
+    public void setUp() {
         //Test
         ArrayList<LabeledFeatureSet> trainingSet = new ArrayList<>();
         trainingSet.add(new LabeledFeatureSet(new FeatureSet(0), ActivityType.WALK));
@@ -31,18 +35,20 @@ public class TestKNN extends ActivityTestCase {
         this.knnc5 = new KNN(5, trainingSet);
         this.knnc7 = new KNN(7, trainingSet);
     }
+
+    @Test
     public void testClassify(){
-        assertNotSame(ActivityType.WALK,ActivityType.QUEUE);
-        assertEquals(knnc1.classify(new FeatureSet((float) 0)), (ActivityType.WALK));
-        assertEquals(knnc1.classify(new FeatureSet((float) 3)), (ActivityType.WALK));
-        assertEquals(knnc1.classify(new FeatureSet((float) 5.5)), (ActivityType.QUEUE));
-        assertEquals(knnc3.classify(new FeatureSet((float) 1.5)), (ActivityType.WALK));
-        assertEquals(knnc3.classify(new FeatureSet((float) 3.5)), (ActivityType.WALK));
-        assertEquals(knnc3.classify(new FeatureSet((float) 5)), (ActivityType.QUEUE));
-        assertEquals(knnc5.classify(new FeatureSet((float) 1)), (ActivityType.WALK));
-        assertEquals(knnc5.classify(new FeatureSet((float) 4)), (ActivityType.QUEUE));
-        assertEquals(knnc5.classify(new FeatureSet((float) 8)), (ActivityType.QUEUE));
-        assertEquals(knnc7.classify(new FeatureSet((float) 0)), (ActivityType.WALK));
-        assertEquals(knnc7.classify(new FeatureSet((float) 8)), (ActivityType.WALK));
+        Assert.assertNotSame(ActivityType.WALK, ActivityType.QUEUE);
+        Assert.assertEquals(knnc1.classify(new FeatureSet((float) 0)), (ActivityType.WALK));
+        Assert.assertEquals(knnc1.classify(new FeatureSet((float) 3)), (ActivityType.WALK));
+        Assert.assertEquals(knnc1.classify(new FeatureSet((float) 5.5)), (ActivityType.QUEUE));
+        Assert.assertEquals(knnc3.classify(new FeatureSet((float) 1.5)), (ActivityType.WALK));
+        Assert.assertEquals(knnc3.classify(new FeatureSet((float) 3.5)), (ActivityType.WALK));
+        Assert.assertEquals(knnc3.classify(new FeatureSet((float) 5)), (ActivityType.QUEUE));
+        Assert.assertEquals(knnc5.classify(new FeatureSet((float) 1)), (ActivityType.WALK));
+        Assert.assertEquals(knnc5.classify(new FeatureSet((float) 4)), (ActivityType.QUEUE));
+        Assert.assertEquals(knnc5.classify(new FeatureSet((float) 8)), (ActivityType.QUEUE));
+        Assert.assertEquals(knnc7.classify(new FeatureSet((float) 0)), (ActivityType.WALK));
+        Assert.assertEquals(knnc7.classify(new FeatureSet((float) 8)), (ActivityType.WALK));
     }
 }
