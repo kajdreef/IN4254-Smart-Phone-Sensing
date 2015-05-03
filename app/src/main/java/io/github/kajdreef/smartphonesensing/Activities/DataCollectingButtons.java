@@ -15,8 +15,9 @@ import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
 
 
-public class MainMenu extends ActionBarActivity {
+public class DataCollectingButtons extends ActionBarActivity {
 
+    final String SENSOR_DATA_FILE = "newDataAccelerometer.txt";
     SensorManager sm;
     AbstractSensor accelerometer;
 

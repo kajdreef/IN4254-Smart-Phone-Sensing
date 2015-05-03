@@ -8,13 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Accelerometer;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMean;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
@@ -24,8 +21,9 @@ import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
 
 /**
  * Created by kajdreef on 02/05/15.
+ * KNN performance Activity
  */
-public class ActivityMonitoring extends ActionBarActivity {
+public class KNNPerformance extends ActionBarActivity {
 
     SensorManager sm;
     AbstractSensor accelerometer;
@@ -39,19 +37,11 @@ public class ActivityMonitoring extends ActionBarActivity {
     ArrayList<Float> z;
     ArrayList<ActivityType> labels;
 
-    boolean initAccel = false;
     AbstractReader trainReader;
     AbstractReader validationReader;
 
-    private void initAccelerometerAndButtons(){
-        initAccel = true;
-        accelerometer = new Accelerometer(sm);
-    }
-
-
     public void initReader(){
         trainReader = new ReaderTest(this, R.raw.trainingdata);
-
         validationReader = new ReaderTest(this, R.raw.validationdata);
     }
 
@@ -155,7 +145,5 @@ public class ActivityMonitoring extends ActionBarActivity {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        if(initAccel)
-            accelerometer.unregister();
     }
 }
