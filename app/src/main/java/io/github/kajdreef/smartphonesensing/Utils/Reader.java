@@ -1,5 +1,6 @@
 package io.github.kajdreef.smartphonesensing.Utils;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
@@ -18,7 +19,8 @@ import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
  */
 public class Reader  extends AbstractReader{
 
-    public Reader(String newFileName) {
+    public Reader(Context ctx, String newFileName) {
+        super(ctx);
         this.fileName = newFileName;
         try {
             fInpStream = new DataInputStream(new FileInputStream(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName));

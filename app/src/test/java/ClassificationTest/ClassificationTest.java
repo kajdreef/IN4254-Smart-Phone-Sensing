@@ -1,7 +1,5 @@
 package ClassificationTest;
 
-import android.util.Log;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +12,15 @@ import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
+import io.github.kajdreef.smartphonesensing.R;
+import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
+import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
 
 
 public class ClassificationTest {
-    private KNN knn;
+    KNN knn;
+    AbstractReader trainReader;
+    AbstractReader validationReader;
 
     @Before
     public void setUp() {

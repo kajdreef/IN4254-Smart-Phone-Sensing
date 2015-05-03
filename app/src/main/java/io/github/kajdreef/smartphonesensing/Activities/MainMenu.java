@@ -1,4 +1,4 @@
-package io.github.kajdreef.smartphonesensing;
+package io.github.kajdreef.smartphonesensing.Activities;
 
 import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
@@ -11,6 +11,7 @@ import android.widget.Button;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Accelerometer;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
 
 
@@ -64,7 +65,7 @@ public class MainMenu extends ActionBarActivity {
 
 
     public void initReader(){
-        read = new Reader("accelerometerData.txt");
+        read = new Reader(this, "accelerometerData.txt");
         read.readAll();
     }
 
@@ -89,7 +90,6 @@ public class MainMenu extends ActionBarActivity {
     @Override
     public void onResume(){
         super.onResume();
-
     }
 
     @Override

@@ -1,5 +1,7 @@
 package io.github.kajdreef.smartphonesensing.Utils;
 
+import android.content.Context;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +21,13 @@ public abstract class AbstractReader {
     protected ArrayList<Float> allX;
     protected ArrayList<Float> allY;
     protected ArrayList<Float> allZ;
+
+    protected AbstractReader(Context ctx){
+        allStates = new ArrayList<>();
+        allX = new ArrayList<>();
+        allY = new ArrayList<>();
+        allZ = new ArrayList<>();
+    }
 
 
     public boolean available(){
@@ -41,7 +50,6 @@ public abstract class AbstractReader {
             }
             split = str.split(" ");
 
-            result.add((float) ActivityType.fromString(split[1]).ordinal());     // State
             result.add(Float.parseFloat(split[2]));                             // X
             result.add(Float.parseFloat(split[3]));                             // Y
             result.add(Float.parseFloat(split[4]));                             // Z
@@ -53,18 +61,48 @@ public abstract class AbstractReader {
     }
 
     public void readAll(){
-        allStates = new ArrayList<>();
-        allX = new ArrayList<>();
-        allY = new ArrayList<>();
-        allZ = new ArrayList<>();
+        String str = "";
+        String[] split;
+        try {
+            while(this.available()) {
+                str = fInpStream.readLine();
+                if (str == null) {
+                    return;
+                }
+                split = str.split(" ");
+                allStates.add(ActivityType.fromString(split[1]));               // Label
+                allX.add(Float.parseFloat(split[2]));                           // X
+                allY.add(Float.parseFloat(split[3]));                           // Y
+                allZ.add(Float.parseFloat(split[4]));                           // Z
+            }
 
-        while(available()){
-            ArrayList<Float> str = readString();
-            allStates.add(ActivityType.fromInt(str.get(0).intValue()));
-            allX.add(str.get(1));
-            allY.add(str.get(2));
-            allZ.add(str.get(3));
+        }catch(IOException e){
+            e.printStackTrace();
         }
+    }
+
+    public int size(){
+        return allStates.size();
+    }
+
+    public void empty(){
+        allStates.clear();
+        allX.clear();
+        allY.clear();
+        allZ.clear();
+    }
+
+    public void emptyStates(){
+        allStates.clear();
+    }
+    public void emptyX(){
+        allX.clear();
+    }
+    public void emptyY(){
+        allY.clear();
+    }
+    public void emptyZ(){
+        allZ.clear();
     }
 
     public ArrayList<ActivityType> getAllStates(){ return allStates;}

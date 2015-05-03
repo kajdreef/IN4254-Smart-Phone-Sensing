@@ -61,7 +61,7 @@ public class KNN implements Classifier {
             distanceMapping.get(d).add(known.getLabel());
         }
         //Find K closest labels to inputData, and count how many times each label is present
-        List<ActivityType>kClosestLabels = new ArrayList<>();
+        List<ActivityType> kClosestLabels = new ArrayList<>();
         List<Integer> count = new ArrayList<>();
         int neighbor = 0;
         while (neighbor < k) {

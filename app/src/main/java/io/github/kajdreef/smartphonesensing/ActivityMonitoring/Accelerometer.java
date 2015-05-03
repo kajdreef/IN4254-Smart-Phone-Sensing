@@ -25,7 +25,7 @@ public class Accelerometer extends AbstractSensor {
 
     public Accelerometer(SensorManager sm){
         super(sm);
-        wr = new Writer("accelerometerData.txt");
+        wr = new Writer("newDataAccelerometer.txt");
         type = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
