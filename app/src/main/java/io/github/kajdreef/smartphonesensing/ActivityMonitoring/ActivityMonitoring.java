@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
 import io.github.kajdreef.smartphonesensing.R;
@@ -29,7 +30,7 @@ public class ActivityMonitoring implements Observer {
     private AbstractReader trainReader;
     private AbstractReader accelerometerReader;
     final int K = 5;
-    public static final int WINDOW_SIZE = 15;
+    public static final int WINDOW_SIZE = 30;
     private ActivityType activity = ActivityType.NONE;
 
     ArrayList<Float> x;
@@ -65,18 +66,16 @@ public class ActivityMonitoring implements Observer {
 
     @Override
     public void update(){
-        Log.d("State", activity.toString());
         amountOfNewSamples++;
-        if(amountOfNewSamples > 20*WINDOW_SIZE){
+        if(amountOfNewSamples > WINDOW_SIZE){
             x = accelerometerReader.getAllX();
             y = accelerometerReader.getAllY();
             z = accelerometerReader.getAllZ();
 
-            //TODO Classification part and save the classification to activity
+            FeatureExtractor extractor = new FeatureExtractorSD();
 
-//            ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, new FeatureExtractorSD(), WINDOW_SIZE);
-//            this.activity = train.get(0).getLabel();
-
+            FeatureSet fs = extractor.extractFeatures(x,y,z);
+            activity = knn.classify(fs);
 
             amountOfNewSamples = 0;
         }
