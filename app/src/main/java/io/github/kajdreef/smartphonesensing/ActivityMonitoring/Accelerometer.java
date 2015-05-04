@@ -5,6 +5,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
+import io.github.kajdreef.smartphonesensing.Utils.Writer;
+
 
 /**
  * Created by kajdreef on 23/04/15.
@@ -15,7 +18,6 @@ import android.util.Log;
 public class Accelerometer extends AbstractSensor {
 
     private Writer wr;
-
     public static ActivityType state = ActivityType.NONE;
 
     public static void setState(ActivityType newState){
@@ -24,7 +26,7 @@ public class Accelerometer extends AbstractSensor {
 
     public Accelerometer(SensorManager sm){
         super(sm);
-        wr = new Writer("accelerometerData.txt");
+        wr = new Writer(ActivityMonitoringActivity.SENSOR_DATA_FILE);
         type = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
@@ -43,8 +45,9 @@ public class Accelerometer extends AbstractSensor {
             y=event.values[1];
             z=event.values[2];
 
-            // Add data to File
+            // Add data to File (Accelerometer state is NONE when not changed for )
             wr.appendData(x, y, z, Accelerometer.state);
+            this.notifyObserver();
         }
     }
 }

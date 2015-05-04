@@ -15,7 +15,7 @@ public enum ActivityType {
     WALK{
         public ActivityType fromStringToType(String s){
             if(WALK.toString().equals(s))
-                return ActivityType.NONE;
+                return ActivityType.WALK;
             else
                 return null;
         }
@@ -23,7 +23,7 @@ public enum ActivityType {
     QUEUE{
         public ActivityType fromStringToType(String s){
             if(QUEUE.toString().equals(s))
-                return ActivityType.NONE;
+                return ActivityType.QUEUE;
             else
                 return null;
         }
@@ -40,5 +40,14 @@ public enum ActivityType {
             }
         }
         return result;
+    }
+
+    public static ActivityType fromInt(int num) {
+        for(ActivityType t : ActivityType.values()){
+            if(t.ordinal() == num) {
+                return t;
+            }
+        }
+        return ActivityType.NONE;
     }
 }

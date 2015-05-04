@@ -1,24 +1,23 @@
-package io.github.kajdreef.smartphonesensing;
+package io.github.kajdreef.smartphonesensing.Activities;
 
 import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
-
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Accelerometer;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Reader;
+import io.github.kajdreef.smartphonesensing.R;
+import io.github.kajdreef.smartphonesensing.Utils.Reader;
 
 
-public class MainMenu extends ActionBarActivity {
+public class DataCollectingButtons extends ActionBarActivity {
 
+    final String SENSOR_DATA_FILE = "newDataAccelerometer.txt";
     SensorManager sm;
     AbstractSensor accelerometer;
 
@@ -67,12 +66,8 @@ public class MainMenu extends ActionBarActivity {
 
 
     public void initReader(){
-        read = new Reader("accelerometerData.txt");
+        read = new Reader(this, "accelerometerData.txt");
         read.readAll();
-        Log.d("Reader - States", read.getAllStates().toString());
-        Log.d("Reader - X", read.getAllX().toString());
-        Log.d("Reader - Y", read.getAllY().toString());
-        Log.d("Reader - Z", read.getAllZ().toString());
     }
 
 
@@ -80,8 +75,8 @@ public class MainMenu extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
+
 
 //        initAccelerometerAndButtons();
 
@@ -96,7 +91,6 @@ public class MainMenu extends ActionBarActivity {
     @Override
     public void onResume(){
         super.onResume();
-
     }
 
     @Override

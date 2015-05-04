@@ -1,4 +1,4 @@
-package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
+package io.github.kajdreef.smartphonesensing.Utils;
 
 import android.os.Environment;
 import android.util.Log;
@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
+
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 
 /**
  * Created by kajdreef on 23/04/15.
@@ -42,7 +44,7 @@ public class Writer {
             long delta = date.getTime() - startTime.getTime();
 
             fOutStream.write((delta + " " + state.toString() + " " + x + " " + y + " " + z + "\n").getBytes());
-            Log.d("Writer", delta + " "+ state.toString() + " " + x + " " + y + " " + z + "\n");
+//            Log.d("Writer", delta + " "+ state.toString() + " " + x + " " + y + " " + z + "\n");
             fOutStream.flush();
         } catch (IOException e) {
             e.printStackTrace();
