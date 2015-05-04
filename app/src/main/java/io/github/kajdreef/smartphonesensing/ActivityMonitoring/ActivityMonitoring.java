@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
@@ -26,25 +27,36 @@ import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
 public class ActivityMonitoring implements Observer {
 
     private int amountOfNewSamples = 0;
-    private KNN knn;
-    private AbstractReader trainReader;
-    private AbstractReader accelerometerReader;
-    final int K = 5;
-    public static final int WINDOW_SIZE = 30;
     private ActivityType activity = ActivityType.NONE;
 
+    // Readers
+    private AbstractReader trainReader;
+    private AbstractReader accelerometerReader;
+
+    // Initialise the Feature type!
+    FeatureExtractor extractor = new FeatureExtractorSD();
+
+    // k-Nearest Neighbors
+    private KNN knn;
+    private final int K = 5;
+    private static final int WINDOW_SIZE = 30;
+
+    // Data to calculate solution
     ArrayList<Float> x;
     ArrayList<Float> y;
     ArrayList<Float> z;
     ArrayList<ActivityType> labels;
 
     public ActivityMonitoring(Context ctx){
-        // initialise the reader to train kNN
+        // initialise the readers to train kNN
         trainReader = new ReaderTest(ctx, R.raw.trainingdata);
         accelerometerReader = new Reader(ctx, ActivityMonitoringActivity.SENSOR_DATA_FILE);
         initKNN();
     }
 
+    /**
+     * Initialise kNN
+     */
     public void initKNN(){
         // Get all data from the trainingData file in resources
         trainReader.readAll();
@@ -56,7 +68,7 @@ public class ActivityMonitoring implements Observer {
         }
 
         // Initialise KNN and train it
-        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, new FeatureExtractorSD(), WINDOW_SIZE);
+        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, extractor, WINDOW_SIZE);
         knn = new KNN(K,train);
         x.clear();
         y.clear();
@@ -72,8 +84,6 @@ public class ActivityMonitoring implements Observer {
             y = accelerometerReader.getAllY();
             z = accelerometerReader.getAllZ();
 
-            FeatureExtractor extractor = new FeatureExtractorSD();
-
             FeatureSet fs = extractor.extractFeatures(x,y,z);
             activity = knn.classify(fs);
 
@@ -81,6 +91,10 @@ public class ActivityMonitoring implements Observer {
         }
     }
 
+    /**
+     * Return the current Activity that the user is doing.
+     * @return activity: Queueing, Walking, or None (to be determined activity)
+     */
     public ActivityType getActivity(){
         return activity;
     }
