@@ -39,7 +39,7 @@ public class ActivityMonitoring implements Observer {
     // k-Nearest Neighbors
     private KNN knn;
     private final int K = 5;
-    private static final int WINDOW_SIZE = 30;
+    private static final int WINDOW_SIZE = 10;
 
     // Data to calculate solution
     ArrayList<Float> x;
@@ -81,9 +81,11 @@ public class ActivityMonitoring implements Observer {
         amountOfNewSamples++;
         if(amountOfNewSamples > WINDOW_SIZE){
             accelerometerReader.readAll();
-            x = accelerometerReader.getAllX();
-            y = accelerometerReader.getAllY();
-            z = accelerometerReader.getAllZ();
+            int totalSize = accelerometerReader.size();
+            x = new ArrayList<>(accelerometerReader.getAllX().subList(totalSize-WINDOW_SIZE,totalSize));
+            y = new ArrayList<>(accelerometerReader.getAllY().subList(totalSize-WINDOW_SIZE,totalSize));
+            z = new ArrayList<>(accelerometerReader.getAllZ().subList(totalSize-WINDOW_SIZE,totalSize));
+            labels = new ArrayList<>(accelerometerReader.getAllStates().subList(totalSize-WINDOW_SIZE,totalSize));
             FeatureSet fs = extractor.extractFeatures(x,y,z);
             activity = knn.classify(fs);
             amountOfNewSamples = 0;
