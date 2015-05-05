@@ -80,13 +80,12 @@ public class ActivityMonitoring implements Observer {
     public void update(){
         amountOfNewSamples++;
         if(amountOfNewSamples > WINDOW_SIZE){
+            accelerometerReader.readAll();
             x = accelerometerReader.getAllX();
             y = accelerometerReader.getAllY();
             z = accelerometerReader.getAllZ();
-
             FeatureSet fs = extractor.extractFeatures(x,y,z);
             activity = knn.classify(fs);
-
             amountOfNewSamples = 0;
         }
     }
