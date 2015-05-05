@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMean;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
@@ -26,7 +28,6 @@ import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
 public class KNNPerformance extends ActionBarActivity {
 
     SensorManager sm;
-    AbstractSensor accelerometer;
 
     KNN knn;
     final int k = 5;
@@ -53,7 +54,22 @@ public class KNNPerformance extends ActionBarActivity {
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 
         initReader();
+        float result;
 
+        // Check the performance of Feature Mean
+        result = performance(new FeatureExtractorMean());
+        Log.d("Performance of Mean: ", "" + result);
+
+        // Check the performance of Feature Standard Deviation
+        result = performance(new FeatureExtractorSD());
+        Log.d("Performance of SD: ", "" + result);
+
+        // Check the performance of Feature Auto Correlation
+        result = performance(new FeatureExtractorAC());
+        Log.d("Performance of AC: ", "" + result);
+    }
+
+    public float performance(FeatureExtractor extractor){
         // Get all data fromt the accelerometerData.txt
         trainReader.readAll();
         if(trainReader.size() >= windowSize) {
@@ -63,13 +79,8 @@ public class KNNPerformance extends ActionBarActivity {
             labels = trainReader.getAllStates();
         }
 
-        Log.d("Validation", "Train data x: " + x.toString());
-        Log.d("Validation", "Train data y: " + y.toString());
-        Log.d("Validation", "Train data z: " + z.toString());
-        Log.d("Validation", "Train data labels: " + labels.toString());
-
         // Initialise KNN and train it
-        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, new FeatureExtractorSD(), windowSize);
+        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, extractor, windowSize);
         knn = new KNN(k,train);
 
 
@@ -82,25 +93,12 @@ public class KNNPerformance extends ActionBarActivity {
             labels = validationReader.getAllStates();
         }
 
-        Log.d("Validation", "Validation data x: " + x.toString());
-        Log.d("Validation", "Validation data y: " + y.toString());
-        Log.d("Validation", "Validation data z: " + z.toString());
-        Log.d("Validation", "Validation data labels: " + labels.toString());
-
         //Test the KNN with the validation data
-        ArrayList<LabeledFeatureSet> test = FeatureExtractor.generateDataSet(labels,x,y,z, new FeatureExtractorSD(), windowSize);
-
-
-        // Output the labels of the validation data
-        String str = "Validation computed features Label [";
-        for(LabeledFeatureSet t : test) {
-            str += "," + t.getLabel().toString();
-        }
-        str += "]";
-        Log.d("Classification features",str);
+        ArrayList<LabeledFeatureSet> test = FeatureExtractor.generateDataSet(labels,x,y,z, extractor, windowSize);
 
         // Compare classification with reality
-        Log.d("Validation", ""+knn.test(test));
+        return knn.test(test);
+
     }
 
     @Override
