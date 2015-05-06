@@ -44,7 +44,7 @@ public class Writer {
             long delta = date.getTime() - startTime.getTime();
 
             fOutStream.write((delta + " " + state.toString() + " " + x + " " + y + " " + z + "\n").getBytes());
-//            Log.d("Writer", delta + " "+ state.toString() + " " + x + " " + y + " " + z + "\n");
+            Log.d("Writer", delta + " "+ state.toString() + " " + x + " " + y + " " + z + "\n");
             fOutStream.flush();
         } catch (IOException e) {
             e.printStackTrace();

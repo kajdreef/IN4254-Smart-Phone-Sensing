@@ -17,7 +17,6 @@ import io.github.kajdreef.smartphonesensing.Utils.Reader;
 
 public class DataCollectingButtons extends ActionBarActivity {
 
-    final String SENSOR_DATA_FILE = "newDataAccelerometer.txt";
     SensorManager sm;
     AbstractSensor accelerometer;
 
@@ -66,7 +65,7 @@ public class DataCollectingButtons extends ActionBarActivity {
 
 
     public void initReader(){
-        read = new Reader(this, "accelerometerData.txt");
+        read = new Reader(this, ActivityMonitoringActivity.SENSOR_DATA_FILE);
         read.readAll();
     }
 
@@ -78,9 +77,9 @@ public class DataCollectingButtons extends ActionBarActivity {
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 
 
-//        initAccelerometerAndButtons();
+        initAccelerometerAndButtons();
 
-        initReader();
+//        initReader();
     }
 
     @Override

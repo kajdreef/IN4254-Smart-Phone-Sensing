@@ -9,7 +9,6 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
@@ -31,7 +30,7 @@ public class KNNPerformance extends ActionBarActivity {
 
     KNN knn;
     final int k = 5;
-    final int windowSize = 15;
+    final int WINDOW_SIZE = 20;
 
     ArrayList<Float> x;
     ArrayList<Float> y;
@@ -72,7 +71,7 @@ public class KNNPerformance extends ActionBarActivity {
     public float performance(FeatureExtractor extractor){
         // Get all data fromt the accelerometerData.txt
         trainReader.readAll();
-        if(trainReader.size() >= windowSize) {
+        if(trainReader.size() >= WINDOW_SIZE) {
             x = trainReader.getAllX();
             y = trainReader.getAllY();
             z = trainReader.getAllZ();
@@ -80,13 +79,13 @@ public class KNNPerformance extends ActionBarActivity {
         }
 
         // Initialise KNN and train it
-        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, extractor, windowSize);
+        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, extractor, WINDOW_SIZE);
         knn = new KNN(k,train);
 
 
         // Read validation saved data from the accelerometer
         validationReader.readAll();
-        if(validationReader.size() >= windowSize) {
+        if(validationReader.size() >= WINDOW_SIZE) {
             x = validationReader.getAllX();
             y = validationReader.getAllY();
             z = validationReader.getAllZ();
@@ -94,7 +93,7 @@ public class KNNPerformance extends ActionBarActivity {
         }
 
         //Test the KNN with the validation data
-        ArrayList<LabeledFeatureSet> test = FeatureExtractor.generateDataSet(labels,x,y,z, extractor, windowSize);
+        ArrayList<LabeledFeatureSet> test = FeatureExtractor.generateDataSet(labels,x,y,z, extractor, WINDOW_SIZE);
 
         // Compare classification with reality
         return knn.test(test);
