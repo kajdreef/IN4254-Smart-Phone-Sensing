@@ -37,6 +37,6 @@ public class FeatureExtractorSDTest {
         z.add((float) 0.0);
         z.add((float) 2.0);
         float result =  FESD.extractFeatures(x, y, z).getData();
-        Assert.assertTrue(0.81 < result && result < 0.82);
+        Assert.assertEquals(0.81, result, 0.01);
     }
 }

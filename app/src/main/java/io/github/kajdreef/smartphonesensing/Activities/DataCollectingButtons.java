@@ -7,29 +7,35 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Accelerometer;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
 
 
-public class DataCollectingButtons extends ActionBarActivity {
+public class DataCollectingButtons extends ActionBarActivity implements Observer {
 
     SensorManager sm;
     AbstractSensor accelerometer;
 
     Button walking;
     Button queueing;
+    TextView t;
 
     boolean initAccel = false;
     Reader read;
 
     private void initAccelerometerAndButtons(){
         initAccel = true;
-        accelerometer = new Accelerometer(sm);
 
+        t = (TextView) this.findViewById(R.id.state);
+
+        accelerometer = new Accelerometer(sm);
+        accelerometer.attach(this);
         // Create walk button, when clicked on the button state will change state to WALK.
         walking = (Button) findViewById(R.id.walking);
         walking.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +48,8 @@ public class DataCollectingButtons extends ActionBarActivity {
                 else{
                     accelerometer.unregister();
                     initAccel = true;
+                    Accelerometer.setState(ActivityType.NONE);
+                    update();
                 }
             }
         });
@@ -58,6 +66,8 @@ public class DataCollectingButtons extends ActionBarActivity {
                 else{
                     accelerometer.unregister();
                     initAccel = true;
+                    Accelerometer.setState(ActivityType.NONE);
+                    update();
                 }
             }
         });
@@ -73,7 +83,7 @@ public class DataCollectingButtons extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.data_collection_menu);
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 
 
@@ -125,5 +135,9 @@ public class DataCollectingButtons extends ActionBarActivity {
         super.onDestroy();
         if(initAccel)
             accelerometer.unregister();
+    }
+
+    public void update(){
+        t.setText(Accelerometer.getState().toString());
     }
 }

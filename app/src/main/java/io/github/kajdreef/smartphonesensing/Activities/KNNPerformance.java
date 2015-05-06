@@ -30,7 +30,7 @@ public class KNNPerformance extends ActionBarActivity {
 
     KNN knn;
     final int k = 5;
-    final int WINDOW_SIZE = 20;
+    final int WINDOW_SIZE = 30;
 
     ArrayList<Float> x;
     ArrayList<Float> y;
@@ -41,7 +41,7 @@ public class KNNPerformance extends ActionBarActivity {
     AbstractReader validationReader;
 
     public void initReader(){
-        trainReader = new ReaderTest(this, R.raw.trainingdata);
+        trainReader = new ReaderTest(this, R.raw.accelerometer_data_set);
         validationReader = new ReaderTest(this, R.raw.validationdata);
     }
 
