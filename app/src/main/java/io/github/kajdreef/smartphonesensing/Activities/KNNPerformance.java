@@ -41,7 +41,7 @@ public class KNNPerformance extends ActionBarActivity {
     AbstractReader validationReader;
 
     public void initReader(){
-        trainReader = new ReaderTest(this, R.raw.accelerometer_data);
+        trainReader = new ReaderTest(this, R.raw.accelerometer_data_set);
         validationReader = new ReaderTest(this, R.raw.validationdata);
     }
 

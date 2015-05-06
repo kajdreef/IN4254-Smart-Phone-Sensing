@@ -50,10 +50,7 @@ public class KNNTest {
         Assert.assertEquals(knnc7.classify(new FeatureSet((float) 0)), (ActivityType.WALK));
         Assert.assertEquals(knnc7.classify(new FeatureSet((float) 8)), (ActivityType.WALK));
     }
-    @Test
-    public void testCrossValidation(){
-        Assert.assertEquals(1,knnc1.crossValidation(3),0.001);
-    }
+
     @Test
     public void testLeaveOneOut(){
         Assert.assertEquals(1,knnc1.leaveOneOut(),0.001);

@@ -27,7 +27,7 @@ import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
 public class ActivityMonitoring implements Observer {
 
     private int amountOfNewSamples = 0;
-    private ActivityType activity = ActivityType.NONE;
+    private ArrayList<ActivityType> activityList;
 
     // Readers
     private AbstractReader trainReader;
@@ -58,6 +58,8 @@ public class ActivityMonitoring implements Observer {
      * Initialise kNN
      */
     public void initKNN(){
+        activityList = new ArrayList<>();
+
         // Get all data from the trainingData file in resources
         trainReader.readAll();
         if(trainReader.size() >= WINDOW_SIZE) {
@@ -90,7 +92,7 @@ public class ActivityMonitoring implements Observer {
             
             // Extract features and classify them
             FeatureSet fs = extractor.extractFeatures(x,y,z);
-            activity = knn.classify(fs);
+            activityList.add(knn.classify(fs));
             amountOfNewSamples = 0;
         }
     }
@@ -100,6 +102,13 @@ public class ActivityMonitoring implements Observer {
      * @return activity: Queueing, Walking, or None (to be determined activity)
      */
     public ActivityType getActivity(){
-        return activity;
+        if(activityList.size() == 0){
+            return ActivityType.NONE;
+        }
+        return activityList.get(activityList.size() - 1);
+    }
+
+    public ArrayList<ActivityType> getActivityList(){
+        return this.activityList;
     }
 }
