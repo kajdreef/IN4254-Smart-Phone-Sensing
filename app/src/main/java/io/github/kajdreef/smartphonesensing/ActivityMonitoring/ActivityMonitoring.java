@@ -80,12 +80,15 @@ public class ActivityMonitoring implements Observer {
     public void update(){
         amountOfNewSamples++;
         if(amountOfNewSamples > WINDOW_SIZE){
+
+            // Read the new data and return arraylists as big as the window size.
             accelerometerReader.readAll();
-            int totalSize = accelerometerReader.size();
-            x = new ArrayList<>(accelerometerReader.getAllX().subList(totalSize-WINDOW_SIZE,totalSize));
-            y = new ArrayList<>(accelerometerReader.getAllY().subList(totalSize-WINDOW_SIZE,totalSize));
-            z = new ArrayList<>(accelerometerReader.getAllZ().subList(totalSize-WINDOW_SIZE,totalSize));
-            labels = new ArrayList<>(accelerometerReader.getAllStates().subList(totalSize-WINDOW_SIZE,totalSize));
+            x = new ArrayList<>(accelerometerReader.getSubListX(WINDOW_SIZE));
+            y = new ArrayList<>(accelerometerReader.getSubListY(WINDOW_SIZE));
+            z = new ArrayList<>(accelerometerReader.getSubListZ(WINDOW_SIZE));
+            labels = new ArrayList<>(accelerometerReader.getSubListStates(WINDOW_SIZE));
+            
+            // Extract features and classify them
             FeatureSet fs = extractor.extractFeatures(x,y,z);
             activity = knn.classify(fs);
             amountOfNewSamples = 0;

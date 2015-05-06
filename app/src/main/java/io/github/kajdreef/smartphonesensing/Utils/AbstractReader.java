@@ -5,6 +5,7 @@ import android.content.Context;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 
@@ -109,4 +110,21 @@ public abstract class AbstractReader {
     public ArrayList<Float> getAllX(){return allX;}
     public ArrayList<Float> getAllY(){return allY;}
     public ArrayList<Float> getAllZ(){return allZ;}
+
+    public List<ActivityType> getSubListStates(int windowSize){
+        int size = allStates.size();
+        return allStates.subList(size-windowSize,size);
+    }
+    public List<Float> getSubListX(int windowSize){
+        int size = allX.size();
+        return allX.subList(size-windowSize,size);
+    }
+    public List<Float> getSubListY(int windowSize){
+        int size = allY.size();
+        return allY.subList(size-windowSize,size);
+    }
+    public List<Float> getSubListZ(int windowSize){
+        int size = allZ.size();
+        return allZ.subList(size-windowSize,size);
+    }
 }
