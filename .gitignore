@@ -4,3 +4,5 @@
 /.idea/libraries
 .DS_Store
 /build
+vcs.xml
+app.iml

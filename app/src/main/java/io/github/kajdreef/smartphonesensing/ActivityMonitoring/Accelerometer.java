@@ -24,6 +24,10 @@ public class Accelerometer extends AbstractSensor {
         Accelerometer.state = newState;
     }
 
+    public static ActivityType getState(){
+        return Accelerometer.state;
+    }
+
     public Accelerometer(SensorManager sm){
         super(sm);
         wr = new Writer(ActivityMonitoringActivity.SENSOR_DATA_FILE);
