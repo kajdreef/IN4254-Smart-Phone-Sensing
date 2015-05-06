@@ -28,6 +28,7 @@ public class KNNTest {
         trainingSet.add(new LabeledFeatureSet(new FeatureSet(5), ActivityType.QUEUE));
         trainingSet.add(new LabeledFeatureSet(new FeatureSet(5), ActivityType.QUEUE));
         trainingSet.add(new LabeledFeatureSet(new FeatureSet(6), ActivityType.QUEUE));
+
         this.knnc1 = new KNN(1, trainingSet);
         this.knnc3 = new KNN(3, trainingSet);
         this.knnc5 = new KNN(5, trainingSet);
@@ -48,5 +49,14 @@ public class KNNTest {
         Assert.assertEquals(knnc5.classify(new FeatureSet((float) 8)), (ActivityType.QUEUE));
         Assert.assertEquals(knnc7.classify(new FeatureSet((float) 0)), (ActivityType.WALK));
         Assert.assertEquals(knnc7.classify(new FeatureSet((float) 8)), (ActivityType.WALK));
+    }
+    @Test
+    public void testCrossValidation(){
+        Assert.assertEquals(1,knnc1.crossValidation(3),0.001);
+    }
+    @Test
+    public void testLeaveOneOut(){
+        Assert.assertEquals(1,knnc1.leaveOneOut(),0.001);
+        Assert.assertEquals(1, knnc3.leaveOneOut(), 0.001);
     }
 }

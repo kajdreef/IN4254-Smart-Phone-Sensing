@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 
-public class KNN implements Classifier {
+public class KNN extends Classifier {
     private int k;
     private List<LabeledFeatureSet> data;
 
@@ -24,32 +24,17 @@ public class KNN implements Classifier {
     public void addTrainingData(List<LabeledFeatureSet> trainingDataSet) {
         this.data.addAll(trainingDataSet);
     }
-    public void retrain(List<LabeledFeatureSet> trainingDataSet) {
+    @Override
+    public void clearTrainingData(){
         this.data.clear();
-        this.data.addAll(trainingDataSet);
-    }
-    @Override
-    public float test(List<LabeledFeatureSet> testDataSet) {
-        int correct=0;
-        for (LabeledFeatureSet featSet : testDataSet ){
-            ActivityType label = classify(featSet.getFeatureSet());
-            if(label.equals(featSet.getLabel())){
-                correct++;
-            }
-        }
-        return (float) correct/testDataSet.size();
     }
 
     @Override
-    public List<ActivityType> classifyList(List<FeatureSet> inputList) {
-
-        List<ActivityType> labelList = new ArrayList<>();
-        for (FeatureSet set : inputList) {
-            labelList.add(classify(set));
-        }
-        return labelList;
+    public List<LabeledFeatureSet> getAllTrainingData() {
+        return this.data;
     }
 
+    @Override
     public ActivityType classify(FeatureSet inputData) {
         //Construct mapping of distances to inputData
         TreeMap<Float,ArrayList<ActivityType>> distanceMapping = new TreeMap<>();
