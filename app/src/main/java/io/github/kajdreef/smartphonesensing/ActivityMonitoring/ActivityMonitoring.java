@@ -34,12 +34,12 @@ public class ActivityMonitoring implements Observer {
     private AbstractReader accelerometerReader;
 
     // Initialise the Feature type!
-    FeatureExtractor extractor = new FeatureExtractorSD();
+    FeatureExtractor extractor = new FeatureExtractorAC();
 
     // k-Nearest Neighbors
     private KNN knn;
     private final int K = 5;
-    private static final int WINDOW_SIZE = 10;
+    private static final int WINDOW_SIZE = 30;
 
     // Data to calculate solution
     ArrayList<Float> x;

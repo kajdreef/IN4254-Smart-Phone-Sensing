@@ -2,6 +2,8 @@ package io.github.kajdreef.smartphonesensing.Classification;
 
 import java.util.ArrayList;
 
+import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
+
 public class FeatureExtractorMean extends FeatureExtractor {
     @Override
     public FeatureSet extractFeatures(ArrayList<Float> x, ArrayList<Float> y, ArrayList<Float> z) {
@@ -10,14 +12,7 @@ public class FeatureExtractorMean extends FeatureExtractor {
         for (int i = 0;i<x.size();i++){
             magnitude.add(i, (float)(Math.sqrt(Math.pow(x.get(i),2.0) + Math.pow(y.get(i),2.0) + Math.pow(z.get(i),2.0))));
         }
-        return new FeatureSet(sum(magnitude)/x.size());
+        return new FeatureSet(ArrayOperations.sum(magnitude)/x.size());
     }
 
-    private float sum(ArrayList<Float> in){
-        float s = 0 ;
-        for(Float f : in){
-            s += f;
-        }
-        return s;
-    }
 }

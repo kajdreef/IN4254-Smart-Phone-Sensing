@@ -2,6 +2,8 @@ package io.github.kajdreef.smartphonesensing.Classification;
 
 import java.util.ArrayList;
 
+import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
+
 public class FeatureExtractorAC extends FeatureExtractor {
 
     @Override
@@ -24,16 +26,6 @@ public class FeatureExtractorAC extends FeatureExtractor {
             out.set(i,out.get(i)/(magnitude.size()-i)/sigma/sigma);
         }
         out.remove(0);
-        return new FeatureSet(maximumValue(out));
-    }
-    public static float maximumValue(ArrayList<Float> in){
-        if(in.isEmpty())
-            return 0;
-        float max = in.get(0);
-        for(Float f:in){
-            if(f>max)
-                max = f;
-        }
-        return max;
+        return new FeatureSet(ArrayOperations.sum(out.subList(9,11)));
     }
 }
