@@ -55,30 +55,7 @@ public abstract class Classifier {
         }
         return out;
     }
-    public float crossValidation(int k){
-        ArrayList<LabeledFeatureSet> save = new ArrayList<>(getAllTrainingData());
-        ArrayList<ActivityType> labelList = new ArrayList<>(getLabelList());
-        float correct = 0;
-        ArrayList<LabeledFeatureSet> test = new ArrayList<>();
-        ArrayList<LabeledFeatureSet> all = new ArrayList<>();
-        for (int i = 0; i < k; i++) {
-            for (ActivityType a : labelList){
-                all.addAll(extractLabeledData(save,a));
-                int N = all.size();
-                int step = N/k;
-                List<LabeledFeatureSet> subTest = all.subList(i * step, (i + 1) * step);
-                test.addAll(subTest);
-                all.removeAll(subTest);
-                addTrainingData(all);
-            }
-            correct = correct + test(test)/k;
-            clearTrainingData();
-            test.clear();
-            all.clear();
-        }
-        retrain(save);
-        return correct;
-    }
+
     public float leaveOneOut(){
         ArrayList<LabeledFeatureSet> save = new ArrayList<>(getAllTrainingData());
         int correct = 0;
@@ -94,6 +71,6 @@ public abstract class Classifier {
             all.clear();
         }
         retrain(save);
-        return correct/save.size();
+        return correct/(float)save.size();
     }
 }

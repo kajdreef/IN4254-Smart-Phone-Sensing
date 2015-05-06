@@ -41,7 +41,7 @@ public class KNNPerformance extends ActionBarActivity {
     AbstractReader validationReader;
 
     public void initReader(){
-        trainReader = new ReaderTest(this, R.raw.accelerometer_data_set);
+        trainReader = new ReaderTest(this, R.raw.accelerometer_data);
         validationReader = new ReaderTest(this, R.raw.validationdata);
     }
 
@@ -66,6 +66,36 @@ public class KNNPerformance extends ActionBarActivity {
         // Check the performance of Feature Auto Correlation
         result = performance(new FeatureExtractorAC());
         Log.d("Performance of AC: ", "" + result);
+
+        // Check the performance of Feature Mean
+        result = performanceLeaveOneOut(new FeatureExtractorMean());
+        Log.d("LOO of Mean: ", "" + result);
+
+        // Check the performance of Feature Standard Deviation
+        result = performanceLeaveOneOut(new FeatureExtractorSD());
+        Log.d("LOO of SD: ", "" + result);
+
+        // Check the performance of Feature Auto Correlation
+        result = performanceLeaveOneOut(new FeatureExtractorAC());
+        Log.d("LOO of AC: ", "" + result);
+    }
+
+    public float performanceLeaveOneOut(FeatureExtractor extractor){
+        // Get all data fromt the accelerometerData.txt
+        trainReader.readAll();
+        if(trainReader.size() >= WINDOW_SIZE) {
+            x = trainReader.getAllX();
+            y = trainReader.getAllY();
+            z = trainReader.getAllZ();
+            labels = trainReader.getAllStates();
+        }
+
+        // Initialise KNN and train it
+        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, extractor, WINDOW_SIZE);
+        knn = new KNN(k,train);
+
+        // Compare classification with reality
+        return knn.leaveOneOut();
     }
 
     public float performance(FeatureExtractor extractor){
@@ -97,7 +127,6 @@ public class KNNPerformance extends ActionBarActivity {
 
         // Compare classification with reality
         return knn.test(test);
-
     }
 
     @Override
