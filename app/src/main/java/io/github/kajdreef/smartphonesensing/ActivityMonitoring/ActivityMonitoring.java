@@ -40,7 +40,7 @@ public class ActivityMonitoring implements Observer {
     // k-Nearest Neighbors
     private KNN knn;
     private final int K = 5;
-    private static final int WINDOW_SIZE = 7;
+    private static final int WINDOW_SIZE = 25;
 
     // Data to calculate solution
     ArrayList<Float> x;

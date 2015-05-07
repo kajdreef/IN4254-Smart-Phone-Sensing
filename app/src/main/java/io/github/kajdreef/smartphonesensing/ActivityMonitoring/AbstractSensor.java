@@ -26,7 +26,7 @@ public abstract class AbstractSensor implements SensorEventListener {
      * Register the event listener for certain sensor.
      */
     public void register(){
-        sm.registerListener(this, type, SensorManager.SENSOR_DELAY_NORMAL);
+        sm.registerListener(this, type, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     /**
