@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IN4254-Smart-Phone-Sensing.iml" filepath="$PROJECT_DIR$/IN4254-Smart-Phone-Sensing.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SmartPhoneSensing.iml" filepath="$PROJECT_DIR$/SmartPhoneSensing.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
