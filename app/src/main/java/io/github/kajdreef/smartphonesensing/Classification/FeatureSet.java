@@ -1,18 +1,36 @@
 package io.github.kajdreef.smartphonesensing.Classification;
 
+import java.util.ArrayList;
+
 public class FeatureSet {
 
-    private float data;
+    private ArrayList<Float> data;
     public FeatureSet(FeatureSet feat){
         this.data = feat.getData();
     }
-    public FeatureSet(float data){
+    public FeatureSet(){this.data=new ArrayList<>();}
+    public FeatureSet(ArrayList<Float> data){
         this.data = data;
     }
-    public float getData() {
+    public FeatureSet(Float f){
+        this.data= new ArrayList<>();
+        data.add(f);
+    }
+    public FeatureSet(int i){
+        this.data= new ArrayList<>();
+        data.add((float) i);
+    }
+    public ArrayList<Float> getData() {
         return this.data;
     }
+    public void addFeature(FeatureSet feat){
+        data.addAll(feat.getData());
+    }
     public float distance(FeatureSet feat){
-        return Math.abs(this.data - feat.getData());
+        float distance = 0;
+        for (int i = 0; i < data.size() ; i++) {
+            distance += Math.pow(feat.getData().get(i)-data.get(i),2);
+        }
+        return (float)Math.sqrt(distance);
     }
 }

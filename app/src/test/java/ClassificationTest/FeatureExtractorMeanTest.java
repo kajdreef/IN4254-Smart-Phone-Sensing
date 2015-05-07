@@ -34,7 +34,7 @@ public class FeatureExtractorMeanTest {
         z.add((float) 0.0);
         z.add((float) 1.0);
 
-        Assert.assertTrue((float) 1 == FEM.extractFeatures(x,y,z).getData());
+        Assert.assertTrue((float) 1 == FEM.extractFeatures(x,y,z).getData().get(0));
 //        assert true;
     }
 }

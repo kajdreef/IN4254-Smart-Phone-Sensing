@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
@@ -56,31 +57,38 @@ public class KNNPerformance extends ActionBarActivity {
         float result;
 
         // Check the performance of Feature Mean
-        result = performance(new FeatureExtractorMean());
+        ArrayList<FeatureExtractor> extractors = new ArrayList<>();
+        extractors.add(new FeatureExtractorMean());
+        result = performance(extractors);
         Log.d("Performance of Mean: ", "" + result);
-
+        extractors.clear();
+        extractors.add(new FeatureExtractorSD());
         // Check the performance of Feature Standard Deviation
-        result = performance(new FeatureExtractorSD());
+        result = performance(extractors);
         Log.d("Performance of SD: ", "" + result);
-
+        extractors.clear();
+        extractors.add(new FeatureExtractorAC());
         // Check the performance of Feature Auto Correlation
-        result = performance(new FeatureExtractorAC());
+        result = performance(extractors);
         Log.d("Performance of AC: ", "" + result);
-
+        extractors.clear();
+        extractors.add(new FeatureExtractorMean());
         // Check the performance of Feature Mean
-        result = performanceLeaveOneOut(new FeatureExtractorMean());
+        result = performanceLeaveOneOut(extractors);
         Log.d("LOO of Mean: ", "" + result);
-
+        extractors.clear();
+        extractors.add(new FeatureExtractorSD());
         // Check the performance of Feature Standard Deviation
-        result = performanceLeaveOneOut(new FeatureExtractorSD());
+        result = performanceLeaveOneOut(extractors);
         Log.d("LOO of SD: ", "" + result);
-
+        extractors.clear();
+        extractors.add(new FeatureExtractorAC());
         // Check the performance of Feature Auto Correlation
-        result = performanceLeaveOneOut(new FeatureExtractorAC());
+        result = performanceLeaveOneOut(extractors);
         Log.d("LOO of AC: ", "" + result);
     }
 
-    public float performanceLeaveOneOut(FeatureExtractor extractor){
+    public float performanceLeaveOneOut(ArrayList<FeatureExtractor> extractor){
         // Get all data fromt the accelerometerData.txt
         trainReader.readAll();
         if(trainReader.size() >= WINDOW_SIZE) {
@@ -98,7 +106,7 @@ public class KNNPerformance extends ActionBarActivity {
         return knn.leaveOneOut();
     }
 
-    public float performance(FeatureExtractor extractor){
+    public float performance(ArrayList<FeatureExtractor> extractor){
         // Get all data fromt the accelerometerData.txt
         trainReader.readAll();
         if(trainReader.size() >= WINDOW_SIZE) {

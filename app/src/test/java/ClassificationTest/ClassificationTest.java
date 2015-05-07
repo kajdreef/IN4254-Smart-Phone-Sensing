@@ -42,7 +42,9 @@ public class ClassificationTest {
             y.add(new Random().nextFloat());
             z.add(new Random().nextFloat());
         }
-        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels,x,y,z,new FeatureExtractorSD(),step);
+        ArrayList<FeatureExtractor> extractors = new ArrayList<>();
+        extractors.add(new FeatureExtractorSD());
+        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels,x,y,z,extractors,step);
         knn = new KNN(5,train);
     }
 
@@ -66,7 +68,9 @@ public class ClassificationTest {
             y.add(new Random().nextFloat());
             z.add(new Random().nextFloat());
         }
-        ArrayList<LabeledFeatureSet> test = FeatureExtractor.generateDataSet(labels,x,y,z,new FeatureExtractorSD(),step);
+        ArrayList<FeatureExtractor> extractors = new ArrayList<>();
+        extractors.add(new FeatureExtractorSD());
+        ArrayList<LabeledFeatureSet> test = FeatureExtractor.generateDataSet(labels,x,y,z,extractors,step);
         float correct = knn.test(test);
 
         System.out.println(Float.toString(correct));

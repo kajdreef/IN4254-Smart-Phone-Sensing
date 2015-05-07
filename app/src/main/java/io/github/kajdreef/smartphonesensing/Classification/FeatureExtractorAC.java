@@ -13,8 +13,8 @@ public class FeatureExtractorAC extends FeatureExtractor {
         for (int i = 0;i<x.size();i++){
             magnitude.add(i,(float)Math.sqrt(Math.pow(x.get(i),2.0)+Math.pow(y.get(i),2.0)+Math.pow(z.get(i),2.0)));
         }
-        float mean = new FeatureExtractorMean().extractFeatures(x,y,z).getData();
-        float sigma = new FeatureExtractorSD().extractFeatures(x,y,z).getData();
+        float mean = new FeatureExtractorMean().extractFeatures(x,y,z).getData().get(0);
+        float sigma = new FeatureExtractorSD().extractFeatures(x,y,z).getData().get(0);
         ArrayList<Float> out = new ArrayList<>(magnitude.size());
         for (int i = 0; i < magnitude.size(); i++) {
             out.add((float)0);

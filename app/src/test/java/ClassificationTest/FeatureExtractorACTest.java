@@ -29,6 +29,6 @@ public class FeatureExtractorACTest {
         //Not sure how to actually test this, but it seemed correct in the debug..
         //assertEquals(???, extractorAC.extractFeatures(x, y, z).getData());
 
-        Assert.assertEquals(-1.2710112, extractorAC.extractFeatures(x, y, z).getData(), 0.001);
+        Assert.assertEquals(-1.2710112, extractorAC.extractFeatures(x, y, z).getData().get(0), 0.001);
     }
 }

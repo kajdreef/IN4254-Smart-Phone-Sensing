@@ -14,7 +14,7 @@ public abstract class FeatureExtractor {
                                                                ArrayList<Float> x,
                                                                ArrayList<Float> y,
                                                                ArrayList<Float> z,
-                                                               FeatureExtractor extractor,
+                                                               ArrayList<FeatureExtractor> extractors,
                                                                final int stepSize){
         //Extract LabeledFeatureSet
         ArrayList<LabeledFeatureSet> train = new ArrayList<>();
@@ -24,7 +24,11 @@ public abstract class FeatureExtractor {
                 ArrayList<Float> xlist =  new ArrayList<>(x.subList(index, index + stepSize));
                 ArrayList<Float> ylist =  new ArrayList<>(y.subList(index, index + stepSize));
                 ArrayList<Float> zlist =  new ArrayList<>(z.subList(index, index + stepSize));
-                train.add(new LabeledFeatureSet(extractor.extractFeatures(xlist,ylist,zlist),labels.get(index)));
+                FeatureSet f = new FeatureSet();
+                for (FeatureExtractor ext :extractors){
+                   f.addFeature(ext.extractFeatures(xlist, ylist, zlist));
+                }
+                train.add(new LabeledFeatureSet(f,labels.get(index)));
             }
             index = index+stepSize;
         }
