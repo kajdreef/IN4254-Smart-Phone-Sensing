@@ -56,34 +56,40 @@ public class KNNPerformance extends ActionBarActivity {
         initReader();
         float result;
 
-        // Check the performance of Feature Mean
         ArrayList<FeatureExtractor> extractors = new ArrayList<>();
+
+        // Check the performance of Feature Mean
         extractors.add(new FeatureExtractorMean());
         result = performance(extractors);
         Log.d("Performance of Mean: ", "" + result);
         extractors.clear();
-        extractors.add(new FeatureExtractorSD());
+
         // Check the performance of Feature Standard Deviation
+        extractors.add(new FeatureExtractorSD());
         result = performance(extractors);
         Log.d("Performance of SD: ", "" + result);
         extractors.clear();
-        extractors.add(new FeatureExtractorAC());
+
         // Check the performance of Feature Auto Correlation
+        extractors.add(new FeatureExtractorAC());
         result = performance(extractors);
         Log.d("Performance of AC: ", "" + result);
         extractors.clear();
-        extractors.add(new FeatureExtractorMean());
+
         // Check the performance of Feature Mean
+        extractors.add(new FeatureExtractorMean());
         result = performanceLeaveOneOut(extractors);
         Log.d("LOO of Mean: ", "" + result);
         extractors.clear();
-        extractors.add(new FeatureExtractorSD());
+
         // Check the performance of Feature Standard Deviation
+        extractors.add(new FeatureExtractorSD());
         result = performanceLeaveOneOut(extractors);
         Log.d("LOO of SD: ", "" + result);
         extractors.clear();
-        extractors.add(new FeatureExtractorAC());
+
         // Check the performance of Feature Auto Correlation
+        extractors.add(new FeatureExtractorAC());
         result = performanceLeaveOneOut(extractors);
         Log.d("LOO of AC: ", "" + result);
     }
