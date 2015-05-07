@@ -25,7 +25,6 @@ public class FeatureExtractorAC extends FeatureExtractor {
             }
             out.set(i,out.get(i)/(magnitude.size()-i)/sigma/sigma);
         }
-        out.remove(0);
-        return new FeatureSet(ArrayOperations.sum(out.subList(9,11)));
+        return new FeatureSet(ArrayOperations.standardDeviation(out));
     }
 }

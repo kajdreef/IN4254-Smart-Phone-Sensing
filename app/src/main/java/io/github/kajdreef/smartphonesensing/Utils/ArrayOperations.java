@@ -24,4 +24,17 @@ public class ArrayOperations {
         }
         return s;
     }
+    public static float standardDeviation(List<Float> in){
+        float mean = ArrayOperations.sum(in)/in.size();
+
+        double SD = 0;
+
+        for (int i = 0;i<in.size();i++){
+            SD = SD + Math.pow(in.get(i)-mean,2.0);
+        }
+
+        SD = SD/in.size();
+        SD = Math.sqrt(SD);
+        return (float) SD;
+    }
 }

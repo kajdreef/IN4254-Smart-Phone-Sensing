@@ -14,16 +14,6 @@ public class FeatureExtractorSD extends FeatureExtractor {
             magnitude.add(i,(float)Math.sqrt(Math.pow(x.get(i),2.0)+Math.pow(y.get(i),2.0)+Math.pow(z.get(i),2.0)));
         }
 
-        double mean = ArrayOperations.sum(magnitude)/x.size();
-
-        double SD = 0;
-
-        for (int i = 0;i<x.size();i++){
-            SD = SD + Math.pow(magnitude.get(i)-mean,2.0);
-        }
-
-        SD = SD/x.size();
-        SD = Math.sqrt(SD);
-        return new FeatureSet((float)SD);
+        return new FeatureSet(ArrayOperations.standardDeviation(magnitude));
     }
 }
