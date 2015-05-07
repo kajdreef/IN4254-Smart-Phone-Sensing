@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMag;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMean;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
@@ -40,7 +41,7 @@ public class ActivityMonitoring implements Observer {
     // k-Nearest Neighbors
     private KNN knn;
     private final int K = 5;
-    private static final int WINDOW_SIZE = 25;
+    public static final int WINDOW_SIZE = 120;
 
     // Data to calculate solution
     ArrayList<Float> x;
@@ -50,7 +51,7 @@ public class ActivityMonitoring implements Observer {
 
     public ActivityMonitoring(Context ctx){
         // initialise the readers to train kNN
-        trainReader = new ReaderTest(ctx, R.raw.trainingdata);
+        trainReader = new ReaderTest(ctx, R.raw.accelerometer_data_set_high_sample_rate);
         accelerometerReader = new Reader(ctx, ActivityMonitoringActivity.SENSOR_DATA_FILE);
         initKNN();
     }
@@ -71,8 +72,8 @@ public class ActivityMonitoring implements Observer {
         }
 
         // Initialise KNN and train it
-
-        extractor.add(new FeatureExtractorMean());
+        extractor = new ArrayList<>();
+        extractor.add(new FeatureExtractorMag());
         extractor.add(new FeatureExtractorSD());
         ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, extractor, WINDOW_SIZE);
         knn = new KNN(K,train);

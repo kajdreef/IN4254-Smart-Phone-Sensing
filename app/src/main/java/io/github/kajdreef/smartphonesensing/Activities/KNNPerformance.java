@@ -31,7 +31,7 @@ public class KNNPerformance extends ActionBarActivity {
 
     KNN knn;
     final int k = 5;
-    final int WINDOW_SIZE = 25;
+    final int WINDOW_SIZE = 100;
 
     ArrayList<Float> x;
     ArrayList<Float> y;

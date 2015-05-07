@@ -28,7 +28,7 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
     SensorManager sm;
     AbstractSensor accelerometer;
 
-    float WINDOW_TIME = 1.209f;
+    float WINDOW_TIME = (float)ActivityMonitoring.WINDOW_SIZE/200;
 
     float serviceTime;
     float queueTime;
