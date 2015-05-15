@@ -1,5 +1,6 @@
 package io.github.kajdreef.smartphonesensing.Utils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,17 @@ public class ArrayOperations {
                 max = in[index];
         }
         return max;
+    }
+    public static int indexFirstMaximumFrom(int i,ArrayList<Float> in){
+        float max = in.get(i);
+        int maxIndex = i;
+        for(int index = i;index<in.size();index++){
+            if(in.get(index)>max) {
+                max = in.get(index);
+                maxIndex = index;
+            }
+        }
+        return maxIndex;
     }
     public static float sum(List<Float> in){
         float s = 0 ;

@@ -87,6 +87,6 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
     @Override
     public void update(){
         TextView t = (TextView) this.findViewById(R.id.textView2);
-        t.setText(am.getActivity().toString());
+        t.setText(am.getActivity().toString() +" "+ Float.toString(am.getSpeed())+ "m/s");
     }
 }

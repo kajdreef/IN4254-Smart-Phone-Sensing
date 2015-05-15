@@ -16,6 +16,7 @@ import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
+import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.SpeedExtractor;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
@@ -41,7 +42,7 @@ public class ActivityMonitoring implements Observer {
 
     // k-Nearest Neighbors
     private KNN knn;
-    private final int K = 1;
+    private final int K = 5;
     public static final int WINDOW_SIZE = 160;
 
     // Data to calculate solution
@@ -49,6 +50,9 @@ public class ActivityMonitoring implements Observer {
     ArrayList<Float> y;
     ArrayList<Float> z;
     ArrayList<ActivityType> labels;
+
+    //Try to estimate speed of walking
+    private float speed;
 
     public ActivityMonitoring(Context ctx){
         // initialise the readers to train kNN
@@ -76,7 +80,7 @@ public class ActivityMonitoring implements Observer {
         extractor = new ArrayList<>();
         extractor.add(new FeatureExtractorMag());
         extractor.add(new FeatureExtractorSD());
-        extractor.add(new FeatureExtractorFFT());
+        extractor.add(new FeatureExtractorAC());
         ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, extractor, WINDOW_SIZE);
         knn = new KNN(K,train);
         x.clear();
@@ -102,7 +106,14 @@ public class ActivityMonitoring implements Observer {
             for (FeatureExtractor ext : extractor) {
                 fs.addFeature(ext.extractFeatures(x, y, z));
             }
-            activityList.add(knn.classify(fs));
+            ActivityType label = knn.classify(fs);
+            activityList.add(label);
+            if(label == ActivityType.WALK){
+                speed = SpeedExtractor.calculateSpeed(x,y,z);
+            }
+            else{
+                speed = 0;
+            }
             amountOfNewSamples = 0;
         }
     }
@@ -121,4 +132,5 @@ public class ActivityMonitoring implements Observer {
     public ArrayList<ActivityType> getActivityList(){
         return this.activityList;
     }
+    public float getSpeed(){return this.speed;}
 }
