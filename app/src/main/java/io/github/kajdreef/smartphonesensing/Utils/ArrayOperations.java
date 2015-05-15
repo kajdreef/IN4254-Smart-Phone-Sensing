@@ -17,6 +17,14 @@ public class ArrayOperations {
         }
         return max;
     }
+    public static float maximumValueFrom(int i,float[] in){
+        float max = in[i];
+        for(int index = i;index<in.length;index++){
+            if(in[index]>max)
+                max = in[index];
+        }
+        return max;
+    }
     public static float sum(List<Float> in){
         float s = 0 ;
         for(Float f : in){

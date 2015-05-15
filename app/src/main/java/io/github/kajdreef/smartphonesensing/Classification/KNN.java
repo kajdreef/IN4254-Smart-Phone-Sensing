@@ -6,27 +6,33 @@ import java.util.List;
 import java.util.TreeMap;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
 
 public class KNN extends Classifier {
     private int k;
     private List<LabeledFeatureSet> data;
+    private ArrayList<Float> covariances;
 
     public KNN(int k,List<LabeledFeatureSet> data){
-        if(data.size()<k) {
+        //if(data.size()<k) {
         //throw exception
-        }
+        //}
         //if k even throw exception
         this.k = k;
         this.data = data;
+        this.covariances=new ArrayList<>();
+        this.updateCovariances();
     }
 
     @Override
     public void addTrainingData(List<LabeledFeatureSet> trainingDataSet) {
         this.data.addAll(trainingDataSet);
+        this.updateCovariances();
     }
     @Override
     public void clearTrainingData(){
         this.data.clear();
+        this.covariances.clear();
     }
 
     @Override
@@ -39,7 +45,7 @@ public class KNN extends Classifier {
         //Construct mapping of distances to inputData
         TreeMap<Float,ArrayList<ActivityType>> distanceMapping = new TreeMap<>();
         for(LabeledFeatureSet known : this.data){
-                float d = inputData.distance(known);
+                float d = mahaDistance(inputData, known);
             if(!distanceMapping.containsKey(d)){
                 distanceMapping.put(d, new ArrayList<ActivityType>());
             }
@@ -75,5 +81,29 @@ public class KNN extends Classifier {
             }
         }
         return kClosestLabels.get(maxIndex);
+    }
+    private void updateCovariances(){
+        covariances.clear();
+        //Calculate covariances for Mahalanobis distance
+        if(!data.isEmpty()){
+            ArrayList<Float> calculateCovariance = new ArrayList<>();
+            for (int i = 0; i < data.get(0).getData().size(); i++) {
+                for (int j = 0; j < data.size(); j++) {
+                    calculateCovariance.add(data.get(j).getData().get(i));
+                }
+                covariances.add(ArrayOperations.standardDeviation(calculateCovariance));
+            }
+        }
+    }
+    public float mahaDistance(FeatureSet f1, FeatureSet f2){
+        if(f1.getData().size() != f2.getData().size()){
+            return Float.NaN;
+        }
+        float distance = 0;
+        for (int i = 0; i < f1.getData().size(); i++){
+            float x = (f1.getData().get(i) - f2.getData().get(i))/covariances.get(i);
+            distance += x*x;
+        }
+        return (float) Math.sqrt(distance);
     }
 }
