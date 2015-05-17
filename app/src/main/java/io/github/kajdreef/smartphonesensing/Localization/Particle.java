@@ -9,14 +9,14 @@ public class Particle {
 
     public Particle(float x, float y){
         currentLocation = new Location(x,y);
-        previousLocation = new Location(-1f,-1f);
+        previousLocation = new Location(x,y);
 
         this.weight = 1f;
     }
 
-    public void updateLocation(float x, float y){
+    public void updateLocation(float dx, float dy){
         previousLocation.setLocation(currentLocation);
-        currentLocation.setLocation(x,y);
+        currentLocation.move(dx, dy);
     }
 
     //TODO: implement this method

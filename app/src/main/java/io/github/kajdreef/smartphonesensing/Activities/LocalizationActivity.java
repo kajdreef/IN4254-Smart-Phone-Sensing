@@ -2,6 +2,7 @@ package io.github.kajdreef.smartphonesensing.Activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +21,7 @@ import io.github.kajdreef.smartphonesensing.R;
 public class LocalizationActivity extends ActionBarActivity implements Observer{
 
     FloorPlan floorPlan;
-    ArrayList<Particle> particles;
+    ArrayList<Particle> particleList;
     LocalizationView localizationView;
 
     @Override
@@ -28,13 +29,58 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         super.onCreate(savedInstanceState);
         floorPlan = new FloorPlan();
 
-        particles = new ArrayList<>();
-        particles.add(new Particle(50.0f, 50.0f));
-        particles.add(new Particle(150.0f, 150.0f));
-        particles.add(new Particle(200.0f, 200.0f));
+        particleList = new ArrayList<>();
 
-        localizationView = new LocalizationView(this, floorPlan.getWalls(), particles);
+        generateParticles(10000);
+//        Particle p = new Particle(50f, 50f);
+//        if(floorPlan.particleInside(p)){
+//            particleList.add(p);
+//        }
+//        else{
+//            Log.d("Particle Placement", "Out Of Bound!!");
+//        }
+//
+//        p = new Particle(100f, 50f);
+//        if(floorPlan.particleInside(p)){
+//            particleList.add(p);
+//        }
+//        else{
+//            Log.d("Particle Placement", "Out Of Bound!!");
+//        }
+//
+//        p = new Particle(500f, 130f);
+//        if(floorPlan.particleInside(p)){
+//            particleList.add(p);
+//        }
+//        else{
+//            Log.d("Particle Placement", "Out Of Bound!!");
+//        }
+//
+//
+        localizationView = new LocalizationView(this, floorPlan.getPath(), particleList);
+//        for(Particle pEntry : particleList){
+//            pEntry.updateLocation(70f,0f);
+//            if(floorPlan.particleCollision(pEntry)){
+//                pEntry.setCurrentLocation(pEntry.getPreviousLocation());
+//                Log.d("Particle Collision", "Collision detected!!");
+//            }
+//        }
         setContentView(localizationView);
+    }
+
+    public void generateParticles(int numOfParticles){
+        int i = 0;
+        int height = floorPlan.getHeight();
+        int width = floorPlan.getWidth();
+
+        while(i < numOfParticles){
+            Particle p = new Particle((float)(Math.random() * width), (float)(Math.random()* height));
+            if(floorPlan.particleInside(p)){
+                Log.d("Particle Location: " ,p.getCurrentLocation().getX() + ", " + p.getCurrentLocation().getY());
+                particleList.add(p);
+                i++;
+            }
+        }
     }
 
     @Override
@@ -81,6 +127,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
     }
 
     public void update() {
-        localizationView.setParticles(particles);
+        particleList.get(0).updateLocation(particleList.get(0).getCurrentLocation().getX()+5, particleList.get(0).getCurrentLocation().getY()+5);
+        localizationView.setParticles(particleList);
     }
 }

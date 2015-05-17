@@ -26,6 +26,11 @@ public class Location {
         this.y = newLocation.getY();
     }
 
+    public void move(float dx, float dy){
+        this.x += dx;
+        this.y += dy;
+    }
+
     public void setX(float x){
         this.x = x;
     }
