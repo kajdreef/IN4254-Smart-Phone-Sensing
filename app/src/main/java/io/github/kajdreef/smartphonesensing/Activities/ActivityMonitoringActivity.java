@@ -3,13 +3,12 @@ package io.github.kajdreef.smartphonesensing.Activities;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Accelerometer;
+import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
+import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
 import io.github.kajdreef.smartphonesensing.R;

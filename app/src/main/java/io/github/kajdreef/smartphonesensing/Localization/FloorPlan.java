@@ -136,17 +136,25 @@ public class FloorPlan {
         return floorRegion.contains((int) loc.getX(), (int) loc.getY());
     }
 
+    /**
+     * Based on: http://stackoverflow.com/questions/25830932/how-to-find-if-two-line-segments-intersect-or-not-in-java
+     * @param p
+     * @param q
+     * @param r
+     * @return
+     */
     private int orientation(Location p, Location q, Location r) {
         double val = (q.getY() - p.getY()) * (r.getX() - q.getX())
                 - (q.getX() - p.getX()) * (r.getY() - q.getY());
 
         if (val == 0.0)
-            return 0; // colinear
-        return (val > 0) ? 1 : 2; // clock or counterclock wise
+            return 0;
+        return (val > 0) ? 1 : 2;
     }
 
     /**
      * Collision detection with wall
+     * based on http://stackoverflow.com/questions/25830932/how-to-find-if-two-line-segments-intersect-or-not-in-java
      * @param p
      * @return true (=collision) or false (=no collision)
      */

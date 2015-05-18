@@ -1,11 +1,11 @@
-package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
+package io.github.kajdreef.smartphonesensing.Sensor;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.Utils.Writer;
 
 
@@ -19,6 +19,7 @@ public class Accelerometer extends AbstractSensor {
 
     private Writer wr;
     public static ActivityType state = ActivityType.NONE;
+    private static float x=0,y=0,z=0;
 
     public static void setState(ActivityType newState){
         Accelerometer.state = newState;
@@ -26,6 +27,18 @@ public class Accelerometer extends AbstractSensor {
 
     public static ActivityType getState(){
         return Accelerometer.state;
+    }
+
+    public static float getX(){
+        return x;
+    }
+
+    public static float getY(){
+        return y;
+    }
+
+    public static float getZ(){
+        return z;
     }
 
     public Accelerometer(SensorManager sm){
@@ -41,8 +54,6 @@ public class Accelerometer extends AbstractSensor {
 
     @Override
     public void onSensorChanged(SensorEvent event){
-        double x,y,z;
-
         // Check if changed sensor is the Accelerometer.
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
             x=event.values[0];

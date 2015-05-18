@@ -1,4 +1,4 @@
-package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
+package io.github.kajdreef.smartphonesensing.Sensor;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
@@ -6,6 +6,7 @@ import android.hardware.SensorManager;
 
 import java.util.ArrayList;
 
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
 
 /**
  * Created by kajdreef on 23/04/15.

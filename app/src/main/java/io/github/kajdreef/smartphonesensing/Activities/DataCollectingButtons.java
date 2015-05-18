@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Accelerometer;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.AbstractSensor;
+import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
+import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
 import io.github.kajdreef.smartphonesensing.R;

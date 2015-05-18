@@ -1,11 +1,11 @@
 package io.github.kajdreef.smartphonesensing.Activities;
 
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.ArrayList;
 
@@ -14,60 +14,59 @@ import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
 import io.github.kajdreef.smartphonesensing.R;
+import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
+import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
+import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
 
 /**
  * Created by kajdreef on 15/05/15.
  */
 public class LocalizationActivity extends ActionBarActivity implements Observer{
 
-    FloorPlan floorPlan;
-    ArrayList<Particle> particleList;
-    LocalizationView localizationView;
+    private FloorPlan floorPlan;
+    private ArrayList<Particle> particleList;
+    private LocalizationView localizationView;
+    private AbstractSensor accelerometer, magnetometer;
+    private SensorManager sm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        floorPlan = new FloorPlan();
 
+        // create Floor plan and arraylist with all the partcles
+        floorPlan = new FloorPlan();
         particleList = new ArrayList<>();
 
+        // Generate x amount of particles
         generateParticles(10000);
-//        Particle p = new Particle(50f, 50f);
-//        if(floorPlan.particleInside(p)){
-//            particleList.add(p);
-//        }
-//        else{
-//            Log.d("Particle Placement", "Out Of Bound!!");
-//        }
-//
-//        p = new Particle(100f, 50f);
-//        if(floorPlan.particleInside(p)){
-//            particleList.add(p);
-//        }
-//        else{
-//            Log.d("Particle Placement", "Out Of Bound!!");
-//        }
-//
-//        p = new Particle(500f, 130f);
-//        if(floorPlan.particleInside(p)){
-//            particleList.add(p);
-//        }
-//        else{
-//            Log.d("Particle Placement", "Out Of Bound!!");
-//        }
-//
-//
+
+        // Create the localization view and set it
         localizationView = new LocalizationView(this, floorPlan.getPath(), particleList);
-//        for(Particle pEntry : particleList){
-//            pEntry.updateLocation(70f,0f);
-//            if(floorPlan.particleCollision(pEntry)){
-//                pEntry.setCurrentLocation(pEntry.getPreviousLocation());
-//                Log.d("Particle Collision", "Collision detected!!");
-//            }
-//        }
         setContentView(localizationView);
+
+        initSensors();
     }
 
+    /**
+     * Initialise the sensors
+     */
+    public void initSensors(){
+        sm =(SensorManager)getSystemService(SENSOR_SERVICE);
+
+        accelerometer = new Accelerometer(sm);
+        magnetometer = new Magnetometer(sm);
+
+        accelerometer.attach(this);
+        magnetometer.attach(this);
+
+        accelerometer.register();
+        magnetometer.register();
+    }
+
+    /**
+     * Generate particles that are uniformly distributed over the map.
+     * @param numOfParticles that need to be generated
+     */
     public void generateParticles(int numOfParticles){
         int i = 0;
         int height = floorPlan.getHeight();
@@ -127,7 +126,24 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
     }
 
     public void update() {
-        particleList.get(0).updateLocation(particleList.get(0).getCurrentLocation().getX()+5, particleList.get(0).getCurrentLocation().getY()+5);
+        particleList.get(0).updateLocation(particleList.get(0).getCurrentLocation().getX() + 5, particleList.get(0).getCurrentLocation().getY() + 5);
         localizationView.setParticles(particleList);
+
+        calculateOrientation();
+    }
+
+    public float[] calculateOrientation(){
+
+        float[] orientation = {0f,0f,0f};
+        float[] R = {0f,0f,0f,0f,0f,0f,0f,0f,0f};
+        float[] I = {0f,0f,0f,0f,0f,0f,0f,0f,0f};
+        float[] gravity = {Accelerometer.getX(),Accelerometer.getY(), Accelerometer.getZ()};
+        float[] geomagnetic = {Magnetometer.getAzimuth(), Magnetometer.getPitch(), Magnetometer.getRoll()};
+
+        SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
+        SensorManager.getOrientation(R, orientation);
+        Log.d("LocalizationActivity - ", "Orientation = " + orientation.toString());
+
+        return orientation;
     }
 }
