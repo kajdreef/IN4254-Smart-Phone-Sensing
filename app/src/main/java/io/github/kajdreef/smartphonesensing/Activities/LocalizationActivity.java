@@ -26,8 +26,11 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
     private FloorPlan floorPlan;
     private ArrayList<Particle> particleList;
     private LocalizationView localizationView;
-    private AbstractSensor accelerometer, magnetometer;
+    private Accelerometer accelerometer;
+    private Magnetometer magnetometer;
     private SensorManager sm;
+
+    private float[] orientation = {0f,0f,0f};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +100,6 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         super.onPause();
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -129,21 +131,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         particleList.get(0).updateLocation(particleList.get(0).getCurrentLocation().getX() + 5, particleList.get(0).getCurrentLocation().getY() + 5);
         localizationView.setParticles(particleList);
 
-        calculateOrientation();
+        orientation = magnetometer.calculateOrientation(accelerometer.getGravity());
     }
 
-    public float[] calculateOrientation(){
-
-        float[] orientation = {0f,0f,0f};
-        float[] R = {0f,0f,0f,0f,0f,0f,0f,0f,0f};
-        float[] I = {0f,0f,0f,0f,0f,0f,0f,0f,0f};
-        float[] gravity = {Accelerometer.getX(),Accelerometer.getY(), Accelerometer.getZ()};
-        float[] geomagnetic = {Magnetometer.getAzimuth(), Magnetometer.getPitch(), Magnetometer.getRoll()};
-
-        SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
-        SensorManager.getOrientation(R, orientation);
-        Log.d("LocalizationActivity - ", "Orientation = " + orientation.toString());
-
-        return orientation;
-    }
 }

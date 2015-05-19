@@ -48,7 +48,7 @@ public class FloorPlan {
     public FloorPlan(){
         wallPath = new Path();
 
-        // Add the walls to the path
+        // Add the walls to the path (used to draw the path)
         wallPath.moveTo(A.getX(), A.getY());
         wallPath.lineTo(B.getX(), B.getY());
         wallPath.lineTo(C.getX(), C.getY());
@@ -84,6 +84,7 @@ public class FloorPlan {
         floorRegion.setPath(wallPath, new Region((int) rectF.left, (int) rectF.top, (int) rectF.right, (int) rectF.bottom));
         allWalls = new ArrayList<>();
 
+        // Used for collision detection!
         addWall(A, B);
         addWall(B, C);
         addWall(C, D);
