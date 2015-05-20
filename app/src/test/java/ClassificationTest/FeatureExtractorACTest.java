@@ -7,7 +7,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
-
 public class FeatureExtractorACTest {
     private FeatureExtractorAC extractorAC;
 
@@ -17,7 +16,7 @@ public class FeatureExtractorACTest {
     }
 
     @Test
-    public void testFeatureMean(){
+    public void testFeatureAC(){
         ArrayList<Float> x = new ArrayList<>();
         ArrayList<Float> y = new ArrayList<>();
         ArrayList<Float> z = new ArrayList<>();
@@ -29,6 +28,6 @@ public class FeatureExtractorACTest {
         //Not sure how to actually test this, but it seemed correct in the debug..
         //assertEquals(???, extractorAC.extractFeatures(x, y, z).getData());
 
-        Assert.assertEquals(-1.2710112, extractorAC.extractFeatures(x, y, z).getData().get(0), 0.001);
+        Assert.assertEquals(0.759899, extractorAC.extractFeatures(x, y, z).getData().get(0), 0.001);
     }
 }

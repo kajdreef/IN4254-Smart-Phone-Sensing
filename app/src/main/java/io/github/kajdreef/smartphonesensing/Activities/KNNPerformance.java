@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorFFT;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMag;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMean;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
@@ -30,7 +32,7 @@ public class KNNPerformance extends ActionBarActivity {
 
     KNN knn;
     final int k = 5;
-    final int WINDOW_SIZE = 100;
+    final int WINDOW_SIZE = 200;
 
     ArrayList<Float> x;
     ArrayList<Float> y;
@@ -57,6 +59,7 @@ public class KNNPerformance extends ActionBarActivity {
 
         ArrayList<FeatureExtractor> extractors = new ArrayList<>();
 
+/*
         // Check the performance of Feature Mean
         extractors.add(new FeatureExtractorMean());
         result = performance(extractors);
@@ -75,6 +78,12 @@ public class KNNPerformance extends ActionBarActivity {
         Log.d("Performance of AC: ", "" + result);
         extractors.clear();
 
+        // Check the performance of Feature Fourier Transform
+        extractors.add(new FeatureExtractorFFT());
+        result = performance(extractors);
+        Log.d("Performance of FFT: ", "" + result);
+        extractors.clear();
+
         // Check the performance of Feature Mean
         extractors.add(new FeatureExtractorMean());
         result = performanceLeaveOneOut(extractors);
@@ -91,6 +100,24 @@ public class KNNPerformance extends ActionBarActivity {
         extractors.add(new FeatureExtractorAC());
         result = performanceLeaveOneOut(extractors);
         Log.d("LOO of AC: ", "" + result);
+        extractors.clear();
+
+        // Check the performance of Feature Fourier Transform
+        extractors.add(new FeatureExtractorFFT());
+        result = performanceLeaveOneOut(extractors);
+        Log.d("LOO of FFT: ", "" + result);
+        extractors.clear();
+*/
+
+        // Check the performance of All features
+        extractors.add(new FeatureExtractorSD());
+        extractors.add(new FeatureExtractorMag());
+        extractors.add(new FeatureExtractorAC());
+        extractors.add(new FeatureExtractorFFT());
+        result = performanceLeaveOneOut(extractors);
+        Log.d("LOO of All: ", "" + result);
+        extractors.clear();
+
     }
 
     public float performanceLeaveOneOut(ArrayList<FeatureExtractor> extractor){

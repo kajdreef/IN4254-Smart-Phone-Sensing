@@ -9,6 +9,9 @@ import java.util.Random;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorFFT;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMag;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
@@ -28,20 +31,23 @@ public class ClassificationTest {
         ArrayList<Float> x = new ArrayList<>();
         ArrayList<Float> y = new ArrayList<>();
         ArrayList<Float> z = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1000; i++) {
             labels.add(ActivityType.QUEUE);
-            x.add((float) 1+i/300);
-            y.add((float) 1-i/200);
-            z.add((float) 1+i/1000);
-        }
-        for (int i = 0; i < 10; i++) {
-            labels.add(ActivityType.WALK);
             x.add(new Random().nextFloat());
             y.add(new Random().nextFloat());
             z.add(new Random().nextFloat());
         }
+        for (int i = 0; i < 1000; i++) {
+            labels.add(ActivityType.WALK);
+            x.add(new Random().nextFloat()/5 + (float)Math.sin(i*2*Math.PI/50));
+            y.add(new Random().nextFloat()/5);
+            z.add(new Random().nextFloat()/5);
+        }
         ArrayList<FeatureExtractor> extractors = new ArrayList<>();
+        extractors.add(new FeatureExtractorFFT());
         extractors.add(new FeatureExtractorSD());
+        extractors.add(new FeatureExtractorMag());
+        extractors.add(new FeatureExtractorAC());
         ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels,x,y,z,extractors,step);
         knn = new KNN(5,train);
     }
@@ -53,25 +59,26 @@ public class ClassificationTest {
         ArrayList<Float> x = new ArrayList<>();
         ArrayList<Float> y = new ArrayList<>();
         ArrayList<Float> z = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1000; i++) {
             labels.add(ActivityType.QUEUE);
-            x.add((float) 1+i/1000);
-            y.add((float) 1+i/300);
-            z.add((float) 1-i/500);
-        }
-
-        for (int i = 0; i < 10; i++) {
-            labels.add(ActivityType.WALK);
             x.add(new Random().nextFloat());
             y.add(new Random().nextFloat());
             z.add(new Random().nextFloat());
         }
+
+        for (int i = 0; i < 1000; i++) {
+            labels.add(ActivityType.WALK);
+            x.add(new Random().nextFloat()/5+(float)Math.sin(i*2*Math.PI/50));
+            y.add(new Random().nextFloat()/5);
+            z.add(new Random().nextFloat()/5);
+        }
         ArrayList<FeatureExtractor> extractors = new ArrayList<>();
+        extractors.add(new FeatureExtractorFFT());
         extractors.add(new FeatureExtractorSD());
+        extractors.add(new FeatureExtractorMag());
+        extractors.add(new FeatureExtractorAC());
         ArrayList<LabeledFeatureSet> test = FeatureExtractor.generateDataSet(labels,x,y,z,extractors,step);
         float correct = knn.test(test);
-
-        System.out.println(Float.toString(correct));
         Assert.assertTrue(correct > (float) 0.5);
     }
 }

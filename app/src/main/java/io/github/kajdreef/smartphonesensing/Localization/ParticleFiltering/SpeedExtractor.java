@@ -1,13 +1,20 @@
-package io.github.kajdreef.smartphonesensing.Classification;
+package io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering;
 
 import java.util.ArrayList;
 
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMean;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
 
-public class FeatureExtractorAC extends FeatureExtractor {
-
-    @Override
-    public FeatureSet extractFeatures(ArrayList<Float> x,ArrayList<Float> y,ArrayList<Float> z){
+/**
+ * Created by Uncle John on 15/05/2015.
+ */
+public class SpeedExtractor {
+    public static final int INDEX_FROM = 40;
+    public static final float STEP_DISTANCE = (float)0.8;
+    public static final float dt = (float)0.005;
+    public static float calculateSpeed(ArrayList<Float> x,ArrayList<Float> y,ArrayList<Float> z){
         ArrayList<Float> magnitude = new ArrayList<>(x.size());
 
         for (int i = 0;i<x.size();i++){
@@ -19,12 +26,13 @@ public class FeatureExtractorAC extends FeatureExtractor {
         for (int i = 0; i < magnitude.size(); i++) {
             out.add((float)0);
         }
-        for (int i = 0; i < out.size(); i++) {
+        for (int i = 0; i < out.size()-1; i++) {
             for (int j = 0; j < magnitude.size()-i; j++) {
                 out.set(i,out.get(i)+(magnitude.get(j)-mean)*(magnitude.get(i+j)-mean));
             }
             out.set(i,out.get(i)/(magnitude.size()-i)/sigma/sigma);
         }
-        return new FeatureSet(ArrayOperations.standardDeviation(out));
+        int maxIndex = ArrayOperations.indexFirstMaximumFrom(INDEX_FROM,out);
+        return STEP_DISTANCE/(maxIndex*dt);
     }
 }
