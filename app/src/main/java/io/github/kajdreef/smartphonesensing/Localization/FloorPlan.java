@@ -3,10 +3,8 @@ package io.github.kajdreef.smartphonesensing.Localization;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.Region;
-import android.util.Log;
-import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.Utils.LineIntersect;
+import java.util.ArrayList;
 
 /**
  * Created by kajdreef on 15/05/15.

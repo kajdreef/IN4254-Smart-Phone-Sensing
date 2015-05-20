@@ -67,4 +67,9 @@ public class ParticleFilter {
                     particleSave.get(index).getCurrentLocation().getY()));
         }
     }
+
+    public ArrayList<Particle> getParticles() {
+        return particles;
+    }
+
 }

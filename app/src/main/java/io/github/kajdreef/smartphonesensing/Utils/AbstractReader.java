@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 
 /**
  * Created by kajdreef on 01/05/15.
@@ -18,7 +18,7 @@ public abstract class AbstractReader {
     protected String fileName;
     protected DataInputStream fInpStream = null;
 
-    protected ArrayList<ActivityType> allStates;
+    protected ArrayList<Type> allStates;
     protected ArrayList<Float> allX;
     protected ArrayList<Float> allY;
     protected ArrayList<Float> allZ;
@@ -61,7 +61,7 @@ public abstract class AbstractReader {
         return result;
     }
 
-    public void readAll(){
+    public void readAccelerometerData(){
         String str = "";
         String[] split;
         try {
@@ -71,7 +71,7 @@ public abstract class AbstractReader {
                     return;
                 }
                 split = str.split(" ");
-                allStates.add(ActivityType.fromString(split[1]));               // Label
+                allStates.add(Type.fromString(split[1]));               // Label
                 allX.add(Float.parseFloat(split[2]));                           // X
                 allY.add(Float.parseFloat(split[3]));                           // Y
                 allZ.add(Float.parseFloat(split[4]));                           // Z
@@ -80,6 +80,25 @@ public abstract class AbstractReader {
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Float> readMagnetometerData(){
+        String str = "";
+        String[] split;
+        ArrayList<Float> data = new ArrayList<>();
+        try {
+            while(this.available()) {
+                str = fInpStream.readLine();
+                if (str == null) {
+                    return null;
+                }
+                split = str.split(" ");
+                data.add(Float.parseFloat(split[0]));                           // Magnetometer data
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return data;
     }
 
     public int size(){
@@ -106,12 +125,12 @@ public abstract class AbstractReader {
         allZ.clear();
     }
 
-    public ArrayList<ActivityType> getAllStates(){ return allStates;}
+    public ArrayList<Type> getAllStates(){ return allStates;}
     public ArrayList<Float> getAllX(){return allX;}
     public ArrayList<Float> getAllY(){return allY;}
     public ArrayList<Float> getAllZ(){return allZ;}
 
-    public List<ActivityType> getSubListStates(int windowSize){
+    public List<Type> getSubListStates(int windowSize){
         int size = allStates.size();
         return allStates.subList(size-windowSize,size);
     }

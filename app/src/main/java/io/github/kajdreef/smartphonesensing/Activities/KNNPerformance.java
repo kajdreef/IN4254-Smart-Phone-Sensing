@@ -9,12 +9,11 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorFFT;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMag;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMean;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
@@ -37,7 +36,7 @@ public class KNNPerformance extends ActionBarActivity {
     ArrayList<Float> x;
     ArrayList<Float> y;
     ArrayList<Float> z;
-    ArrayList<ActivityType> labels;
+    ArrayList<Type> labels;
 
     AbstractReader trainReader;
     AbstractReader validationReader;
@@ -122,7 +121,7 @@ public class KNNPerformance extends ActionBarActivity {
 
     public float performanceLeaveOneOut(ArrayList<FeatureExtractor> extractor){
         // Get all data fromt the accelerometerData.txt
-        trainReader.readAll();
+        trainReader.readAccelerometerData();
         if(trainReader.size() >= WINDOW_SIZE) {
             x = trainReader.getAllX();
             y = trainReader.getAllY();
@@ -140,7 +139,7 @@ public class KNNPerformance extends ActionBarActivity {
 
     public float performance(ArrayList<FeatureExtractor> extractor){
         // Get all data fromt the accelerometerData.txt
-        trainReader.readAll();
+        trainReader.readAccelerometerData();
         if(trainReader.size() >= WINDOW_SIZE) {
             x = trainReader.getAllX();
             y = trainReader.getAllY();
@@ -154,7 +153,7 @@ public class KNNPerformance extends ActionBarActivity {
 
 
         // Read validation saved data from the accelerometer
-        validationReader.readAll();
+        validationReader.readAccelerometerData();
         if(validationReader.size() >= WINDOW_SIZE) {
             x = validationReader.getAllX();
             y = validationReader.getAllY();

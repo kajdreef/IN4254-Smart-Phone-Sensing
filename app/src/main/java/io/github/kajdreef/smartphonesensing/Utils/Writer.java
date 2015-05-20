@@ -10,7 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 
 /**
  * Created by kajdreef on 23/04/15.
@@ -39,12 +39,33 @@ public class Writer {
         }
     }
 
-    public void appendData(float x, float y, float z,  ActivityType state) {
+    /**
+     * Used to write data for the accelerometer
+     * @param x
+     * @param y
+     * @param z
+     * @param state
+     */
+    public void appendData(float x, float y, float z,  Type state) {
         try{
             date = new Date();
             long delta = date.getTime() - startTime.getTime();
 
             fOutStream.write((delta + " " + state.toString() + " " + x + " " + y + " " + z + "\n").getBytes());
+            //Log.d("Writer", delta + " "+ state.toString() + " " + x + " " + y + " " + z + "\n");
+            fOutStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Can be used to write everything in string form to a file.
+     * @param msg
+     */
+    public void appendString(String msg){
+        try{
+            fOutStream.write((msg + "\n").getBytes());
             //Log.d("Writer", delta + " "+ state.toString() + " " + x + " " + y + " " + z + "\n");
             fOutStream.flush();
         } catch (IOException e) {
