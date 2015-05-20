@@ -41,7 +41,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         particleList = new ArrayList<>();
 
         // Generate x amount of particles
-        generateParticles(10000);
+        generateParticles(1000);
 
         // Create the localization view and set it
         localizationView = new LocalizationView(this, floorPlan.getPath(), particleList);
@@ -78,7 +78,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         while(i < numOfParticles){
             Particle p = new Particle((float)(Math.random() * width), (float)(Math.random()* height));
             if(floorPlan.particleInside(p)){
-                Log.d("Particle Location: " ,p.getCurrentLocation().getX() + ", " + p.getCurrentLocation().getY());
+                //Log.d("Particle Location: " ,p.getCurrentLocation().getX() + ", " + p.getCurrentLocation().getY());
                 particleList.add(p);
                 i++;
             }

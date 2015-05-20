@@ -26,6 +26,7 @@ public class Writer {
 
     public Writer(String fileName){
         file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), fileName);
+        file.setReadable(true);
 
         this.date = new Date();
         this.startTime = new Date();
@@ -38,13 +39,13 @@ public class Writer {
         }
     }
 
-    public void appendData(double x, double y, double z,  ActivityType state) {
+    public void appendData(float x, float y, float z,  ActivityType state) {
         try{
             date = new Date();
             long delta = date.getTime() - startTime.getTime();
 
             fOutStream.write((delta + " " + state.toString() + " " + x + " " + y + " " + z + "\n").getBytes());
-            Log.d("Writer", delta + " "+ state.toString() + " " + x + " " + y + " " + z + "\n");
+            //Log.d("Writer", delta + " "+ state.toString() + " " + x + " " + y + " " + z + "\n");
             fOutStream.flush();
         } catch (IOException e) {
             e.printStackTrace();

@@ -33,6 +33,7 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
 
         am = new ActivityMonitoring(this);
         accelerometer = new Accelerometer(sm);
+        // Add observer
         accelerometer.attach(am);
         accelerometer.attach(this);
         accelerometer.register();
