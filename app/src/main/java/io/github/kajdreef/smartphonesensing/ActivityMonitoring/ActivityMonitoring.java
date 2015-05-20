@@ -6,11 +6,7 @@ import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
-<<<<<<< HEAD
-=======
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorFFT;
->>>>>>> 0e5a43ea8f53941c23dc342671dc66afa973dda4
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMag;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
