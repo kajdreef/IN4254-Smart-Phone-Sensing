@@ -1,5 +1,6 @@
 package io.github.kajdreef.smartphonesensing.Activities;
 
+import android.content.pm.ActivityInfo;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -13,8 +14,8 @@ import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
+import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.R;
-import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
 
@@ -30,7 +31,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
     private Magnetometer magnetometer;
     private SensorManager sm;
 
-    private float[] orientation = {0f,0f,0f};
+    private float orientationAngle = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +42,17 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         particleList = new ArrayList<>();
 
         // Generate x amount of particles
-        //ParticleFilter pf = new ParticleFilter(1000,floorPlan);
+        ParticleFilter pf = new ParticleFilter(1000,floorPlan);
+
+        // Initialise Sensors;
+        initSensors();
+
         // Create the localization view and set it
         localizationView = new LocalizationView(this, floorPlan.getPath(), particleList);
-        setContentView(localizationView);
 
-        initSensors();
+        // set contentview to localizationview  with screen orientation in landscape.
+        setContentView(localizationView);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     /**
@@ -111,7 +117,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         particleList.get(0).updateLocation(particleList.get(0).getCurrentLocation().getX() + 5, particleList.get(0).getCurrentLocation().getY() + 5);
         localizationView.setParticles(particleList);
 
-        orientation = magnetometer.calculateOrientation(accelerometer.getGravity());
+        orientationAngle = magnetometer.calulateAngle(accelerometer.getGravity());
     }
 
 }
