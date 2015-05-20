@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor.FeatureExtractorSD;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 
 
 public class FeatureExtractorSDTest {

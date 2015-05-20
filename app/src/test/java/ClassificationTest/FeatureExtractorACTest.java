@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor.FeatureExtractorAC;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
 
 public class FeatureExtractorACTest {
     private FeatureExtractorAC extractorAC;

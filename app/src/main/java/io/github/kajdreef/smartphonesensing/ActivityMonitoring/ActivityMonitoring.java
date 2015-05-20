@@ -5,9 +5,9 @@ import android.content.Context;
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor.FeatureExtractor;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor.FeatureExtractorMag;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor.FeatureExtractorSD;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMag;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;

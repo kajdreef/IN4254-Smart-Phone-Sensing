@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor.FeatureExtractorMean;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMean;
 
 
 public class FeatureExtractorMeanTest {
