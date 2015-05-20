@@ -1,7 +1,5 @@
 package ClassificationTest;
 
-import android.test.ActivityTestCase;
-
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -9,7 +7,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor.FeatureExtractorSD;
 
 
 public class FeatureExtractorSDTest {

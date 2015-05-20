@@ -1,9 +1,10 @@
-package io.github.kajdreef.smartphonesensing.Classification;
+package io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
+import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
 
 public abstract class FeatureExtractor {
     public abstract FeatureSet extractFeatures(ArrayList<Float> x,ArrayList<Float> y,ArrayList<Float> z);

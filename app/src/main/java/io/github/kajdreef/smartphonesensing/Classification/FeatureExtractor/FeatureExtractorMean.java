@@ -1,7 +1,8 @@
-package io.github.kajdreef.smartphonesensing.Classification;
+package io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
 
 import java.util.ArrayList;
 
+import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
 
 public class FeatureExtractorMean extends FeatureExtractor {

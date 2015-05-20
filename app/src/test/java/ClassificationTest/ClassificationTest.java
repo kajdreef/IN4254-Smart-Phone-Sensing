@@ -8,13 +8,11 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor.FeatureExtractor;
+import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
-import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
-import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
 
 
 public class ClassificationTest {
