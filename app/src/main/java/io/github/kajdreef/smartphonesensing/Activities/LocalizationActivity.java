@@ -1,5 +1,6 @@
 package io.github.kajdreef.smartphonesensing.Activities;
 
+import android.content.pm.ActivityInfo;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -43,11 +44,15 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         // Generate x amount of particles
         generateParticles(1000);
 
+        // Initialise Sensors;
+        initSensors();
+
         // Create the localization view and set it
         localizationView = new LocalizationView(this, floorPlan.getPath(), particleList);
-        setContentView(localizationView);
 
-        initSensors();
+        // set contentview to localizationview  with screen orientation in landscape.
+        setContentView(localizationView);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     /**
