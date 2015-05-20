@@ -30,7 +30,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
     private Magnetometer magnetometer;
     private SensorManager sm;
 
-    private float[] orientation = {0f,0f,0f};
+    private float orientationAngle = 0f;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +131,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         particleList.get(0).updateLocation(particleList.get(0).getCurrentLocation().getX() + 5, particleList.get(0).getCurrentLocation().getY() + 5);
         localizationView.setParticles(particleList);
 
-        orientation = magnetometer.calculateOrientation(accelerometer.getGravity());
+        orientationAngle = magnetometer.calulateAngle(accelerometer.getGravity());
     }
 
 }

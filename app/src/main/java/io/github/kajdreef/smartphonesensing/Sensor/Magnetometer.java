@@ -13,8 +13,9 @@ import io.github.kajdreef.smartphonesensing.Utils.Writer;
 */
 public class Magnetometer extends AbstractSensor{
 
-    private float[] geomagnetic = {0f,0f,0f};
     private Writer wr;
+    private float[] m_rotationMatrix = new float[16];
+    float[] geomagnetic = new float[3];
 
     public Magnetometer(SensorManager sm){
         super(sm);
@@ -42,16 +43,22 @@ public class Magnetometer extends AbstractSensor{
         return geomagnetic;
     }
 
-    public float[] calculateOrientation(float[] gravity){
+    /**
+     * Calculate the angle between the North and the direction you are going
+     * @param gravity
+     * @return yaw (in degrees)
+     */
+    public float calulateAngle(float[] gravity){
 
         float[] orientation = {0f,0f,0f};
-        float[] R = {0f,0f,0f,0f,0f,0f,0f,0f,0f};
-        float[] I = {0f,0f,0f,0f,0f,0f,0f,0f,0f};
 
-        SensorManager.getRotationMatrix(R, I, gravity, geomagnetic);
-        SensorManager.getOrientation(R, orientation);
-        Log.d("Magnetometer - ", "Orientation = " + orientation[0]+ ", " + orientation[1] + ", " + orientation[2]);
+        SensorManager.getRotationMatrix(m_rotationMatrix, null, gravity, geomagnetic);
+        SensorManager.getOrientation(m_rotationMatrix, orientation);
 
-        return orientation;
+        float yaw = (float) (Math.toDegrees(orientation[0]));
+
+        Log.d("Magnetometer - ", "Yaw = " + yaw );
+
+        return yaw;
     }
 }
