@@ -41,8 +41,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         particleList = new ArrayList<>();
 
         // Generate x amount of particles
-        generateParticles(1000);
-
+        //ParticleFilter pf = new ParticleFilter(1000,floorPlan);
         // Create the localization view and set it
         localizationView = new LocalizationView(this, floorPlan.getPath(), particleList);
         setContentView(localizationView);
@@ -64,25 +63,6 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
 
         accelerometer.register();
         magnetometer.register();
-    }
-
-    /**
-     * Generate particles that are uniformly distributed over the map.
-     * @param numOfParticles that need to be generated
-     */
-    public void generateParticles(int numOfParticles){
-        int i = 0;
-        int height = floorPlan.getHeight();
-        int width = floorPlan.getWidth();
-
-        while(i < numOfParticles){
-            Particle p = new Particle((float)(Math.random() * width), (float)(Math.random()* height));
-            if(floorPlan.particleInside(p)){
-                //Log.d("Particle Location: " ,p.getCurrentLocation().getX() + ", " + p.getCurrentLocation().getY());
-                particleList.add(p);
-                i++;
-            }
-        }
     }
 
     @Override
