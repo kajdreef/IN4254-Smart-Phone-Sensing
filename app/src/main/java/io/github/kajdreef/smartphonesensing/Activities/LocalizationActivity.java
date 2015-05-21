@@ -124,6 +124,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
             lm.update();
 
             localizationView.setParticles(lm.getParticles());
+            localizationView.invalidate();
             amountOfNewSamples = 0;
         }
     }
