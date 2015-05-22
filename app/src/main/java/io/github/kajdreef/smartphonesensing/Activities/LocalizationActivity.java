@@ -43,7 +43,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
 
         // Generate x amount of particles
         ParticleFilter pf = new ParticleFilter(1000,floorPlan);
-
+        particleList = pf.getParticles();
         // Initialise Sensors;
         initSensors();
 
