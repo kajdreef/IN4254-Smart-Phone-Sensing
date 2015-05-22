@@ -2,14 +2,14 @@ package io.github.kajdreef.smartphonesensing.Classification;
 
 import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 
 public abstract class FeatureExtractor {
     public abstract FeatureSet extractFeatures(ArrayList<Float> x,ArrayList<Float> y,ArrayList<Float> z);
-    public LabeledFeatureSet addLabel(FeatureSet f, ActivityType l){
+    public LabeledFeatureSet addLabel(FeatureSet f, Type l){
         return new LabeledFeatureSet(f,l);
     }
-    public static ArrayList<LabeledFeatureSet> generateDataSet(ArrayList<ActivityType> labels,
+    public static ArrayList<LabeledFeatureSet> generateDataSet(ArrayList<Type> labels,
                                                                ArrayList<Float> x,
                                                                ArrayList<Float> y,
                                                                ArrayList<Float> z,

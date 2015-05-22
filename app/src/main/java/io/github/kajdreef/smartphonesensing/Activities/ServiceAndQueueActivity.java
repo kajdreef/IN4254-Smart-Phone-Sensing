@@ -11,10 +11,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
 import io.github.kajdreef.smartphonesensing.R;
 
@@ -26,11 +27,15 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
     ActivityMonitoring am;
     SensorManager sm;
     AbstractSensor accelerometer;
+    public static final int WINDOW_SIZE = 150;
+    private int amountOfNewSamples = 0;
 
-    float WINDOW_TIME = (float)ActivityMonitoring.WINDOW_SIZE/200;
+    float WINDOW_TIME = WINDOW_SIZE/200;
 
     float serviceTime;
     float queueTime;
+
+    ActivityType activityList;
 
     // Button for on the screen;
     Button start, stop;
@@ -41,7 +46,6 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
 
         // Start accelerometer and attacht this Activity as Observer
         accelerometer = new Accelerometer(sm);
-        accelerometer.attach(am);
         accelerometer.attach(this);
 
         // Create walk button, when clicked on the button state will change state to WALK.
@@ -59,33 +63,33 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
         stop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 accelerometer.unregister();
-                calculateSQTime(am.getActivityList());
+                calculateSQTime(activityList.getTypeList());
                 update();
             }
         });
     }
 
-    public void calculateSQTime(ArrayList<ActivityType> activityList){
+    public void calculateSQTime(ArrayList<Type> activityList){
         float time = 0;
         float result = 0;
         // amount of moving forward steps during the queue.
         int steps = 0;
-        ActivityType previous = ActivityType.NONE;
-        for(ActivityType at : activityList) {
+        Type previous = Type.NONE;
+        for(Type at : activityList) {
             // As long as time is lower than 10.0f we can still be in the queue.
             if (time < 10.0f){
-                if (at == ActivityType.QUEUE) {
+                if (at == Type.QUEUE) {
                     // Update the total queuing time
                     result+= WINDOW_TIME;
                     time = 0;
-                    previous = ActivityType.QUEUE;
+                    previous = Type.QUEUE;
                 } else if(result > 0){
                     // update the walking time if bigger than 10 seconds than we are out of the queue.
                     time += WINDOW_TIME;
                     // Check if the previous one was NOT walk so it can be seen as 1 step.
-                    if(previous != ActivityType.WALK)
+                    if(previous != Type.WALK)
                         steps++;
-                    previous = ActivityType.WALK;
+                    previous = Type.WALK;
                 }
             }
             else
@@ -102,6 +106,7 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
         setContentView(R.layout.service_queue_menu);
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 
+        activityList = ActivityType.getInstance();
         initAccelerometerAndButtons();
     }
 
@@ -152,6 +157,14 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
 
     @Override
     public void update(){
+        amountOfNewSamples++;
+        if(amountOfNewSamples > WINDOW_SIZE){
+            // First update am so the new speed and activity is available
+            am.update();
+
+            amountOfNewSamples = 0;
+        }
+
         TextView stateText = (TextView) this.findViewById(R.id.stateData);
         stateText.setText(am.getActivity().toString());
 

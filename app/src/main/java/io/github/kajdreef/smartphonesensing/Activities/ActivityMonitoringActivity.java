@@ -22,8 +22,8 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
     SensorManager sm;
     AbstractSensor accelerometer;
     public static final String SENSOR_DATA_FILE = "accelerometerData.txt";
-
-
+    public static final int WINDOW_SIZE = 150;
+    private int amountOfNewSamples = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +33,7 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
 
         am = new ActivityMonitoring(this);
         accelerometer = new Accelerometer(sm);
-        // Add observer
-        accelerometer.attach(am);
+
         accelerometer.attach(this);
         accelerometer.register();
     }
@@ -84,8 +83,14 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
         accelerometer.unregister();
     }
 
-    @Override
-    public void update(){
+    public void update() {
+        amountOfNewSamples++;
+        if(amountOfNewSamples > WINDOW_SIZE){
+            // First update am so the new speed and activity is available
+            am.update();
+
+            amountOfNewSamples = 0;
+        }
         TextView t = (TextView) this.findViewById(R.id.textView2);
         t.setText(am.getActivity().toString() +" "+ Float.toString(am.getSpeed())+ "m/s");
     }

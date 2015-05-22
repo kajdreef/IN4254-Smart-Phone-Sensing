@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
 
 public class KNN extends Classifier {
@@ -41,23 +41,23 @@ public class KNN extends Classifier {
     }
 
     @Override
-    public ActivityType classify(FeatureSet inputData) {
+    public Type classify(FeatureSet inputData) {
         //Construct mapping of distances to inputData
-        TreeMap<Float,ArrayList<ActivityType>> distanceMapping = new TreeMap<>();
+        TreeMap<Float,ArrayList<Type>> distanceMapping = new TreeMap<>();
         for(LabeledFeatureSet known : this.data){
                 float d = mahaDistance(inputData, known);
             if(!distanceMapping.containsKey(d)){
-                distanceMapping.put(d, new ArrayList<ActivityType>());
+                distanceMapping.put(d, new ArrayList<Type>());
             }
             distanceMapping.get(d).add(known.getLabel());
         }
         //Find K closest labels to inputData, and count how many times each label is present
-        List<ActivityType> kClosestLabels = new ArrayList<>();
+        List<Type> kClosestLabels = new ArrayList<>();
         List<Integer> count = new ArrayList<>();
         int neighbor = 0;
         while (neighbor < k) {
-            ArrayList<ActivityType> labelListAtDistance = distanceMapping.pollFirstEntry().getValue();
-            for (ActivityType label : labelListAtDistance) {
+            ArrayList<Type> labelListAtDistance = distanceMapping.pollFirstEntry().getValue();
+            for (Type label : labelListAtDistance) {
                 if (kClosestLabels.contains(label)) {
                     int index = kClosestLabels.indexOf(label);
                     count.set(index, count.get(index) + 1);
