@@ -5,7 +5,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 
 import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Utils.Writer;
 
 
@@ -18,14 +18,14 @@ import io.github.kajdreef.smartphonesensing.Utils.Writer;
 public class Accelerometer extends AbstractSensor {
 
     private Writer wr;
-    private static ActivityType state = ActivityType.NONE;
+    private static Type state = Type.NONE;
     private float[] gravity = {0f,0f,0f};
 
-    public static void setState(ActivityType newState){
+    public static void setState(Type newState){
         Accelerometer.state = newState;
     }
 
-    public static ActivityType getState(){
+    public static Type getState(){
         return Accelerometer.state;
     }
 

@@ -1,10 +1,9 @@
 package io.github.kajdreef.smartphonesensing.Classification;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 
 /**
  * Created by Uncle John on 26/04/2015.
@@ -12,7 +11,7 @@ import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 public abstract class Classifier {
 
     public abstract void addTrainingData(List<LabeledFeatureSet> trainingDataSet);
-    public abstract ActivityType classify(FeatureSet inputData);
+    public abstract Type classify(FeatureSet inputData);
     public abstract void clearTrainingData();
     public abstract List<LabeledFeatureSet> getAllTrainingData();
 
@@ -20,8 +19,8 @@ public abstract class Classifier {
         clearTrainingData();
         addTrainingData(trainingDataSet);
     }
-    public List<ActivityType> classifyList(List<FeatureSet> inputList) {
-        List<ActivityType> labelList = new ArrayList<>();
+    public List<Type> classifyList(List<FeatureSet> inputList) {
+        List<Type> labelList = new ArrayList<>();
         for (FeatureSet set : inputList) {
             labelList.add(classify(set));
         }
@@ -30,14 +29,14 @@ public abstract class Classifier {
     public float test(List<LabeledFeatureSet> testDataSet) {
         int correct=0;
         for (LabeledFeatureSet featSet : testDataSet ){
-            ActivityType label = classify(featSet.getFeatureSet());
+            Type label = classify(featSet.getFeatureSet());
             if(label.equals(featSet.getLabel())){
                 correct++;
             }
         }
         return (float) correct/testDataSet.size();
     }
-    public static ArrayList<LabeledFeatureSet> extractLabeledData(ArrayList<LabeledFeatureSet> data, ActivityType a){
+    public static ArrayList<LabeledFeatureSet> extractLabeledData(ArrayList<LabeledFeatureSet> data, Type a){
         ArrayList<LabeledFeatureSet> out = new ArrayList<>();
         for(LabeledFeatureSet f : data){
             if (f.getLabel().equals(a)){
@@ -46,8 +45,8 @@ public abstract class Classifier {
         }
         return out;
     }
-    public  List<ActivityType> getLabelList(){
-        ArrayList<ActivityType> out = new ArrayList<>();
+    public  List<Type> getLabelList(){
+        ArrayList<Type> out = new ArrayList<>();
         for(LabeledFeatureSet f : getAllTrainingData()){
             if (!out.contains(f.getLabel())){
                 out.add(f.getLabel());

@@ -24,10 +24,9 @@ import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
  * Classify the data from the accelerometer to Walking/Queueing
  * with the help of kNN
  */
-public class ActivityMonitoring implements Observer {
-
-    private int amountOfNewSamples = 0;
-    private ArrayList<ActivityType> activityList;
+public class ActivityMonitoring {
+    // This instance keeps track of the activities performed
+    ActivityType activityList;
 
     // Readers
     private AbstractReader trainReader;
@@ -45,7 +44,7 @@ public class ActivityMonitoring implements Observer {
     ArrayList<Float> x;
     ArrayList<Float> y;
     ArrayList<Float> z;
-    ArrayList<ActivityType> labels;
+    ArrayList<Type> labels;
 
     //Try to estimate speed of walking
     private float speed;
@@ -61,10 +60,9 @@ public class ActivityMonitoring implements Observer {
      * Initialise kNN
      */
     public void initKNN(){
-        activityList = new ArrayList<>();
-
+        activityList = ActivityType.getInstance();
         // Get all data from the trainingData file in resources
-        trainReader.readAll();
+        trainReader.readAccelerometerData();
         if(trainReader.size() >= WINDOW_SIZE) {
             x = trainReader.getAllX();
             y = trainReader.getAllY();
@@ -85,48 +83,39 @@ public class ActivityMonitoring implements Observer {
         labels.clear();
     }
 
-    @Override
-    public void update(){
-        amountOfNewSamples++;
-        if(amountOfNewSamples > WINDOW_SIZE){
-
-            // Read the new data and return arraylists as big as the window size.
-            accelerometerReader.readAll();
-            x = new ArrayList<>(accelerometerReader.getSubListX(WINDOW_SIZE));
-            y = new ArrayList<>(accelerometerReader.getSubListY(WINDOW_SIZE));
-            z = new ArrayList<>(accelerometerReader.getSubListZ(WINDOW_SIZE));
-            labels = new ArrayList<>(accelerometerReader.getSubListStates(WINDOW_SIZE));
-            
-            // Extract features and classify them
-            FeatureSet fs = new FeatureSet();
-            for (FeatureExtractor ext : extractor) {
-                fs.addFeature(ext.extractFeatures(x, y, z));
-            }
-            ActivityType label = knn.classify(fs);
-            activityList.add(label);
-            if(label == ActivityType.WALK){
-                speed = SpeedExtractor.calculateSpeed(x,y,z);
-            }
-            else{
-                speed = 0;
-            }
-            amountOfNewSamples = 0;
-        }
-    }
-
     /**
      * Return the current Activity that the user is doing.
      * @return activity: Queueing, Walking, or None (to be determined activity)
      */
-    public ActivityType getActivity(){
+    public Type getActivity(){
         if(activityList.size() == 0){
-            return ActivityType.NONE;
+            return Type.NONE;
         }
-        return activityList.get(activityList.size() - 1);
+        return activityList.getType(activityList.size() - 1);
     }
 
-    public ArrayList<ActivityType> getActivityList(){
-        return this.activityList;
-    }
     public float getSpeed(){return this.speed;}
+
+    public void update(){
+        // Read the new data and return arraylists as big as the window size.
+        accelerometerReader.readAccelerometerData();
+        x = new ArrayList<>(accelerometerReader.getSubListX(WINDOW_SIZE));
+        y = new ArrayList<>(accelerometerReader.getSubListY(WINDOW_SIZE));
+        z = new ArrayList<>(accelerometerReader.getSubListZ(WINDOW_SIZE));
+        labels = new ArrayList<>(accelerometerReader.getSubListStates(WINDOW_SIZE));
+
+        // Extract features and classify them
+        FeatureSet fs = new FeatureSet();
+        for (FeatureExtractor ext : extractor) {
+            fs.addFeature(ext.extractFeatures(x, y, z));
+        }
+        Type label = knn.classify(fs);
+        activityList.addType(label);
+        if(label == Type.WALK){
+            activityList.addSpeed( SpeedExtractor.calculateSpeed(x,y,z) );
+        }
+        else{
+            speed = 0;
+        }
+    }
 }

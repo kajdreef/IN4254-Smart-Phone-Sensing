@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
@@ -40,7 +40,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
         walking = (Button) findViewById(R.id.walking);
         walking.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Accelerometer.setState(ActivityType.WALK);
+                Accelerometer.setState(Type.WALK);
                 if(initAccel) {
                     accelerometer.register();
                     initAccel = false;
@@ -48,7 +48,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
                 else{
                     accelerometer.unregister();
                     initAccel = true;
-                    Accelerometer.setState(ActivityType.NONE);
+                    Accelerometer.setState(Type.NONE);
                     update();
                 }
             }
@@ -58,7 +58,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
         queueing = (Button) findViewById(R.id.queueing);
         queueing.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Accelerometer.setState(ActivityType.QUEUE);
+                Accelerometer.setState(Type.QUEUE);
                 if(initAccel) {
                     accelerometer.register();
                     initAccel = false;
@@ -66,7 +66,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
                 else{
                     accelerometer.unregister();
                     initAccel = true;
-                    Accelerometer.setState(ActivityType.NONE);
+                    Accelerometer.setState(Type.NONE);
                     update();
                 }
             }
@@ -76,7 +76,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
 
     public void initReader(){
         read = new Reader(this, ActivityMonitoringActivity.SENSOR_DATA_FILE);
-        read.readAll();
+        read.readAccelerometerData();
     }
 
 

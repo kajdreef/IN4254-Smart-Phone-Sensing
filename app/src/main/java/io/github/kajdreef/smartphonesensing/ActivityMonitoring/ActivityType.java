@@ -1,53 +1,49 @@
 package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
 
+import java.util.ArrayList;
+
 /**
- * Created by kajdreef on 23/04/15.
+ * Created by kajdreef on 20/05/15.
  */
-public enum ActivityType {
-    NONE{
-        public ActivityType fromStringToType(String s){
-            if(NONE.toString().equals(s))
-                return ActivityType.NONE;
-            else
-                return null;
-        }
-    },
-    WALK{
-        public ActivityType fromStringToType(String s){
-            if(WALK.toString().equals(s))
-                return ActivityType.WALK;
-            else
-                return null;
-        }
-    },
-    QUEUE{
-        public ActivityType fromStringToType(String s){
-            if(QUEUE.toString().equals(s))
-                return ActivityType.QUEUE;
-            else
-                return null;
-        }
-    };
+public class ActivityType {
 
-    protected abstract ActivityType fromStringToType(String s);
+    private ArrayList<Type> activityList;
+    private ArrayList<Float> speedList;
 
-    public static ActivityType fromString(String s) {
-        ActivityType result = null;
-        for(ActivityType t : ActivityType.values()){
-            result = t.fromStringToType(s);
-            if(result != null){
-                return result;
-            }
-        }
-        return result;
+    private static ActivityType singleton = null;
+
+    private void ImplActivityType(){
+        this.activityList = new ArrayList<>();
     }
 
-    public static ActivityType fromInt(int num) {
-        for(ActivityType t : ActivityType.values()){
-            if(t.ordinal() == num) {
-                return t;
-            }
+    public static ActivityType getInstance(){
+        if (singleton == null){
+            singleton = new ActivityType();
         }
-        return ActivityType.NONE;
+        return singleton;
+    }
+
+    public int size(){
+        return activityList.size();
+    }
+
+    public void addType(Type label){
+        activityList.add(label);
+    }
+
+    public Type getType(int index){
+        return activityList.get(index);
+    }
+
+    public ArrayList<Type> getTypeList(){
+        return activityList;
+    }
+
+    public void addSpeed(float speed){
+        speedList.add(speed);
+    }
+
+    public float getSpeed(int index){
+        return speedList.get(index);
     }
 }

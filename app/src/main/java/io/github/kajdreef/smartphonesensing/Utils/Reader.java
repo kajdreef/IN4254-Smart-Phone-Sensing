@@ -17,7 +17,7 @@ import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
  *
  * Able to read the data from a .txt file line by line.
  */
-public class Reader  extends AbstractReader{
+public class Reader extends AbstractReader{
 
     public Reader(Context ctx, String newFileName) {
         super(ctx);
