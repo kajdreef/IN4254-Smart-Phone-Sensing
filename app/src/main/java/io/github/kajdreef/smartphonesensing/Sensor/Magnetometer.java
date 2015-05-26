@@ -16,10 +16,10 @@ public class Magnetometer extends AbstractSensor{
     private Writer wr;
     private static float[] geomagnetic = new float[3];
 
-    public Magnetometer(SensorManager sm){
+    public Magnetometer(SensorManager sm, String fileLocation){
         super(sm);
         type = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        wr = new Writer("magnetometerData.txt");
+        wr = new Writer(fileLocation);
     }
 
     @Override
