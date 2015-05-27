@@ -22,6 +22,7 @@ public class Accelerometer extends AbstractSensor {
     private Writer wr;
     private static Type state = Type.NONE;
     private float[] gravity = {0f,0f,0f};
+    int numSamples = 0;
 
     public static void setState(Type newState){
         Accelerometer.state = newState;
@@ -55,7 +56,12 @@ public class Accelerometer extends AbstractSensor {
 
             // Add data to File (Accelerometer state is NONE when not changed for )
             wr.appendData(gravity[0], gravity[1], gravity[2], Accelerometer.state);
-            this.notifyObserver();
+            numSamples++;
+            if(numSamples>170) {
+                this.notifyObserver();
+                numSamples = 0;
+            }
+
         }
     }
 

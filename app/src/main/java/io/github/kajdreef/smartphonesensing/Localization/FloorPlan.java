@@ -14,32 +14,35 @@ public class FloorPlan {
     private ArrayList<Wall> allWalls;
     private Path wallPath;
     private Region floorRegion;
+
+    private Location    A = new Location(0f,     0f),
+                        B = new Location(8f,     0f),
+                        C = new Location(8f,     6.1f),
+                        D = new Location(12f,    6.1f),
+                        E = new Location(12f,    0f),
+                        F = new Location(16f,    0f),
+                        G = new Location(16f,    6.1f),
+                        H = new Location(20f,    0f),
+                        I = new Location(20f,    6.1f),
+                        J = new Location(72f,    6.1f),
+                        K = new Location(72f,    8.2f),
+                        L = new Location(64f,    8.2f),
+                        M = new Location(64f,    14.3f),
+                        N = new Location(60f,    14.3f),
+                        O = new Location(60f,    8.2f),
+                        P = new Location(56f,    14.3f),
+                        Q = new Location(56f,    8.2f),
+                        R = new Location(16f,    8.2f),
+                        S = new Location(16f,    14.3f),
+                        T = new Location(12f,    14.3f),
+                        U = new Location(12f,    11.3f),
+                        V = new Location(14.5f,  11.3f),
+                        W = new Location(14.5f,  8.2f),
+                        X = new Location(0f,     8.2f);
+
     //Angle in degrees counted positively from x to y
     private int northAngle = 200;
-    private Location    A = new Location(0f*size,     0f*size),
-                        B = new Location(8f*size,     0f*size),
-                        C = new Location(8f*size,     6.1f*size),
-                        D = new Location(12f*size,    6.1f*size),
-                        E = new Location(12f*size,    0f*size),
-                        F = new Location(16f*size,    0f*size),
-                        G = new Location(16f*size,    6.1f*size),
-                        H = new Location(20f*size,    0f*size),
-                        I = new Location(20f*size,    6.1f*size),
-                        J = new Location(72f*size,    6.1f*size),
-                        K = new Location(72f*size,    8.2f*size),
-                        L = new Location(64f*size,    8.2f*size),
-                        M = new Location(64f*size,    14.3f*size),
-                        N = new Location(60f*size,    14.3f*size),
-                        O = new Location(60f*size,    8.2f*size),
-                        P = new Location(56f*size,    14.3f*size),
-                        Q = new Location(56f*size,    8.2f*size),
-                        R = new Location(16f*size,    8.2f*size),
-                        S = new Location(16f*size,    14.3f*size),
-                        T = new Location(12f*size,    14.3f*size),
-                        U = new Location(12f*size,    11.3f*size),
-                        V = new Location(14.5f*size,  11.3f*size),
-                        W = new Location(14.5f*size,  8.2f*size),
-                        X = new Location(0f*size,     8.2f*size);
+
 
 
 
@@ -128,7 +131,7 @@ public class FloorPlan {
     /**
      * Check if the particle is inside a specific region
      * @param particle
-     * @return true = intersecting or false = no intersecting
+     * @return true = inside or false = not inside
      */
     public boolean particleInside(Particle particle){
         Location loc = particle.getCurrentLocation();
@@ -164,8 +167,9 @@ public class FloorPlan {
             int o3 = orientation(w.start, w.end, p.getPreviousLocation());
             int o4 = orientation(w.start, w.end, p.getCurrentLocation());
 
-            if (o1 != o2 && o3 != o4)
+            if (o1 != o2 && o3 != o4) {
                 return true;
+            }
         }
         return false;
     }

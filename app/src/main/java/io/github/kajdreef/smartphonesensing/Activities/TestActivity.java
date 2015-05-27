@@ -6,7 +6,6 @@ import android.graphics.Point;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -24,19 +23,14 @@ import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
 
 /**
- * Created by kajdreef on 15/05/15.
+ * Created by kajdreef on 27/05/15.
  */
-public class LocalizationActivity extends ActionBarActivity implements Observer{
+public class TestActivity extends ActionBarActivity implements Observer {
 
     private FloorPlan floorPlan;
     private LocalizationView localizationView;
-    private ActivityMonitoring am;
-    private LocalizationMonitoring localizationMonitoring;
-    private Accelerometer accelerometer;
-    private Magnetometer magnetometer;
-    private SensorManager sm;
+    private ParticleFilter pf;
     public int WINDOW_SIZE;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,51 +42,24 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         Resources res = this.getResources();
         WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
 
-        am = new ActivityMonitoring(this.getApplicationContext());
-
         // Generate x amount of particles
-        localizationMonitoring = new LocalizationMonitoring(500,this.getApplicationContext());
+        pf = new ParticleFilter(1000, floorPlan);
 
-        // Initialise Sensors;
-        initSensors();
-
-        ArrayList<Particle> particleList = localizationMonitoring.getParticles();
 
         // Get window size;
         Point windowSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(windowSize);
 
         // Create the localization view with screen orientation in landscape and set it
-        localizationView = new LocalizationView(this, floorPlan.getPath(), particleList, windowSize.x, windowSize.y);
+        localizationView = new LocalizationView(this, floorPlan.getPath(), pf.getParticles(), windowSize.x, windowSize.y);
 
         setContentView(localizationView);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        this.updateMovement();
     }
 
-    /**
-     * Initialise the sensors
-     */
-    public void initSensors(){
-        sm =(SensorManager)getSystemService(SENSOR_SERVICE);
-
-        // Get needed file locations where data needs to be stored.
-        Resources res = this.getResources();
-
-        String magmetoFileLocation = res.getString(R.string.magnetometer_data_file);
-        String acceleroFileLocation = res.getString(R.string.accelerometer_data_file);
-
-        // Create sensor instances
-        accelerometer = new Accelerometer(sm, acceleroFileLocation);
-        magnetometer = new Magnetometer(sm, magmetoFileLocation);
-
-        accelerometer.attach(this);
-        magnetometer.attach(this);
-
-        accelerometer.register();
-        magnetometer.register();
-    }
-
-    @Override
+@Override
     public void onStart() {
         super.onStart();
     }
@@ -134,10 +101,26 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         super.onDestroy();
     }
 
-    public void update() {
-        am.update();
-        localizationMonitoring.update();
-        localizationView.setParticles(localizationMonitoring.getParticles());
+    public void updateMovement() {
+
+//        for (int i = 0; i < 4; i++) {
+//            pf.movement(5f, 0f);
+//            localizationView.setParticles(pf.getParticles());
+//            localizationView.invalidate();
+//        }
+
+//        pf.movement(0f, 3f);
+//        localizationView.setParticles(pf.getParticles());
+//        localizationView.invalidate();
+//
+//        pf.movement(0f, 3f);
+//        localizationView.setParticles(pf.getParticles());
+//        localizationView.invalidate();
+
+    }
+
+    public void update(){
+
     }
 
 }

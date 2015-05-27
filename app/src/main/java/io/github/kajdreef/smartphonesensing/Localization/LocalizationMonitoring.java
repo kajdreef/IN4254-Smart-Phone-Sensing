@@ -1,6 +1,7 @@
 package io.github.kajdreef.smartphonesensing.Localization;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
+import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
 import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
@@ -25,12 +27,17 @@ public class LocalizationMonitoring implements Observer {
     private FloorPlan floorPlan;
     private AbstractReader magnetometerReader;
     private AbstractReader accelerometerReader;
+    private int WINDOW_SIZE;
+
     //Aquisition frequency
     private static final int f = 200;
 
     public LocalizationMonitoring(int numParticles, Context ctx){
-        magnetometerReader = new Reader(ctx, "magnetometerData.txt");
-        accelerometerReader = new Reader(ctx, "accelerometerData.txt");
+
+        Resources res = ctx.getResources();
+        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
+        magnetometerReader = new Reader(ctx, res.getString(R.string.magnetometer_data_file));
+        accelerometerReader = new Reader(ctx, res.getString(R.string.accelerometer_data_file));
 
         activityList = ActivityType.getInstance();
 
@@ -55,22 +62,23 @@ public class LocalizationMonitoring implements Observer {
 
             magnetometerReader.readData();
             accelerometerReader.readData();
-            List<Float> mDataX = magnetometerReader.getSubListX(LocalizationActivity.WINDOW_SIZE);
-            List<Float> mDataY = magnetometerReader.getSubListY(LocalizationActivity.WINDOW_SIZE);
-            List<Float> mDataZ = magnetometerReader.getSubListZ(LocalizationActivity.WINDOW_SIZE);
-            List<Float> aDataX = accelerometerReader.getSubListX(LocalizationActivity.WINDOW_SIZE);
-            List<Float> aDataY = accelerometerReader.getSubListY(LocalizationActivity.WINDOW_SIZE);
-            List<Float> aDataZ = accelerometerReader.getSubListZ(LocalizationActivity.WINDOW_SIZE);
+            List<Float> mDataX = magnetometerReader.getSubListX(WINDOW_SIZE);
+            List<Float> mDataY = magnetometerReader.getSubListY(WINDOW_SIZE);
+            List<Float> mDataZ = magnetometerReader.getSubListZ(WINDOW_SIZE);
+            List<Float> aDataX = accelerometerReader.getSubListX(WINDOW_SIZE);
+            List<Float> aDataY = accelerometerReader.getSubListY(WINDOW_SIZE);
+            List<Float> aDataZ = accelerometerReader.getSubListZ(WINDOW_SIZE);
 
             float angle = 0;
 
             // Take average angle over Window size of samples.
-            for(int i = 0; i < LocalizationActivity.WINDOW_SIZE; i++){
+            for(int i = 0; i < WINDOW_SIZE; i++){
                 float[] gravity = {aDataX.get(i), aDataY.get(i), aDataZ.get(i)};
                 float[] mData = {mDataX.get(i), mDataY.get(i), mDataZ.get(i)};
-                angle += Magnetometer.calulateAngle(gravity, mData)/LocalizationActivity.WINDOW_SIZE;
+                angle += Magnetometer.calulateAngle(gravity, mData)/WINDOW_SIZE;
             }
-            pf.movement(angle, 1f, LocalizationActivity.WINDOW_SIZE);
+
+            pf.movement(angle, 1f, WINDOW_SIZE);
         }
     }
 }

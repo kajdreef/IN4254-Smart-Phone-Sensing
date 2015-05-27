@@ -12,8 +12,9 @@ public class ActivityType {
 
     private static ActivityType singleton = null;
 
-    private void ImplActivityType(){
+    private ActivityType(){
         this.activityList = new ArrayList<>();
+        this.speedList = new ArrayList<>();
     }
 
     public static ActivityType getInstance(){
