@@ -40,6 +40,10 @@ public class FloorPlan {
                         W = new Location(14.5f,  8.2f),
                         X = new Location(0f,     8.2f);
 
+    //Angle in degrees counted positively from x to y
+    private int northAngle = 200;
+
+
 
 
     public FloorPlan(){
@@ -176,4 +180,5 @@ public class FloorPlan {
     public int getHeight(){
         return floorRegion.getBounds().height();
     }
+    public float getNorthAngle(){return northAngle;}
 }

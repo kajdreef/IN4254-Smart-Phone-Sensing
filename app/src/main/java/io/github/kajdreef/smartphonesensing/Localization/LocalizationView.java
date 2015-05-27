@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 
 import java.lang.reflect.Array;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
  */
 public class LocalizationView extends View {
 
-    public ArrayList<Wall> walls;
     public ArrayList<Particle> particles;
     private float offSetX;
     private float offSetY;

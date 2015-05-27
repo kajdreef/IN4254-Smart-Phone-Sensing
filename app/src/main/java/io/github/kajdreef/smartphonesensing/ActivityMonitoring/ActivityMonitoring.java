@@ -22,7 +22,7 @@ import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
 /**
  * Created by kajdreef on 04/05/15.
  *
- * Classify the data from the accelerometer to Walking/Queueing
+ * Classify the allMag from the accelerometer to Walking/Queueing
  * with the help of kNN
  */
 public class ActivityMonitoring {
@@ -68,8 +68,8 @@ public class ActivityMonitoring {
      */
     public void initKNN(){
         activityList = ActivityType.getInstance();
-        // Get all data from the trainingData file in resources
-        trainReader.readAccelerometerData();
+        // Get all allMag from the trainingData file in resources
+        trainReader.readData();
         if(trainReader.size() >= WINDOW_SIZE) {
             x = trainReader.getAllX();
             y = trainReader.getAllY();
@@ -104,8 +104,8 @@ public class ActivityMonitoring {
     public float getSpeed(){return this.speed;}
 
     public void update(){
-        // Read the new data and return arraylists as big as the window size.
-        accelerometerReader.readAccelerometerData();
+        // Read the new allMag and return arraylists as big as the window size.
+        accelerometerReader.readData();
         x = new ArrayList<>(accelerometerReader.getSubListX(WINDOW_SIZE));
         y = new ArrayList<>(accelerometerReader.getSubListY(WINDOW_SIZE));
         z = new ArrayList<>(accelerometerReader.getSubListZ(WINDOW_SIZE));

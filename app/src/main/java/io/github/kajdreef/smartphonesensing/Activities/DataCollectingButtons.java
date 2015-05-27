@@ -82,7 +82,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
         Resources res = this.getResources();
         String fileLocation = res.getString(R.string.accelerometer_data_file);
         read = new Reader(this, fileLocation);
-        read.readAccelerometerData();
+        read.readData();
     }
 
 

@@ -5,6 +5,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.util.Log;
 
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Utils.Writer;
 
@@ -35,6 +36,7 @@ public class Magnetometer extends AbstractSensor{
             geomagnetic[1] = event.values[1];
             geomagnetic[2] = event.values[2];
             wr.appendString(String.valueOf(geomagnetic[0]));
+            wr.appendData(geomagnetic[0],geomagnetic[1],geomagnetic[2], Type.NONE);
         }
     }
 
@@ -47,7 +49,7 @@ public class Magnetometer extends AbstractSensor{
      * @param gravity
      * @return yaw (in degrees)
      */
-    public static float calulateAngle(float[] gravity){
+    public static float calulateAngle(float[] gravity,float[] geomagnetic){
         float[] m_rotationMatrix = new float[16];
         float[] orientation = new float[3];
 
