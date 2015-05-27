@@ -14,10 +14,6 @@ public class KNN extends Classifier {
     private ArrayList<Float> covariances;
 
     public KNN(int k,List<LabeledFeatureSet> data){
-        //if(data.size()<k) {
-        //throw exception
-        //}
-        //if k even throw exception
         this.k = k;
         this.data = data;
         this.covariances=new ArrayList<>();

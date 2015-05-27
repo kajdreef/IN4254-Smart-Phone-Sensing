@@ -76,7 +76,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
 
     public void initReader(){
         read = new Reader(this, ActivityMonitoringActivity.SENSOR_DATA_FILE);
-        read.readAccelerometerData();
+        read.readData();
     }
 
 

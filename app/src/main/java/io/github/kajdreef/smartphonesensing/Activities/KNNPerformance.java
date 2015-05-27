@@ -120,8 +120,8 @@ public class KNNPerformance extends ActionBarActivity {
     }
 
     public float performanceLeaveOneOut(ArrayList<FeatureExtractor> extractor){
-        // Get all data fromt the accelerometerData.txt
-        trainReader.readAccelerometerData();
+        // Get all allMag fromt the accelerometerData.txt
+        trainReader.readData();
         if(trainReader.size() >= WINDOW_SIZE) {
             x = trainReader.getAllX();
             y = trainReader.getAllY();
@@ -138,8 +138,8 @@ public class KNNPerformance extends ActionBarActivity {
     }
 
     public float performance(ArrayList<FeatureExtractor> extractor){
-        // Get all data fromt the accelerometerData.txt
-        trainReader.readAccelerometerData();
+        // Get all allMag fromt the accelerometerData.txt
+        trainReader.readData();
         if(trainReader.size() >= WINDOW_SIZE) {
             x = trainReader.getAllX();
             y = trainReader.getAllY();
@@ -152,8 +152,8 @@ public class KNNPerformance extends ActionBarActivity {
         knn = new KNN(k,train);
 
 
-        // Read validation saved data from the accelerometer
-        validationReader.readAccelerometerData();
+        // Read validation saved allMag from the accelerometer
+        validationReader.readData();
         if(validationReader.size() >= WINDOW_SIZE) {
             x = validationReader.getAllX();
             y = validationReader.getAllY();
@@ -161,7 +161,7 @@ public class KNNPerformance extends ActionBarActivity {
             labels = validationReader.getAllStates();
         }
 
-        //Test the KNN with the validation data
+        //Test the KNN with the validation allMag
         ArrayList<LabeledFeatureSet> test = FeatureExtractor.generateDataSet(labels,x,y,z, extractor, WINDOW_SIZE);
 
         // Compare classification with reality

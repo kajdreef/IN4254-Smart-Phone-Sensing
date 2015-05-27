@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import io.github.kajdreef.smartphonesensing.Activities.LocalizationActivity;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
@@ -24,6 +25,8 @@ public class LocalizationMonitoring implements Observer {
     private FloorPlan floorPlan;
     private AbstractReader magnetometerReader;
     private AbstractReader accelerometerReader;
+    //Aquisition frequency
+    private static final int f = 200;
 
     public LocalizationMonitoring(int numParticles, Context ctx){
         magnetometerReader = new Reader(ctx, "magnetometerData.txt");
@@ -50,8 +53,11 @@ public class LocalizationMonitoring implements Observer {
         // If activity type == walking then update the location!
         if(activityList.getType(activityList.size() - 1) == Type.WALK) {
 
-            List<Float> mData = magnetometerReader.readMagnetometerData();
-            accelerometerReader.readAccelerometerData();
+            magnetometerReader.readData();
+            accelerometerReader.readData();
+            List<Float> mDataX = magnetometerReader.getSubListX(LocalizationActivity.WINDOW_SIZE);
+            List<Float> mDataY = magnetometerReader.getSubListY(LocalizationActivity.WINDOW_SIZE);
+            List<Float> mDataZ = magnetometerReader.getSubListZ(LocalizationActivity.WINDOW_SIZE);
             List<Float> aDataX = accelerometerReader.getSubListX(LocalizationActivity.WINDOW_SIZE);
             List<Float> aDataY = accelerometerReader.getSubListY(LocalizationActivity.WINDOW_SIZE);
             List<Float> aDataZ = accelerometerReader.getSubListZ(LocalizationActivity.WINDOW_SIZE);
@@ -59,14 +65,19 @@ public class LocalizationMonitoring implements Observer {
             float angle = 0;
 
             // Take average angle over Window size of samples.
-            for(int i = 0; i < mData.size(); i++){
+            for(int i = 0; i < LocalizationActivity.WINDOW_SIZE; i++){
                 float[] gravity = {aDataX.get(i), aDataY.get(i), aDataZ.get(i)};
-                angle = (Magnetometer.calulateAngle(gravity)/mData.size());
+                float[] mData = {mDataX.get(i), mDataY.get(i), mDataZ.get(i)};
+                angle += Magnetometer.calulateAngle(gravity, mData)/LocalizationActivity.WINDOW_SIZE;
             }
-
-            float speed = activityList.getSpeed(activityList.size() - 1);
-            float dx = speed * (float) Math.cos(angle);
-            float dy = speed * (float) Math.sin(angle);
+            //Gaussian distribution of mean 1 and SD 0.2m/s
+            float v = 1f + (float) new Random().nextGaussian()*0.2f;
+            //Gaussian distribution of mean alpha and SD alphaDeviation
+            int alphaDeviation = 20;
+            float alpha = angle+floorPlan.getNorthAngle()+90
+                    + (float) new Random().nextGaussian()*alphaDeviation;
+            float dx = v*LocalizationActivity.WINDOW_SIZE * (float) Math.cos(alpha)/f;
+            float dy = v*LocalizationActivity.WINDOW_SIZE * (float) Math.sin(alpha)/f;
             pf.movement(dx, dy);
         }
     }

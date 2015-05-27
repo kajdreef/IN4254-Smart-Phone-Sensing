@@ -25,7 +25,7 @@ public class ClassificationTest {
 
     @Before
     public void setUp() {
-        //Get data from files as 3 arraylists for 1 training point (15-20 points?)
+        //Get allMag from files as 3 arraylists for 1 training point (15-20 points?)
         int step = 3;
         ArrayList<Type> labels = new ArrayList<>();
         ArrayList<Float> x = new ArrayList<>();

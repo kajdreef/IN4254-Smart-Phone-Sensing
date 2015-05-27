@@ -14,7 +14,8 @@ public class FloorPlan {
     private ArrayList<Wall> allWalls;
     private Path wallPath;
     private Region floorRegion;
-
+    //Angle in degrees counted positively from x to y
+    private int northAngle = 200;
     private Location    A = new Location(0f*size,     0f*size),
                         B = new Location(8f*size,     0f*size),
                         C = new Location(8f*size,     6.1f*size),
@@ -176,4 +177,5 @@ public class FloorPlan {
     public int getHeight(){
         return floorRegion.getBounds().height();
     }
+    public float getNorthAngle(){return northAngle;}
 }

@@ -61,7 +61,7 @@ public abstract class AbstractReader {
         return result;
     }
 
-    public void readAccelerometerData(){
+    public void readData(){
         String str = "";
         String[] split;
         try {
@@ -81,26 +81,6 @@ public abstract class AbstractReader {
             e.printStackTrace();
         }
     }
-
-    public ArrayList<Float> readMagnetometerData(){
-        String str = "";
-        String[] split;
-        ArrayList<Float> data = new ArrayList<>();
-        try {
-            while(this.available()) {
-                str = fInpStream.readLine();
-                if (str == null) {
-                    return null;
-                }
-                split = str.split(" ");
-                data.add(Float.parseFloat(split[0]));                           // Magnetometer data
-            }
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-        return data;
-    }
-
     public int size(){
         return allStates.size();
     }
