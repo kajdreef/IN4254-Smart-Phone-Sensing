@@ -14,6 +14,7 @@ public class ParticleFilter {
     private FloorPlan floorPlan;
     private final int N_INIT;
     private final float RATIO = 4/(float)5;
+
     /**
      * Constructs ParticleFilter with particles that are uniformly distributed over the map.
      * @param n number of particles that need to be generated
@@ -25,6 +26,7 @@ public class ParticleFilter {
         this.floorPlan = floorPlan;
         this.generateParticles(N_INIT);
     }
+
     /**
      * Generate particles that are uniformly distributed over the map.
      * @param numOfParticles that need to be generated
@@ -43,23 +45,36 @@ public class ParticleFilter {
             }
         }
     }
+
+    /**
+     * Move the particles with a distance of dx in the x-direction and dy in y-direction.
+     * @param dx (movement in the x-direction)
+     * @param dy (movement in the y-direction)
+     */
     public void movement(float dx,float dy){
         ArrayList<Particle> particleSave = new ArrayList<>();
         particleSave.addAll(particles);
         ArrayList<Particle> collisionParticles = new ArrayList<>();
+
+        // Check if a particle has collision upon moving the particle
         for (Particle p : particles){
             p.updateLocation( dx, dy);
             if(floorPlan.particleCollision(p)){
                 collisionParticles.add(p);
             }
         }
+
+        // Remove the collided particles from the particle list.
         particles.removeAll(collisionParticles);
         int safeSize = particles.size();
+
+        // Replace the particles that collide with a wall by adding new particles on top of survived particles.
         for (int i = 0; i < collisionParticles.size()*RATIO ; i++) {
             int index = new Random().nextInt(safeSize);
             particles.add(new Particle(particles.get(index).getCurrentLocation().getX(),
                                         particles.get(index).getCurrentLocation().getY()));
         }
+
         //1-ratio in particleSave
         for (int i = 0; i < collisionParticles.size()*(1-RATIO)-1 ; i++) {
             int index = new Random().nextInt(particleSave.size());

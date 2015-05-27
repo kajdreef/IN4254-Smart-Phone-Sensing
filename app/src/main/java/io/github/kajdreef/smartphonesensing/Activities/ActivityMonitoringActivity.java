@@ -1,5 +1,6 @@
 package io.github.kajdreef.smartphonesensing.Activities;
 
+import android.content.res.Resources;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -21,18 +22,23 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
     ActivityMonitoring am;
     SensorManager sm;
     AbstractSensor accelerometer;
-    public static final String SENSOR_DATA_FILE = "accelerometerData.txt";
-    public static final int WINDOW_SIZE = 150;
+    public int WINDOW_SIZE;
     private int amountOfNewSamples = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Resources res = this.getResources();
+        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
+
+        String acceleroFileLocation = res.getString(R.string.accelerometer_data_file);
+
         setContentView(R.layout.activity_monitoring_menu);
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 
         am = new ActivityMonitoring(this);
-        accelerometer = new Accelerometer(sm);
+        accelerometer = new Accelerometer(sm, acceleroFileLocation);
 
         accelerometer.attach(this);
         accelerometer.register();

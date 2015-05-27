@@ -1,11 +1,13 @@
 package io.github.kajdreef.smartphonesensing.Activities;
 
+import android.content.res.Resources;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -27,7 +29,7 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
     ActivityMonitoring am;
     SensorManager sm;
     AbstractSensor accelerometer;
-    public static final int WINDOW_SIZE = 150;
+    public int WINDOW_SIZE;
     private int amountOfNewSamples = 0;
 
     float WINDOW_TIME = WINDOW_SIZE/200;
@@ -44,8 +46,13 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
         // Initialise the Activity Monitoring
         am = new ActivityMonitoring(this);
 
+        // Get needed file locations where data needs to be stored.
+        Resources res = this.getResources();
+
+        String acceleroFileLocation = res.getString(R.string.accelerometer_data_file);
+
         // Start accelerometer and attacht this Activity as Observer
-        accelerometer = new Accelerometer(sm);
+        accelerometer = new Accelerometer(sm, acceleroFileLocation);
         accelerometer.attach(this);
 
         // Create walk button, when clicked on the button state will change state to WALK.
@@ -103,6 +110,9 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Resources res = this.getResources();
+        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
         setContentView(R.layout.service_queue_menu);
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 

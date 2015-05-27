@@ -2,7 +2,6 @@ package LocalizationTest;
 
 import android.test.ActivityTestCase;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,8 +14,9 @@ public class ParticleFilterTest extends ActivityTestCase {
     public void setUp(){
         pf = new ParticleFilter(1000,new FloorPlan());
     }
+
     @Test
     public void testMovement(){
-        pf.movement(5f,5f);
+        pf.movement(5f, 5f);
     }
 }

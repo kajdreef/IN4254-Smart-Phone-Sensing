@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">SmartPhoneSensing</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <!-- File storage locations-->
+    <string name="accelerometer_data_file">accelerometerData.txt</string>
+    <string name="magnetometer_data_file">magnetometerData.txt"</string>
+
+
 </resources>

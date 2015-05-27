@@ -1,6 +1,7 @@
 package io.github.kajdreef.smartphonesensing.Activities;
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -30,7 +31,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
     private Accelerometer accelerometer;
     private Magnetometer magnetometer;
     private SensorManager sm;
-
+    public static int WINDOW_SIZE = 150;
     private float orientationAngle = 0f;
 
     @Override
@@ -61,8 +62,15 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
     public void initSensors(){
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 
-        accelerometer = new Accelerometer(sm);
-        magnetometer = new Magnetometer(sm);
+        // Get needed file locations where data needs to be stored.
+        Resources res = this.getResources();
+
+        String magmetoFileLocation = res.getString(R.string.magnetometer_data_file);
+        String acceleroFileLocation = res.getString(R.string.accelerometer_data_file);
+
+        // Create sensor instances
+        accelerometer = new Accelerometer(sm, acceleroFileLocation);
+        magnetometer = new Magnetometer(sm, magmetoFileLocation);
 
         accelerometer.attach(this);
         magnetometer.attach(this);

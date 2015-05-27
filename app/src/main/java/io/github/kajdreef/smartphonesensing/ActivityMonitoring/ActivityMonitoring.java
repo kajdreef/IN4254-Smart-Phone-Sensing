@@ -1,6 +1,7 @@
 package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,6 @@ public class ActivityMonitoring {
     // k-Nearest Neighbors
     private KNN knn;
     private final int K = 5;
-    public static final int WINDOW_SIZE = 160;
 
     // Data to calculate solution
     ArrayList<Float> x;
@@ -49,10 +49,17 @@ public class ActivityMonitoring {
     //Try to estimate speed of walking
     private float speed;
 
+    // Contains the window size as a constant
+    private int WINDOW_SIZE = R.integer.WINDOW_SIZE;
+
     public ActivityMonitoring(Context ctx){
         // initialise the readers to train kNN
         trainReader = new ReaderTest(ctx, R.raw.accelerometer_data_set_high_sample_rate);
-        accelerometerReader = new Reader(ctx, ActivityMonitoringActivity.SENSOR_DATA_FILE);
+
+        // Get the needed resources
+        Resources res = ctx.getResources();
+        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
+        accelerometerReader = new Reader(ctx, res.getString(R.string.accelerometer_data_file));
         initKNN();
     }
 
