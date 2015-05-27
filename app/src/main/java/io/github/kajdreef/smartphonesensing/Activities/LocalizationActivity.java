@@ -36,7 +36,7 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
     private Magnetometer magnetometer;
     private SensorManager sm;
     public int WINDOW_SIZE;
-    private int amountOfNewSamples=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -77,15 +77,8 @@ public class LocalizationMonitoring implements Observer {
                 float[] mData = {mDataX.get(i), mDataY.get(i), mDataZ.get(i)};
                 angle += Magnetometer.calulateAngle(gravity, mData)/WINDOW_SIZE;
             }
-            //Gaussian distribution of mean 1 and SD 0.2m/s
-            float v = 1f + (float) new Random().nextGaussian()*0.2f;
-            //Gaussian distribution of mean alpha and SD alphaDeviation
-            int alphaDeviation = 20;
-            float alpha = angle+floorPlan.getNorthAngle()+90
-                    + (float) new Random().nextGaussian()*alphaDeviation;
-            float dx = v*WINDOW_SIZE * (float) Math.cos(alpha)/f;
-            float dy = v*WINDOW_SIZE * (float) Math.sin(alpha)/f;
-            pf.movement(dx, dy);
+
+            pf.movement(angle, 1f, WINDOW_SIZE);
         }
     }
 }
