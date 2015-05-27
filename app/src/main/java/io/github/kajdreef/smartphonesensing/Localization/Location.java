@@ -46,4 +46,13 @@ public class Location {
     public float getY(){
         return this.y;
     }
+
+    /**
+     * Check if two location are the same
+     * @param loc1 (= a location)
+     * @return true if the locations are the same; false if not
+     */
+    public boolean isEqual(Location loc1){
+        return loc1.getY() == this.y && loc1.getX() == this.x;
+    }
 }

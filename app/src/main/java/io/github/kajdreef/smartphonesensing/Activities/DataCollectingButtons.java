@@ -1,5 +1,6 @@
 package io.github.kajdreef.smartphonesensing.Activities;
 
+import android.content.res.Resources;
 import android.hardware.SensorManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -34,7 +35,10 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
 
         t = (TextView) this.findViewById(R.id.state);
 
-        accelerometer = new Accelerometer(sm);
+        Resources res = this.getResources();
+        String acceleroFileLocation = res.getString(R.string.accelerometer_data_file);
+
+        accelerometer = new Accelerometer(sm, acceleroFileLocation);
         accelerometer.attach(this);
         // Create walk button, when clicked on the button state will change state to WALK.
         walking = (Button) findViewById(R.id.walking);
@@ -75,8 +79,10 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
 
 
     public void initReader(){
-        read = new Reader(this, ActivityMonitoringActivity.SENSOR_DATA_FILE);
-        read.readData();
+        Resources res = this.getResources();
+        String fileLocation = res.getString(R.string.accelerometer_data_file);
+        read = new Reader(this, fileLocation);
+        read.readAccelerometerData();
     }
 
 

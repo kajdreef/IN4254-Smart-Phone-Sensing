@@ -1,11 +1,13 @@
 package io.github.kajdreef.smartphonesensing.Sensor;
 
+import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 
 import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
+import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.Writer;
 
 
@@ -29,9 +31,12 @@ public class Accelerometer extends AbstractSensor {
         return Accelerometer.state;
     }
 
-    public Accelerometer(SensorManager sm){
+    public Accelerometer(SensorManager sm, String fileLocation){
         super(sm);
-        wr = new Writer(ActivityMonitoringActivity.SENSOR_DATA_FILE);
+
+
+
+        wr = new Writer(fileLocation);
         type = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
