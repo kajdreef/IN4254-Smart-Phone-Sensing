@@ -131,7 +131,7 @@ public class FloorPlan {
     /**
      * Check if the particle is inside a specific region
      * @param particle
-     * @return true = intersecting or false = no intersecting
+     * @return true = inside or false = not inside
      */
     public boolean particleInside(Particle particle){
         Location loc = particle.getCurrentLocation();
@@ -167,8 +167,9 @@ public class FloorPlan {
             int o3 = orientation(w.start, w.end, p.getPreviousLocation());
             int o4 = orientation(w.start, w.end, p.getCurrentLocation());
 
-            if (o1 != o2 && o3 != o4)
+            if (o1 != o2 && o3 != o4) {
                 return true;
+            }
         }
         return false;
     }

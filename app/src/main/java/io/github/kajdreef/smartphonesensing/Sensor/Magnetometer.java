@@ -16,6 +16,7 @@ public class Magnetometer extends AbstractSensor{
 
     private Writer wr;
     private static float[] geomagnetic = new float[3];
+    int numSamples =0;
 
     public Magnetometer(SensorManager sm, String fileLocation){
         super(sm);
@@ -35,8 +36,13 @@ public class Magnetometer extends AbstractSensor{
             geomagnetic[0] = event.values[0];
             geomagnetic[1] = event.values[1];
             geomagnetic[2] = event.values[2];
-            wr.appendString(String.valueOf(geomagnetic[0]));
             wr.appendData(geomagnetic[0],geomagnetic[1],geomagnetic[2], Type.NONE);
+            numSamples++;
+            if(numSamples>170) {
+                this.notifyObserver();
+                numSamples = 0;
+            }
+
         }
     }
 

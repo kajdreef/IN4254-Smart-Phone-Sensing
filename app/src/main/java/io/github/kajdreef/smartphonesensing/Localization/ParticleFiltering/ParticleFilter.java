@@ -13,7 +13,7 @@ public class ParticleFilter {
     private ArrayList<Particle> particles;
     private FloorPlan floorPlan;
     private final int N_INIT;
-    private final float RATIO = 4/(float)5;
+    private final float RATIO = 9/(float)10;
 
     /**
      * Constructs ParticleFilter with particles that are uniformly distributed over the map.
@@ -53,13 +53,17 @@ public class ParticleFilter {
      */
     public void movement(float dx,float dy){
         ArrayList<Particle> particleSave = new ArrayList<>();
-        particleSave.addAll(particles);
+//        particleSave.addAll(particles);
+        particleSave.addAll((ArrayList<Particle>) particles.clone());
         ArrayList<Particle> collisionParticles = new ArrayList<>();
 
         // Check if a particle has collision upon moving the particle
         for (Particle p : particles){
             p.updateLocation( dx, dy);
             if(floorPlan.particleCollision(p)){
+                collisionParticles.add(p);
+            }
+            else if (!floorPlan.particleInside(p)){
                 collisionParticles.add(p);
             }
         }
@@ -78,8 +82,8 @@ public class ParticleFilter {
         //1-ratio in particleSave
         for (int i = 0; i < collisionParticles.size()*(1-RATIO)-1 ; i++) {
             int index = new Random().nextInt(particleSave.size());
-            particles.add(new Particle(particleSave.get(index).getCurrentLocation().getX(),
-                    particleSave.get(index).getCurrentLocation().getY()));
+            particles.add(new Particle(particleSave.get(index).getPreviousLocation().getX(),
+                    particleSave.get(index).getPreviousLocation().getY()));
         }
     }
     public ArrayList<Particle> getParticles(){ return this.particles;}
