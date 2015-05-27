@@ -3,8 +3,12 @@ package io.github.kajdreef.smartphonesensing.Localization;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
+import android.util.Log;
+import android.view.Display;
 import android.view.View;
 
 import java.lang.reflect.Array;
@@ -17,18 +21,33 @@ public class LocalizationView extends View {
 
     public ArrayList<Wall> walls;
     public ArrayList<Particle> particles;
-    private final float offsetX = 50f;
-    private final float offsetY = 50f;
+    private float offSetX;
+    private float offSetY;
+    private final float size = 0.8f;
+    private float scale;
 
     Path wallPath;
 
-    public LocalizationView(Context ctx, Path floorPlan, ArrayList<Particle> allParticles){
+    public LocalizationView(Context ctx, Path floorPlan, ArrayList<Particle> allParticles, float width, float height){
         super(ctx);
         this.wallPath = floorPlan;
         this.particles = allParticles;
 
+        Matrix scaleMatrix = new Matrix();
+        RectF rectF = new RectF();
+        this.wallPath.computeBounds(rectF, true);
+
+        // Scale the floorplan depending on size of the screen.
+        this.scale = (size*width)/rectF.width();
+        scaleMatrix.setScale(scale, scale, rectF.left, rectF.top);
+        this.wallPath.transform(scaleMatrix);
+
+        this.offSetX = (width - width*0.8f)/2;
+        this.offSetY = (height - height*0.8f)/2;
+
         // Offset of the dx and dy
-        wallPath.offset(offsetX, offsetY);
+        wallPath.offset(offSetX, offSetY);
+
     }
 
     @Override
@@ -53,7 +72,7 @@ public class LocalizationView extends View {
         paint.setColor(Color.RED);
         // Draw Particles
         for(Particle p : this.particles) {
-            canvas.drawPoint(p.getCurrentLocation().getX() + offsetX, p.getCurrentLocation().getY() + offsetY , paint);
+            canvas.drawPoint(p.getCurrentLocation().getX()*scale + offSetX, p.getCurrentLocation().getY()*scale + offSetY , paint);
         }
     }
 

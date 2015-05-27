@@ -2,6 +2,7 @@ package io.github.kajdreef.smartphonesensing.Activities;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.graphics.Point;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -48,8 +49,16 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         // Initialise Sensors;
         initSensors();
 
+        particleList = pf.getParticles();
+
+        // Get window size;
+        Point windowSize = new Point();
+        this.getWindowManager().getDefaultDisplay().getSize(windowSize);
+
+        Log.d("LocalizationActivity", windowSize.toString());
+
         // Create the localization view and set it
-        localizationView = new LocalizationView(this, floorPlan.getPath(), particleList);
+        localizationView = new LocalizationView(this, floorPlan.getPath(), particleList, windowSize.x, windowSize.y);
 
         // set contentview to localizationview  with screen orientation in landscape.
         setContentView(localizationView);
