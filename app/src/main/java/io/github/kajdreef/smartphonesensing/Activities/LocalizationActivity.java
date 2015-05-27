@@ -32,7 +32,6 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
     private Accelerometer accelerometer;
     private Magnetometer magnetometer;
     private SensorManager sm;
-    public static int WINDOW_SIZE = 150;
     private float orientationAngle = 0f;
     public final static int WINDOW_SIZE = 150;
     private int amountOfNewSamples=0;
