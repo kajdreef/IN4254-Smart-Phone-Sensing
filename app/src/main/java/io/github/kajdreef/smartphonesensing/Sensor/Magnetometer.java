@@ -58,9 +58,6 @@ public class Magnetometer extends AbstractSensor{
         SensorManager.getOrientation(m_rotationMatrix, orientation);
 
         float yaw = (float) (Math.toDegrees(orientation[0]));
-
-        Log.d("Magnetometer - ", "Yaw = " + yaw );
-
         return yaw;
     }
 }
