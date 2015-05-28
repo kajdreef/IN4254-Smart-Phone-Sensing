@@ -13,12 +13,13 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
-import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
@@ -26,11 +27,11 @@ import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
 /**
  * Created by kajdreef on 15/05/15.
  */
-public class LocalizationActivity extends ActionBarActivity implements Observer{
+public class LocalizationActivity extends ActionBarActivity implements ObserverSensor {
 
     private FloorPlan floorPlan;
     private LocalizationView localizationView;
-    private ActivityMonitoring am;
+    private ActivityMonitoring activityMonitoring;
     private LocalizationMonitoring localizationMonitoring;
     private Accelerometer accelerometer;
     private Magnetometer magnetometer;
@@ -48,10 +49,10 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         Resources res = this.getResources();
         WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
 
-        am = new ActivityMonitoring(this.getApplicationContext());
+        activityMonitoring = new ActivityMonitoring(this.getApplicationContext());
 
         // Generate x amount of particles
-        localizationMonitoring = new LocalizationMonitoring(500,this.getApplicationContext());
+        localizationMonitoring = new LocalizationMonitoring(1000,this.getApplicationContext());
 
         // Initialise Sensors;
         initSensors();
@@ -134,10 +135,11 @@ public class LocalizationActivity extends ActionBarActivity implements Observer{
         super.onDestroy();
     }
 
-    public void update() {
-        am.update();
-        localizationMonitoring.update();
-        localizationView.setParticles(localizationMonitoring.getParticles());
-    }
 
+    public void update(int SensorType) {
+        activityMonitoring.update(SensorType);
+        localizationMonitoring.update(SensorType);
+        localizationView.setParticles(localizationMonitoring.getParticles());
+        localizationView.invalidate();
+    }
 }

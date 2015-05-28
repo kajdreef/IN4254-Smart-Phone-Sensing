@@ -6,7 +6,7 @@ import android.hardware.SensorManager;
 
 import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 
 /**
  * Created by kajdreef on 23/04/15.
@@ -16,11 +16,11 @@ public abstract class AbstractSensor implements SensorEventListener {
 
     protected Sensor type;
     protected SensorManager sm;
-    protected ArrayList<Observer> observerList;
+    protected ArrayList<ObserverSensor> observerSensorList;
 
     public AbstractSensor(SensorManager sm){
         this.sm = sm;
-        this.observerList = new ArrayList<>();
+        this.observerSensorList = new ArrayList<>();
     }
 
     /**
@@ -41,24 +41,24 @@ public abstract class AbstractSensor implements SensorEventListener {
      * Add class that needs to be notified when something happens.
      * @param obs
      */
-    public void attach(Observer obs){
-        this.observerList.add(obs);
+    public void attach(ObserverSensor obs){
+        this.observerSensorList.add(obs);
     }
 
     /**
      * Remove class that needs to be notified when something happens.
      * @param obs
      */
-    public void detach(Observer obs){
-        this.observerList.remove(obs);
+    public void detach(ObserverSensor obs){
+        this.observerSensorList.remove(obs);
     }
 
     /**
      * Notify all classes in the ObserverList.
      */
-    public void notifyObserver(){
-        for(Observer  obs: observerList){
-            obs.update();
+    public void notifyObserver(int SensorType){
+        for(ObserverSensor obs: observerSensorList){
+            obs.update(SensorType);
         }
     }
 }

@@ -3,29 +3,22 @@ package io.github.kajdreef.smartphonesensing.Activities;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
-import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
-import io.github.kajdreef.smartphonesensing.Localization.Particle;
 import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.R;
-import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
-import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
 
 /**
  * Created by kajdreef on 27/05/15.
  */
-public class TestActivity extends ActionBarActivity implements Observer {
+public class TestActivity extends ActionBarActivity implements ObserverSensor {
 
     private FloorPlan floorPlan;
     private LocalizationView localizationView;
@@ -102,24 +95,34 @@ public class TestActivity extends ActionBarActivity implements Observer {
     }
 
     public void updateMovement() {
+        long j =0;
+        for (int i = 0; i < 50; i++) {
+            while(j<1000){j++;}
+            pf.movement(1.0f, 1.0f, 160);
+            localizationView.setParticles(pf.getParticles());
+            Log.d("Update Screen", "" + pf.getParticles().get(0).getCurrentLocation().getX() + "" + pf.getParticles().get(0).getCurrentLocation().getY());
+        }
+        localizationView.invalidate();
 
-//        for (int i = 0; i < 4; i++) {
-//            pf.movement(5f, 0f);
-//            localizationView.setParticles(pf.getParticles());
-//            localizationView.invalidate();
-//        }
+        j =0;
+        for (int i = 0; i < 50; i++) {
+            while(j<1000){j++;}
+            pf.movement(180.0f, 1.0f, 160);
+            localizationView.setParticles(pf.getParticles());
+            Log.d("Update Screen2", "" + pf.getParticles().get(0).getCurrentLocation().getX() + "" + pf.getParticles().get(0).getCurrentLocation().getY());
+        }
+        localizationView.invalidate();
 
-//        pf.movement(0f, 3f);
-//        localizationView.setParticles(pf.getParticles());
-//        localizationView.invalidate();
-//
-//        pf.movement(0f, 3f);
-//        localizationView.setParticles(pf.getParticles());
-//        localizationView.invalidate();
-
+        j =0;
+        for (int i = 0; i < 50; i++) {
+            while(j<1000){j++;}
+            pf.movement(0.0f, 1.0f, 160);
+            localizationView.setParticles(pf.getParticles());
+            Log.d("Update Screen3", "" + pf.getParticles().get(0).getCurrentLocation().getX() + "" + pf.getParticles().get(0).getCurrentLocation().getY());
+        }
     }
 
-    public void update(){
+    public void update(int SensorType){
 
     }
 
