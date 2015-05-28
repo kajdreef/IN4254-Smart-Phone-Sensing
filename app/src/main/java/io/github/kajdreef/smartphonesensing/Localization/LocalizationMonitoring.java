@@ -68,19 +68,20 @@ public class LocalizationMonitoring {
         return pf.getParticles();
     }
 
-    public void update(int SensorType){
+    public boolean update(int SensorType){
 
         if(Sensor.TYPE_ACCELEROMETER == SensorType && aDataX.size() < WINDOW_SIZE) {
             this.aDataX.add(Accelerometer.getGravity()[0]);
             this.aDataY.add(Accelerometer.getGravity()[1]);
             this.aDataZ.add(Accelerometer.getGravity()[2]);
-
+            return false;
         }
 
         if(Sensor.TYPE_MAGNETIC_FIELD == SensorType && mDataX.size() <= WINDOW_SIZE){
             this.mDataX.add(Magnetometer.getGeomagnetic()[0]);
             this.mDataY.add(Magnetometer.getGeomagnetic()[1]);
             this.mDataZ.add(Magnetometer.getGeomagnetic()[2]);
+            return false;
         }
 
         // If activity type == walking then update the location!
@@ -100,7 +101,9 @@ public class LocalizationMonitoring {
                 mDataX.clear();
                 mDataY.clear();
                 mDataZ.clear();
+                return true;
             }
         }
+        return false;
     }
 }
