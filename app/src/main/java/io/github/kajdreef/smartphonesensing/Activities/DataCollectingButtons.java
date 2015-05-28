@@ -13,12 +13,12 @@ import android.widget.TextView;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
 
 
-public class DataCollectingButtons extends ActionBarActivity implements Observer {
+public class DataCollectingButtons extends ActionBarActivity implements ObserverSensor {
 
     SensorManager sm;
     AbstractSensor accelerometer;
@@ -53,7 +53,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
                     accelerometer.unregister();
                     initAccel = true;
                     Accelerometer.setState(Type.NONE);
-                    update();
+                    update(0);
                 }
             }
         });
@@ -71,7 +71,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
                     accelerometer.unregister();
                     initAccel = true;
                     Accelerometer.setState(Type.NONE);
-                    update();
+                    update(0);
                 }
             }
         });
@@ -143,7 +143,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
             accelerometer.unregister();
     }
 
-    public void update(){
+    public void update(int SensorType){
         t.setText(Accelerometer.getState().toString());
     }
 }

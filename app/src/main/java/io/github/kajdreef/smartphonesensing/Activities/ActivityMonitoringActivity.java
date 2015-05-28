@@ -11,14 +11,14 @@ import android.widget.TextView;
 import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.R;
 
 /**
  * Created by kajdreef on 02/05/15.
  * Activity monitoring activity
  */
-public class ActivityMonitoringActivity extends ActionBarActivity implements Observer {
+public class ActivityMonitoringActivity extends ActionBarActivity implements ObserverSensor {
     ActivityMonitoring am;
     SensorManager sm;
     AbstractSensor accelerometer;
@@ -89,14 +89,11 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
         accelerometer.unregister();
     }
 
-    public void update() {
-        amountOfNewSamples++;
-        if(amountOfNewSamples > WINDOW_SIZE){
-            // First update am so the new speed and activity is available
-            am.update();
 
-            amountOfNewSamples = 0;
-        }
+    public void update(int ServerType) {
+
+        am.update(ServerType);
+
         TextView t = (TextView) this.findViewById(R.id.textView2);
         t.setText(am.getActivity().toString() +" "+ Float.toString(am.getSpeed())+ "m/s");
     }

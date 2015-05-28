@@ -3,29 +3,21 @@ package io.github.kajdreef.smartphonesensing.Activities;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
-import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
-import io.github.kajdreef.smartphonesensing.Localization.Particle;
 import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.R;
-import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
-import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
 
 /**
  * Created by kajdreef on 27/05/15.
  */
-public class TestActivity extends ActionBarActivity implements Observer {
+public class TestActivity extends ActionBarActivity implements ObserverSensor {
 
     private FloorPlan floorPlan;
     private LocalizationView localizationView;
@@ -119,7 +111,7 @@ public class TestActivity extends ActionBarActivity implements Observer {
 
     }
 
-    public void update(){
+    public void update(int SensorType){
 
     }
 

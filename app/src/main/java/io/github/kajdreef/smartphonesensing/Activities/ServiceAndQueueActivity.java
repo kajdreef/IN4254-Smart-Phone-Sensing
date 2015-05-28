@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -18,14 +17,14 @@ import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Observer;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.R;
 
 /**
  * Created by kajdreef on 02/05/15.
  * Activity monitoring activity
  */
-public class ServiceAndQueueActivity extends ActionBarActivity implements Observer {
+public class ServiceAndQueueActivity extends ActionBarActivity implements ObserverSensor {
     ActivityMonitoring am;
     SensorManager sm;
     AbstractSensor accelerometer;
@@ -71,7 +70,7 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
             public void onClick(View v) {
                 accelerometer.unregister();
                 calculateSQTime(activityList.getTypeList());
-                update();
+                update(0);
             }
         });
     }
@@ -166,14 +165,10 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
     }
 
     @Override
-    public void update(){
-        amountOfNewSamples++;
-        if(amountOfNewSamples > WINDOW_SIZE){
-            // First update am so the new speed and activity is available
-            am.update();
+    public void update(int SensorType){
+        // First update am so the new speed and activity is available
+        am.update(SensorType);
 
-            amountOfNewSamples = 0;
-        }
 
         TextView stateText = (TextView) this.findViewById(R.id.stateData);
         stateText.setText(am.getActivity().toString());

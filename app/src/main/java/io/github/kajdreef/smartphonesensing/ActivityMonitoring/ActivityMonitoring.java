@@ -2,6 +2,8 @@ package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.hardware.Sensor;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -15,6 +17,7 @@ import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
 import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.SpeedExtractor;
 import io.github.kajdreef.smartphonesensing.R;
+import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
 import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
@@ -53,6 +56,12 @@ public class ActivityMonitoring {
     private int WINDOW_SIZE = R.integer.WINDOW_SIZE;
 
     public ActivityMonitoring(Context ctx){
+
+        x = new ArrayList<>();
+        y = new ArrayList<>();
+        z = new ArrayList<>();
+        labels = new ArrayList<>();
+
         // initialise the readers to train kNN
         trainReader = new ReaderTest(ctx, R.raw.accelerometer_data_set_high_sample_rate);
 
@@ -68,26 +77,36 @@ public class ActivityMonitoring {
      */
     public void initKNN(){
         activityList = ActivityType.getInstance();
+
+        ArrayList<Float> xList = new ArrayList<>();
+        ArrayList<Float> yList = new ArrayList<>();
+        ArrayList<Float> zList = new ArrayList<>();
+        ArrayList<Type> labelsList = new ArrayList<>();
+
         // Get all allMag from the trainingData file in resources
         trainReader.readData();
-        if(trainReader.size() >= WINDOW_SIZE) {
-            x = trainReader.getAllX();
-            y = trainReader.getAllY();
-            z = trainReader.getAllZ();
-            labels = trainReader.getAllStates();
-        }
 
+        if(trainReader.size() >= WINDOW_SIZE) {
+            xList = trainReader.getAllX();
+            yList = trainReader.getAllY();
+            zList = trainReader.getAllZ();
+            labelsList = trainReader.getAllStates();
+        }
+        else{
+            Log.e("ActivityMonitoring", "Not enougth training data");
+            System.exit(-1);
+        }
         // Initialise KNN and train it
         extractor = new ArrayList<>();
         extractor.add(new FeatureExtractorMag());
         extractor.add(new FeatureExtractorSD());
         extractor.add(new FeatureExtractorAC());
-        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labels, x, y, z, extractor, WINDOW_SIZE);
+        ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labelsList, xList, yList, zList, extractor, WINDOW_SIZE);
         knn = new KNN(K,train);
-        x.clear();
-        y.clear();
-        z.clear();
-        labels.clear();
+        xList.clear();
+        yList.clear();
+        zList.clear();
+        labelsList.clear();
     }
 
     /**
@@ -103,26 +122,34 @@ public class ActivityMonitoring {
 
     public float getSpeed(){return this.speed;}
 
-    public void update(){
-        // Read the new allMag and return arraylists as big as the window size.
-        accelerometerReader.readData();
-        x = new ArrayList<>(accelerometerReader.getSubListX(WINDOW_SIZE));
-        y = new ArrayList<>(accelerometerReader.getSubListY(WINDOW_SIZE));
-        z = new ArrayList<>(accelerometerReader.getSubListZ(WINDOW_SIZE));
-        labels = new ArrayList<>(accelerometerReader.getSubListStates(WINDOW_SIZE));
+    public void update(int SensorType){
+        // If the sensor type is Accelerometer than get the new data and put it in the array list.
+        if(Sensor.TYPE_ACCELEROMETER == SensorType) {
 
-        // Extract features and classify them
-        FeatureSet fs = new FeatureSet();
-        for (FeatureExtractor ext : extractor) {
-            fs.addFeature(ext.extractFeatures(x, y, z));
-        }
-        Type label = knn.classify(fs);
-        activityList.addType(label);
-        if(label == Type.WALK){
-            activityList.addSpeed( SpeedExtractor.calculateSpeed(x,y,z) );
-        }
-        else{
-            speed = 0;
+            this.x.add(Accelerometer.getGravity()[0]);
+            this.y.add(Accelerometer.getGravity()[1]);
+            this.z.add(Accelerometer.getGravity()[2]);
+
+            // Arraylist has enough data extract feature and classify using KNN
+            if(x.size()>=WINDOW_SIZE) {
+                // Extract features and classify them
+                FeatureSet fs = new FeatureSet();
+                for (FeatureExtractor ext : extractor) {
+                    fs.addFeature(ext.extractFeatures(x, y, z));
+                }
+                Type label = knn.classify(fs);
+                activityList.addType(label);
+                if (label == Type.WALK) {
+                    activityList.addSpeed(SpeedExtractor.calculateSpeed(x, y, z));
+                } else {
+                    speed = 0;
+                }
+
+                // Empty arraylist so new data can be collected.
+                this.x.clear();
+                this.y.clear();
+                this.z.clear();
+            }
         }
     }
 }
