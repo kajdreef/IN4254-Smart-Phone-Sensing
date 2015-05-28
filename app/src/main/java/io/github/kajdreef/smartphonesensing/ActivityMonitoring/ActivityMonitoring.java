@@ -100,7 +100,6 @@ public class ActivityMonitoring {
         extractor = new ArrayList<>();
         extractor.add(new FeatureExtractorMag());
         extractor.add(new FeatureExtractorSD());
-        extractor.add(new FeatureExtractorAC());
         ArrayList<LabeledFeatureSet> train = FeatureExtractor.generateDataSet(labelsList, xList, yList, zList, extractor, WINDOW_SIZE);
         knn = new KNN(K,train);
         xList.clear();

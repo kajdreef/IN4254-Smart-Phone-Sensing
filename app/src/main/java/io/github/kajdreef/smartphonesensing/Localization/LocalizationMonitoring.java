@@ -3,6 +3,7 @@ package io.github.kajdreef.smartphonesensing.Localization;
 import android.content.Context;
 import android.content.res.Resources;
 import android.hardware.Sensor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,13 @@ public class LocalizationMonitoring {
 
         // Initialise the particle filter with numParticles.
         pf = new ParticleFilter(numParticles, floorPlan);
+        // Data to calculate solution
+        aDataX = new ArrayList<>(WINDOW_SIZE);
+        aDataY = new ArrayList<>(WINDOW_SIZE);
+        aDataZ = new ArrayList<>(WINDOW_SIZE);
+        mDataX = new ArrayList<>(WINDOW_SIZE);
+        mDataY = new ArrayList<>(WINDOW_SIZE);
+        mDataZ = new ArrayList<>(WINDOW_SIZE);
     }
 
     public FloorPlan getFloorPlan(){
@@ -76,24 +84,23 @@ public class LocalizationMonitoring {
         }
 
         // If activity type == walking then update the location!
-        if(activityList.getType(activityList.size() - 1) == Type.WALK && mDataX.size() >= WINDOW_SIZE && aDataX.size() >= WINDOW_SIZE) {
-
-            float angle = 0f;
-
-            // Take average angle over Window size of samples.
-            for(int i = 0; i < WINDOW_SIZE; i++){
-                float[] gravity = {this.aDataX.get(i), this.aDataY.get(i), this.aDataZ.get(i)};
-                float[] mData = {this.mDataX.get(i), this.mDataY.get(i), this.mDataZ.get(i)};
-                angle += Magnetometer.calulateAngle(gravity, mData)/WINDOW_SIZE;
+        if( mDataX.size() >= WINDOW_SIZE && aDataX.size() >= WINDOW_SIZE) {
+            if (activityList.getType(activityList.size() - 1) == Type.WALK) {
+                float angle = 0f;
+                // Take average angle over Window size of samples.
+                for (int i = 0; i < WINDOW_SIZE; i++) {
+                    float[] gravity = {this.aDataX.get(i), this.aDataY.get(i), this.aDataZ.get(i)};
+                    float[] mData = {this.mDataX.get(i), this.mDataY.get(i), this.mDataZ.get(i)};
+                    angle += Magnetometer.calulateAngle(gravity, mData) / WINDOW_SIZE;
+                }
+                pf.movement(angle, 1f, WINDOW_SIZE);
+                aDataX.clear();
+                aDataY.clear();
+                aDataZ.clear();
+                mDataX.clear();
+                mDataY.clear();
+                mDataZ.clear();
             }
-
-            pf.movement(angle, 1f, WINDOW_SIZE);
-            aDataX.clear();
-            aDataY.clear();
-            aDataZ.clear();
-            mDataX.clear();
-            mDataY.clear();
-            mDataZ.clear();
         }
     }
 }

@@ -52,7 +52,7 @@ public class Accelerometer extends AbstractSensor {
             gravity[2] =event.values[2];
 
             // Add data to File (Accelerometer state is NONE when not changed for )
-            wr.appendData(gravity[0], gravity[1], gravity[2], Accelerometer.state);
+//            wr.appendData(gravity[0], gravity[1], gravity[2], Accelerometer.state);
             this.notifyObserver(Sensor.TYPE_ACCELEROMETER);
         }
     }

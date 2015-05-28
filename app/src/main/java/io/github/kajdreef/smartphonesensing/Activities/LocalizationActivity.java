@@ -6,13 +6,16 @@ import android.graphics.Point;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
@@ -52,7 +55,7 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
         localizationMonitoring = new LocalizationMonitoring(1000,this.getApplicationContext());
 
         // Initialise Sensors;
-        //initSensors();
+        initSensors();
 
         ArrayList<Particle> particleList = localizationMonitoring.getParticles();
 
@@ -137,6 +140,6 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
         activityMonitoring.update(SensorType);
         localizationMonitoring.update(SensorType);
         localizationView.setParticles(localizationMonitoring.getParticles());
+        localizationView.invalidate();
     }
-
 }

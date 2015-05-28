@@ -36,7 +36,7 @@ public class Magnetometer extends AbstractSensor{
             geomagnetic[0] = event.values[0];
             geomagnetic[1] = event.values[1];
             geomagnetic[2] = event.values[2];
-            wr.appendData(geomagnetic[0],geomagnetic[1],geomagnetic[2], Type.NONE);
+//            wr.appendData(geomagnetic[0],geomagnetic[1],geomagnetic[2], Type.NONE);
             this.notifyObserver(Sensor.TYPE_MAGNETIC_FIELD);
         }
     }
