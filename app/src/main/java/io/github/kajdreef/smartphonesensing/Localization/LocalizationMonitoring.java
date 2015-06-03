@@ -25,7 +25,8 @@ public class LocalizationMonitoring {
     private ActivityType activityList;
     private ParticleFilter pf;
     private FloorPlan floorPlan;
-    private int WINDOW_SIZE;
+    private int WINDOW_SIZE_ACC;
+    private int WINDOW_SIZE_MAG;
 
     //Aquisition frequency
     private static final int f = 200;
@@ -33,7 +34,8 @@ public class LocalizationMonitoring {
     public LocalizationMonitoring(int numParticles, Context ctx){
 
         Resources res = ctx.getResources();
-        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
+        WINDOW_SIZE_ACC = res.getInteger(R.integer.WINDOW_SIZE_ACC);
+        WINDOW_SIZE_MAG = res.getInteger(R.integer.WINDOW_SIZE_MAG);
 
         activityList = ActivityType.getInstance();
 
@@ -57,12 +59,12 @@ public class LocalizationMonitoring {
         if (activityList.getType(activityList.size() - 1) == Type.WALK) {
             float angle = 0f;
             // Take average angle over Window size of samples.
-            for (int i = 0; i < WINDOW_SIZE; i++) {
+            for (int i = 0; i < WINDOW_SIZE_MAG; i++) {
                 float[] gravity = {aDataX.get(i), aDataY.get(i), aDataZ.get(i)};
                 float[] mData = {mDataX.get(i), mDataY.get(i), mDataZ.get(i)};
-                angle += Magnetometer.calulateAngle(gravity, mData) / WINDOW_SIZE;
+                angle += Magnetometer.calulateAngle(gravity, mData) / WINDOW_SIZE_MAG;
             }
-            pf.movement(angle, 1f, WINDOW_SIZE);
+            pf.movement(angle, 1f, WINDOW_SIZE_ACC);
 
             return true;
         }
