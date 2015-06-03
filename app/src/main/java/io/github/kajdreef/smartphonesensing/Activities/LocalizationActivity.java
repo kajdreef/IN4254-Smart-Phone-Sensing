@@ -63,7 +63,6 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
     private ArrayList<Float> magnY;
     private ArrayList<Float> magnZ;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,13 +95,13 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
         setContentView(localizationView);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        accelX = new ArrayList<>(WINDOW_SIZE);
-        accelY = new ArrayList<>(WINDOW_SIZE);
-        accelZ = new ArrayList<>(WINDOW_SIZE);
+        accelX = new ArrayList<>();
+        accelY = new ArrayList<>();
+        accelZ = new ArrayList<>();
 
-        magnX = new ArrayList<>(WINDOW_SIZE);
-        magnY = new ArrayList<>(WINDOW_SIZE);
-        magnZ = new ArrayList<>(WINDOW_SIZE);
+        magnX = new ArrayList<>();
+        magnY = new ArrayList<>();
+        magnZ = new ArrayList<>();
     }
 
     /**
@@ -186,27 +185,11 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
             this.magnZ.add(Magnetometer.getGeomagnetic()[2]);
         }
 
-        if(accelX.size() >= WINDOW_SIZE && magnX.size() >= WINDOW_SIZE) {
-            Runnable runMovement = new Runnable() {
-                @Override
-                public void run() {
-                    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+        if(this.accelX.size() >= WINDOW_SIZE && this.magnX.size() >= WINDOW_SIZE) {
+            Log.d("LocalizationActivity", "Created new Thread");
+            RunMovement runMovement = new RunMovement(accelX, accelY, accelZ, magnX, magnY, magnZ);
 
-                    activityMonitoring.update((ArrayList<Float>) accelX.clone(), (ArrayList<Float>) accelY.clone(), (ArrayList<Float>) accelZ.clone());
-
-                    if (localizationMonitoring.update((ArrayList<Float>) accelX.clone(), (ArrayList<Float>) accelY.clone(), (ArrayList<Float>) accelZ.clone(),
-                                            (ArrayList<Float>) magnX.clone(), (ArrayList<Float>) magnY.clone(), (ArrayList<Float>) magnZ.clone())) {
-
-                        localizationView.setParticles(localizationMonitoring.getParticles());
-
-                        localizationView.post(new Runnable() {
-                            public void run() {
-                                localizationView.invalidate();
-                            }
-                        });
-                    }
-                }
-            };
+            executor.submit(runMovement);
 
             accelX.clear();
             accelY.clear();
@@ -215,9 +198,49 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
             magnX.clear();
             magnY.clear();
             magnZ.clear();
-
-            executor.execute(runMovement);
+            Log.d("LocalizationActivity", "Cleared data sets");
         }
 
+    }
+
+    public class RunMovement implements Runnable {
+        private ArrayList<Float> accelXClone = new ArrayList<>();
+        private ArrayList<Float> accelYClone = new ArrayList<>();
+        private ArrayList<Float> accelZClone = new ArrayList<>();
+
+        private ArrayList<Float> magnXClone = new ArrayList<>();
+        private ArrayList<Float> magnYClone = new ArrayList<>();
+        private ArrayList<Float> magnZClone = new ArrayList<>();
+
+        public RunMovement(ArrayList<Float> xA, ArrayList<Float> yA, ArrayList<Float> zA, ArrayList<Float> xM, ArrayList<Float> yM, ArrayList<Float> zM){
+            this.accelXClone = (ArrayList<Float>) xA.clone();
+            this.accelYClone = (ArrayList<Float>) yA.clone();
+            this.accelZClone = (ArrayList<Float>) zA.clone();
+            this.magnXClone = (ArrayList<Float>) xM.clone();
+            this.magnYClone = (ArrayList<Float>) yM.clone();
+            this.magnZClone = (ArrayList<Float>) zM.clone();
+        }
+
+        @Override
+        public void run() {
+
+            Log.d("RunMovement", "Begin run calculation  " + this.toString());
+
+            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+            activityMonitoring.update( accelXClone, accelYClone, accelZClone);
+
+            if (localizationMonitoring.update( accelXClone, accelYClone, accelZClone,
+                    magnXClone, magnYClone, magnZClone)) {
+
+                localizationView.setParticles(localizationMonitoring.getParticles());
+
+                localizationView.post(new Runnable() {
+                    public void run() {
+                        localizationView.invalidate();
+                    }
+                });
+            }
+            Log.d("RunMovement", "End run calculation  " + this.toString());
+        }
     }
 }
