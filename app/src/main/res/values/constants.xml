@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Constants used in the application -->
-    <integer name="WINDOW_SIZE">160</integer>
+    <integer name="WINDOW_SIZE_ACC">160</integer>
+    <integer name="WINDOW_SIZE_MAG">20</integer>
 </resources>

@@ -2,22 +2,17 @@ package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.hardware.Sensor;
 import android.util.Log;
 
 import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMag;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
-import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.SpeedExtractor;
 import io.github.kajdreef.smartphonesensing.R;
-import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
 import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
@@ -53,7 +48,7 @@ public class ActivityMonitoring {
     private float speed;
 
     // Contains the window size as a constant
-    private int WINDOW_SIZE = R.integer.WINDOW_SIZE;
+    private int WINDOW_SIZE = R.integer.WINDOW_SIZE_ACC;
 
     public ActivityMonitoring(Context ctx){
 
@@ -67,7 +62,7 @@ public class ActivityMonitoring {
 
         // Get the needed resources
         Resources res = ctx.getResources();
-        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
+        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE_ACC);
         accelerometerReader = new Reader(ctx, res.getString(R.string.accelerometer_data_file));
         initKNN();
     }
@@ -121,34 +116,18 @@ public class ActivityMonitoring {
 
     public float getSpeed(){return this.speed;}
 
-    public void update(int SensorType){
-        // If the sensor type is Accelerometer than get the new data and put it in the array list.
-        if(Sensor.TYPE_ACCELEROMETER == SensorType) {
-
-            this.x.add(Accelerometer.getGravity()[0]);
-            this.y.add(Accelerometer.getGravity()[1]);
-            this.z.add(Accelerometer.getGravity()[2]);
-
-            // Arraylist has enough data extract feature and classify using KNN
-            if(x.size()>=WINDOW_SIZE) {
-                // Extract features and classify them
-                FeatureSet fs = new FeatureSet();
-                for (FeatureExtractor ext : extractor) {
-                    fs.addFeature(ext.extractFeatures(x, y, z));
-                }
-                Type label = knn.classify(fs);
-                activityList.addType(label);
-                if (label == Type.WALK) {
-                    activityList.addSpeed(SpeedExtractor.calculateSpeed(x, y, z));
-                } else {
-                    speed = 0;
-                }
-
-                // Empty arraylist so new data can be collected.
-                this.x.clear();
-                this.y.clear();
-                this.z.clear();
-            }
+    public void update(ArrayList<Float> x, ArrayList<Float> y, ArrayList<Float> z){
+        // Extract features and classify them
+        FeatureSet fs = new FeatureSet();
+        for (FeatureExtractor ext : extractor) {
+            fs.addFeature(ext.extractFeatures(x, y, z));
         }
+        Type label = knn.classify(fs);
+        activityList.addType(label);
+//        if (label == Type.WALK) {
+//            activityList.addSpeed(SpeedExtractor.calculateSpeed(x, y, z));
+//        } else {
+//            speed = 0;
+//        }
     }
 }

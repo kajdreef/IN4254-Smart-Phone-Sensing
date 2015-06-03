@@ -111,7 +111,7 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
         super.onCreate(savedInstanceState);
 
         Resources res = this.getResources();
-        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
+        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE_ACC);
         setContentView(R.layout.service_queue_menu);
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 
@@ -167,7 +167,7 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
     @Override
     public void update(int SensorType){
         // First update am so the new speed and activity is available
-        am.update(SensorType);
+//        am.update(SensorType);
 
 
         TextView stateText = (TextView) this.findViewById(R.id.stateData);

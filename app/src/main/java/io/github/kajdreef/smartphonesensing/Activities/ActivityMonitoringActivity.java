@@ -1,12 +1,17 @@
 package io.github.kajdreef.smartphonesensing.Activities;
 
 import android.content.res.Resources;
+import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
@@ -19,44 +24,58 @@ import io.github.kajdreef.smartphonesensing.R;
  * Activity monitoring activity
  */
 public class ActivityMonitoringActivity extends ActionBarActivity implements ObserverSensor {
-    ActivityMonitoring am;
+    ActivityMonitoring activityMonitoring;
     SensorManager sm;
     AbstractSensor accelerometer;
     public int WINDOW_SIZE;
     private int amountOfNewSamples = 0;
+
+    // Arrays with the accelerometer data
+    private ArrayList<Float> accelX;
+    private ArrayList<Float> accelY;
+    private ArrayList<Float> accelZ;
+
+    // Thread Queue
+    private ExecutorService executor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Resources res = this.getResources();
-        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
+        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE_ACC);
 
         String acceleroFileLocation = res.getString(R.string.accelerometer_data_file);
 
-        setContentView(R.layout.activity_monitoring_menu);
-        sm =(SensorManager)getSystemService(SENSOR_SERVICE);
+        executor = Executors.newSingleThreadExecutor();
 
-        am = new ActivityMonitoring(this);
+        setContentView(R.layout.activity_monitoring_menu);
+        sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        activityMonitoring = new ActivityMonitoring(this);
         accelerometer = new Accelerometer(sm, acceleroFileLocation);
 
         accelerometer.attach(this);
         accelerometer.register();
+
+        accelX = new ArrayList<>(WINDOW_SIZE);
+        accelY = new ArrayList<>(WINDOW_SIZE);
+        accelZ = new ArrayList<>(WINDOW_SIZE);
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
     }
 
@@ -84,17 +103,38 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         accelerometer.unregister();
     }
 
 
-    public void update(int ServerType) {
+    public void update(int SensorType) {
 
-        am.update(ServerType);
+        // If the sensor type is Accelerometer than get the new data and put it in the array list.
+        if (Sensor.TYPE_ACCELEROMETER == SensorType && accelX.size() < WINDOW_SIZE) {
+            this.accelX.add(Accelerometer.getGravity()[0]);
+            this.accelY.add(Accelerometer.getGravity()[1]);
+            this.accelZ.add(Accelerometer.getGravity()[2]);
+        }
 
-        TextView t = (TextView) this.findViewById(R.id.textView2);
-        t.setText(am.getActivity().toString() +" "+ Float.toString(am.getSpeed())+ "m/s");
+        if (accelX.size() >= WINDOW_SIZE) {
+            Runnable runMovement = new Runnable() {
+                @Override
+                public void run() {
+                    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+                    activityMonitoring.update(accelX, accelY, accelZ);
+
+                    accelX.clear();
+                    accelY.clear();
+                    accelZ.clear();
+                }
+            };
+
+            executor.execute(runMovement);
+
+            TextView t = (TextView) this.findViewById(R.id.textView2);
+            t.setText(activityMonitoring.getActivity().toString() + " " + Float.toString(activityMonitoring.getSpeed()) + "m/s");
+        }
     }
 }
