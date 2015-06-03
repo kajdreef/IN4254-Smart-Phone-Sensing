@@ -51,37 +51,51 @@ public class ParticleFilter {
             }
         }
     }
-    /** Motion model to estimate dx and dy from alpha angle and velocity. Uses Gaussian distributions
+
+    /**
+     * Motion model to estimate dx and dy from alpha angle and velocity. Uses Gaussian distributions
      * @param alpha
      * @param velocity
      */
     protected float[] motionModel(float alpha, float velocity,int windowSize){
         //Gaussian distribution of mean 1 and SD 0.2m/s
         float v = velocity + (float) new Random().nextGaussian()*velocity/5f;
+
         //Gaussian distribution of mean alpha and SD alphaDeviation
-        int alphaDeviation = 20;
-        float alphaNoise = alpha+floorPlan.getNorthAngle()+90
-                + (float) new Random().nextGaussian()*alphaDeviation;
-        float dx = v*windowSize * (float) Math.cos(alphaNoise)/f;
-        float dy = v*windowSize * (float) Math.sin(alphaNoise)/f;
+        float alphaDeviation = 20f;
+
+        // Add gaussian noise to the angle
+        float alphaNoise = alpha+floorPlan.getNorthAngle() + 90f
+                + (float) new Random().nextGaussian()*2*alphaDeviation-alphaDeviation;
+
+        // Caluclate the dx/dy based on the window size and alpha
+        float dx = v*windowSize * (float) Math.cos(Math.toRadians((double)alphaNoise))/f;
+        float dy = v*windowSize * (float) Math.sin(Math.toRadians((double)alphaNoise))/f;
         float[] out = {dx,dy};
         return out;
     }
+
     /**
      * Move the particles with a distance of dx in the x-direction and dy in y-direction.
      * @param alpha angle of movement w.r.t. north
      * @param velocity velocity of movement
      */
     public void movement(float alpha,float velocity,int windowSize){
-        ArrayList<Particle> particleSave = new ArrayList<>();
-//        particleSave.addAll(particles);
-        particleSave.addAll((ArrayList<Particle>) particles.clone());
+        ArrayList<Particle> particleSave = new ArrayList<Particle>(particles.size());
+        ArrayList<Particle> cloneParticles = new ArrayList<Particle>(particles.size());
+
+        // Clone all items from particle to particleSave
+        for(Particle p : particles) {
+            particleSave.add(new Particle(p.getCurrentLocation(), p.getPreviousLocation()));
+            cloneParticles.add(new Particle(p.getCurrentLocation(), p.getPreviousLocation()));
+        }
+
         ArrayList<Particle> collisionParticles = new ArrayList<>();
 
         // Check if a particle has collision upon moving the particle
-        for (Particle p : particles){
+        for (Particle p : cloneParticles){
             float[] mov = motionModel(alpha,velocity,windowSize);
-            p.updateLocation( mov[0], mov[1]);
+            p.updateLocation(mov[0], mov[1]);
             if(floorPlan.particleCollision(p)){
                 collisionParticles.add(p);
             }
@@ -91,9 +105,18 @@ public class ParticleFilter {
         }
 
         // Remove the collided particles from the particle list.
-        particles.removeAll(collisionParticles);
-        int safeSize = particles.size();
+        cloneParticles.removeAll(collisionParticles);
 
+        // Clear out all the particles
+        particles.clear();
+
+        // Clone all new particles to the particle list
+        for(Particle p : cloneParticles) {
+            particles.add(new Particle(p.getCurrentLocation(), p.getPreviousLocation()));
+        }
+
+        int safeSize = particles.size();
+        
         // Replace the particles that collide with a wall by adding new particles on top of survived particles.
         for (int i = 0; i < collisionParticles.size()*RATIO ; i++) {
             int index = new Random().nextInt(safeSize);
@@ -108,5 +131,6 @@ public class ParticleFilter {
                     particleSave.get(index).getPreviousLocation().getY()));
         }
     }
+
     public ArrayList<Particle> getParticles(){ return this.particles;}
 }

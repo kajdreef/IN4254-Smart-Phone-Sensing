@@ -3,6 +3,7 @@ package io.github.kajdreef.smartphonesensing.Activities;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -11,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
@@ -29,19 +32,43 @@ import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
  */
 public class LocalizationActivity extends ActionBarActivity implements ObserverSensor {
 
+    // Floorplan of the 9th floor of EWI
     private FloorPlan floorPlan;
+
+    // GUI
     private LocalizationView localizationView;
+
+    // Monitoring classes
     private ActivityMonitoring activityMonitoring;
     private LocalizationMonitoring localizationMonitoring;
+
+    // Sensors
     private Accelerometer accelerometer;
     private Magnetometer magnetometer;
     private SensorManager sm;
+
+    // Thread Queue
+    private ExecutorService executor;
+
+    // Window size of the application.
     public int WINDOW_SIZE;
+
+    // Arrays with the accelerometer data
+    private ArrayList<Float> accelX;
+    private ArrayList<Float> accelY;
+    private ArrayList<Float> accelZ;
+
+    // Arrays with the magnetometer data
+    private ArrayList<Float> magnX;
+    private ArrayList<Float> magnY;
+    private ArrayList<Float> magnZ;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        executor  = Executors.newSingleThreadExecutor();
 
         floorPlan = new FloorPlan();
 
@@ -52,7 +79,7 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
         activityMonitoring = new ActivityMonitoring(this.getApplicationContext());
 
         // Generate x amount of particles
-        localizationMonitoring = new LocalizationMonitoring(1,this.getApplicationContext());
+        localizationMonitoring = new LocalizationMonitoring(100,this.getApplicationContext());
 
         // Initialise Sensors;
         initSensors();
@@ -68,6 +95,14 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
 
         setContentView(localizationView);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        accelX = new ArrayList<>(WINDOW_SIZE);
+        accelY = new ArrayList<>(WINDOW_SIZE);
+        accelZ = new ArrayList<>(WINDOW_SIZE);
+
+        magnX = new ArrayList<>(WINDOW_SIZE);
+        magnY = new ArrayList<>(WINDOW_SIZE);
+        magnZ = new ArrayList<>(WINDOW_SIZE);
     }
 
     /**
@@ -136,11 +171,53 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
     }
 
 
-    public void update(int SensorType) {
-        activityMonitoring.update(SensorType);
-        if(localizationMonitoring.update(SensorType)) {
-            localizationView.setParticles(localizationMonitoring.getParticles());
-            localizationView.invalidate();
+    public void update(final int SensorType) {
+
+        // If the sensor type is Accelerometer than get the new data and put it in the array list.
+        if(Sensor.TYPE_ACCELEROMETER == SensorType && accelX.size() <= WINDOW_SIZE) {
+            this.accelX.add(Accelerometer.getGravity()[0]);
+            this.accelY.add(Accelerometer.getGravity()[1]);
+            this.accelZ.add(Accelerometer.getGravity()[2]);
         }
+
+        if(Sensor.TYPE_MAGNETIC_FIELD == SensorType && magnX.size() <= WINDOW_SIZE){
+            this.magnX.add(Magnetometer.getGeomagnetic()[0]);
+            this.magnY.add(Magnetometer.getGeomagnetic()[1]);
+            this.magnZ.add(Magnetometer.getGeomagnetic()[2]);
+        }
+
+        if(accelX.size() >= WINDOW_SIZE && magnX.size() >= WINDOW_SIZE) {
+            Runnable runMovement = new Runnable() {
+                @Override
+                public void run() {
+                    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+
+                    activityMonitoring.update((ArrayList<Float>) accelX.clone(), (ArrayList<Float>) accelY.clone(), (ArrayList<Float>) accelZ.clone());
+
+                    if (localizationMonitoring.update((ArrayList<Float>) accelX.clone(), (ArrayList<Float>) accelY.clone(), (ArrayList<Float>) accelZ.clone(),
+                                            (ArrayList<Float>) magnX.clone(), (ArrayList<Float>) magnY.clone(), (ArrayList<Float>) magnZ.clone())) {
+
+                        localizationView.setParticles(localizationMonitoring.getParticles());
+
+                        localizationView.post(new Runnable() {
+                            public void run() {
+                                localizationView.invalidate();
+                            }
+                        });
+                    }
+                }
+            };
+
+            accelX.clear();
+            accelY.clear();
+            accelZ.clear();
+
+            magnX.clear();
+            magnY.clear();
+            magnZ.clear();
+
+            executor.execute(runMovement);
+        }
+
     }
 }

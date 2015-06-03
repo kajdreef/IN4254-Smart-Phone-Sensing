@@ -9,6 +9,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
@@ -25,9 +28,13 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
     private ParticleFilter pf;
     public int WINDOW_SIZE;
 
+    private ExecutorService executor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        executor  = Executors.newSingleThreadExecutor();
 
         floorPlan = new FloorPlan();
 
@@ -94,36 +101,72 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
         super.onDestroy();
     }
 
+    /**
+     * Update the location of the particles.
+     */
     public void updateMovement() {
-        long j =0;
-        for (int i = 0; i < 50; i++) {
-            while(j<1000){j++;}
-            pf.movement(1.0f, 1.0f, 160);
-            localizationView.setParticles(pf.getParticles());
-            Log.d("Update Screen", "" + pf.getParticles().get(0).getCurrentLocation().getX() + "" + pf.getParticles().get(0).getCurrentLocation().getY());
+        // Movement in +x direction
+        for (int i = 0; i < 70; i++) {
+            // Make Runnable and add it to the executor
+            Runnable runMovement = new Runnable() {
+                @Override
+                public void run() {
+                    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+                    pf.movement(0f, 1.0f, 160);
+                    localizationView.setParticles(pf.getParticles());
+                    localizationView.post(new Runnable() {
+                        public void run() {
+                            localizationView.invalidate();
+                        }
+                    });
+                }
+            };
+            executor.execute(runMovement);
         }
-        localizationView.invalidate();
 
-        j =0;
-        for (int i = 0; i < 50; i++) {
-            while(j<1000){j++;}
-            pf.movement(180.0f, 1.0f, 160);
-            localizationView.setParticles(pf.getParticles());
-            Log.d("Update Screen2", "" + pf.getParticles().get(0).getCurrentLocation().getX() + "" + pf.getParticles().get(0).getCurrentLocation().getY());
+        // Movement in -y direction
+        for (int i = 0; i < 5; i++) {
+            // Make Runnable and add it to the executor
+            Runnable runMovement = new Runnable() {
+                @Override
+                public void run() {
+                    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+                    pf.movement(90f, 1.0f, 160);
+                    localizationView.setParticles(pf.getParticles());
+                    localizationView.post(new Runnable() {
+                        public void run() {
+                            localizationView.invalidate();
+                        }
+                    });
+                }
+            };
+            executor.execute(runMovement);
         }
-        localizationView.invalidate();
 
-        j =0;
-        for (int i = 0; i < 50; i++) {
-            while(j<1000){j++;}
-            pf.movement(0.0f, 1.0f, 160);
-            localizationView.setParticles(pf.getParticles());
-            Log.d("Update Screen3", "" + pf.getParticles().get(0).getCurrentLocation().getX() + "" + pf.getParticles().get(0).getCurrentLocation().getY());
+        // Movement in +y direction
+        for (int i = 0; i < 5; i++) {
+            // Make Runnable and add it to the executor
+            Runnable runMovement = new Runnable() {
+                @Override
+                public void run() {
+                    android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+                    pf.movement(-90f, 1.0f, 160);
+                    localizationView.setParticles(pf.getParticles());
+                    localizationView.post(new Runnable() {
+                        public void run() {
+                            localizationView.invalidate();
+                        }
+                    });
+                }
+            };
+            executor.execute(runMovement);
         }
+
+        executor.shutdown();
+        Log.d("Executor","All Threads Finished!");
     }
 
     public void update(int SensorType){
 
     }
-
 }

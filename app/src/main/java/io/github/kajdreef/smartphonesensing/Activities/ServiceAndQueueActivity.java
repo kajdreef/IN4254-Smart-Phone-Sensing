@@ -167,7 +167,7 @@ public class ServiceAndQueueActivity extends ActionBarActivity implements Observ
     @Override
     public void update(int SensorType){
         // First update am so the new speed and activity is available
-        am.update(SensorType);
+//        am.update(SensorType);
 
 
         TextView stateText = (TextView) this.findViewById(R.id.stateData);

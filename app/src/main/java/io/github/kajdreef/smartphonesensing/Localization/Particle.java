@@ -5,23 +5,30 @@ package io.github.kajdreef.smartphonesensing.Localization;
  */
 public class Particle {
     private Location currentLocation, previousLocation;
-    private float weight;
 
     public Particle(float x, float y){
         currentLocation = new Location(x,y);
         previousLocation = new Location(x,y);
+    }
 
-        this.weight = 1f;
+    public Particle(Location current){
+        currentLocation = new Location(current);
+        previousLocation = new Location(current);
+    }
+
+    /**
+     * Constructor to create a specific particle with current and previous location
+     * @param current
+     * @param previous
+     */
+    public Particle(Location current, Location previous){
+        this.currentLocation = new Location(current);
+        this.previousLocation = new Location(previous);
     }
 
     public void updateLocation(float dx, float dy){
         previousLocation.setLocation(currentLocation);
         currentLocation.move(dx, dy);
-    }
-
-    //TODO: implement this method
-    public void calculateWeight(){
-        this.weight = 1f;
     }
 
     public void setCurrentLocation(Location newLocation){
@@ -38,5 +45,9 @@ public class Particle {
 
     public Location getPreviousLocation(){
         return this.previousLocation;
+    }
+
+    public Particle clone(){
+        return new Particle(this.currentLocation, this.previousLocation);
     }
 }

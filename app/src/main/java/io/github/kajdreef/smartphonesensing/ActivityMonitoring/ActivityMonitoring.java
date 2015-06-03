@@ -121,34 +121,18 @@ public class ActivityMonitoring {
 
     public float getSpeed(){return this.speed;}
 
-    public void update(int SensorType){
-        // If the sensor type is Accelerometer than get the new data and put it in the array list.
-        if(Sensor.TYPE_ACCELEROMETER == SensorType) {
-
-            this.x.add(Accelerometer.getGravity()[0]);
-            this.y.add(Accelerometer.getGravity()[1]);
-            this.z.add(Accelerometer.getGravity()[2]);
-
-            // Arraylist has enough data extract feature and classify using KNN
-            if(x.size()>=WINDOW_SIZE) {
-                // Extract features and classify them
-                FeatureSet fs = new FeatureSet();
-                for (FeatureExtractor ext : extractor) {
-                    fs.addFeature(ext.extractFeatures(x, y, z));
-                }
-                Type label = knn.classify(fs);
-                activityList.addType(label);
-                if (label == Type.WALK) {
-                    activityList.addSpeed(SpeedExtractor.calculateSpeed(x, y, z));
-                } else {
-                    speed = 0;
-                }
-
-                // Empty arraylist so new data can be collected.
-                this.x.clear();
-                this.y.clear();
-                this.z.clear();
-            }
+    public void update(ArrayList<Float> x, ArrayList<Float> y, ArrayList<Float> z){
+        // Extract features and classify them
+        FeatureSet fs = new FeatureSet();
+        for (FeatureExtractor ext : extractor) {
+            fs.addFeature(ext.extractFeatures(x, y, z));
         }
+        Type label = knn.classify(fs);
+        activityList.addType(label);
+//        if (label == Type.WALK) {
+//            activityList.addSpeed(SpeedExtractor.calculateSpeed(x, y, z));
+//        } else {
+//            speed = 0;
+//        }
     }
 }
