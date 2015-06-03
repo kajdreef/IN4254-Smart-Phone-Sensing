@@ -43,7 +43,7 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
         super.onCreate(savedInstanceState);
 
         Resources res = this.getResources();
-        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
+        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE_ACC);
 
         String acceleroFileLocation = res.getString(R.string.accelerometer_data_file);
 

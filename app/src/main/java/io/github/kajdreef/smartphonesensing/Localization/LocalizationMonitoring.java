@@ -2,20 +2,14 @@ package io.github.kajdreef.smartphonesensing.Localization;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.hardware.Sensor;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.R;
-import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
-import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
-import io.github.kajdreef.smartphonesensing.Utils.Reader;
 
 /**
  * Created by kajdreef on 20/05/15.

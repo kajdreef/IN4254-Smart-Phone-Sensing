@@ -2,22 +2,17 @@ package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.hardware.Sensor;
 import android.util.Log;
 
 import java.util.ArrayList;
 
-import io.github.kajdreef.smartphonesensing.Activities.ActivityMonitoringActivity;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMag;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
-import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.SpeedExtractor;
 import io.github.kajdreef.smartphonesensing.R;
-import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
 import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
@@ -53,7 +48,7 @@ public class ActivityMonitoring {
     private float speed;
 
     // Contains the window size as a constant
-    private int WINDOW_SIZE = R.integer.WINDOW_SIZE;
+    private int WINDOW_SIZE = R.integer.WINDOW_SIZE_ACC;
 
     public ActivityMonitoring(Context ctx){
 
@@ -67,7 +62,7 @@ public class ActivityMonitoring {
 
         // Get the needed resources
         Resources res = ctx.getResources();
-        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
+        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE_ACC);
         accelerometerReader = new Reader(ctx, res.getString(R.string.accelerometer_data_file));
         initKNN();
     }

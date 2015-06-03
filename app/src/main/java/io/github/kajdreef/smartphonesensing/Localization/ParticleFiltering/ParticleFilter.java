@@ -1,6 +1,7 @@
 package io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering;
 
 import android.content.res.Resources;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -65,7 +66,7 @@ public class ParticleFilter {
         float alphaDeviation = 20f;
 
         // Add gaussian noise to the angle
-        float alphaNoise = alpha+floorPlan.getNorthAngle() + 90f
+        float alphaNoise = alpha + floorPlan.getNorthAngle() + 90f
                 + (float) new Random().nextGaussian()*2*alphaDeviation-alphaDeviation;
 
         // Caluclate the dx/dy based on the window size and alpha
@@ -83,6 +84,8 @@ public class ParticleFilter {
     public void movement(float alpha,float velocity,int windowSize){
         ArrayList<Particle> particleSave = new ArrayList<Particle>(particles.size());
         ArrayList<Particle> cloneParticles = new ArrayList<Particle>(particles.size());
+
+        Log.d("ParticleFilter", "alpha = " + alpha);
 
         // Clone all items from particle to particleSave
         for(Particle p : particles) {

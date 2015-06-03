@@ -40,7 +40,7 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
 
         // Get resources from the resource folder
         Resources res = this.getResources();
-        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE);
+        WINDOW_SIZE = res.getInteger(R.integer.WINDOW_SIZE_ACC);
 
         // Generate x amount of particles
         pf = new ParticleFilter(1000, floorPlan);

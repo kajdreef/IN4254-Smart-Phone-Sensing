@@ -2,5 +2,5 @@
 <resources>
     <!-- Constants used in the application -->
     <integer name="WINDOW_SIZE_ACC">160</integer>
-    <integer name="WINDOW_SIZE_MAG">80</integer>
+    <integer name="WINDOW_SIZE_MAG">20</integer>
 </resources>
