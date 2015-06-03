@@ -21,6 +21,7 @@ import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
+import io.github.kajdreef.smartphonesensing.Localization.RunMovement;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
@@ -66,7 +67,7 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        executor  = Executors.newSingleThreadExecutor();
+        executor = Executors.newSingleThreadExecutor();
 
         floorPlan = new FloorPlan();
 
@@ -78,7 +79,7 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
         activityMonitoring = new ActivityMonitoring(this.getApplicationContext());
 
         // Generate x amount of particles
-        localizationMonitoring = new LocalizationMonitoring(100,this.getApplicationContext());
+        localizationMonitoring = new LocalizationMonitoring(1000, this.getApplicationContext());
 
         // Initialise Sensors;
         initSensors();
@@ -107,8 +108,8 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
     /**
      * Initialise the sensors
      */
-    public void initSensors(){
-        sm =(SensorManager)getSystemService(SENSOR_SERVICE);
+    public void initSensors() {
+        sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         // Get needed file locations where data needs to be stored.
         Resources res = this.getResources();
@@ -173,68 +174,36 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
     public void update(final int SensorType) {
 
         // If the sensor type is Accelerometer than get the new data and put it in the array list.
-        if(Sensor.TYPE_ACCELEROMETER == SensorType && accelX.size() <= WINDOW_SIZE_ACC) {
+        if (Sensor.TYPE_ACCELEROMETER == SensorType && accelX.size() <= WINDOW_SIZE_ACC) {
             this.accelX.add(Accelerometer.getGravity()[0]);
             this.accelY.add(Accelerometer.getGravity()[1]);
             this.accelZ.add(Accelerometer.getGravity()[2]);
         }
 
-        if(Sensor.TYPE_MAGNETIC_FIELD == SensorType && magnX.size() <= WINDOW_SIZE_MAG){
+        if (Sensor.TYPE_MAGNETIC_FIELD == SensorType && magnX.size() <= WINDOW_SIZE_MAG) {
             this.magnX.add(Magnetometer.getGeomagnetic()[0]);
             this.magnY.add(Magnetometer.getGeomagnetic()[1]);
             this.magnZ.add(Magnetometer.getGeomagnetic()[2]);
         }
 
-        if(this.accelX.size() >= WINDOW_SIZE_ACC && this.magnX.size() >= WINDOW_SIZE_MAG) {
-            RunMovement runMovement = new RunMovement(accelX, accelY, accelZ, magnX, magnY, magnZ);
+        if (this.accelX.size() >= WINDOW_SIZE_ACC && this.magnX.size() >= WINDOW_SIZE_MAG) {
+            // Create runnable
+            RunMovement runMovement = new RunMovement(accelX, accelY, accelZ, magnX, magnY, magnZ,
+                                                activityMonitoring, localizationMonitoring, localizationView);
 
+            // Add runnable to queue
             executor.submit(runMovement);
 
+            // Clear data of acceleromter
             accelX.clear();
             accelY.clear();
             accelZ.clear();
 
+            // Clear data of Magnetometer.
             magnX.clear();
             magnY.clear();
             magnZ.clear();
         }
 
-    }
-
-    public class RunMovement implements Runnable {
-        private ArrayList<Float> accelXClone = new ArrayList<>();
-        private ArrayList<Float> accelYClone = new ArrayList<>();
-        private ArrayList<Float> accelZClone = new ArrayList<>();
-
-        private ArrayList<Float> magnXClone = new ArrayList<>();
-        private ArrayList<Float> magnYClone = new ArrayList<>();
-        private ArrayList<Float> magnZClone = new ArrayList<>();
-
-        public RunMovement(ArrayList<Float> xA, ArrayList<Float> yA, ArrayList<Float> zA, ArrayList<Float> xM, ArrayList<Float> yM, ArrayList<Float> zM){
-            this.accelXClone = (ArrayList<Float>) xA.clone();
-            this.accelYClone = (ArrayList<Float>) yA.clone();
-            this.accelZClone = (ArrayList<Float>) zA.clone();
-            this.magnXClone = (ArrayList<Float>) xM.clone();
-            this.magnYClone = (ArrayList<Float>) yM.clone();
-            this.magnZClone = (ArrayList<Float>) zM.clone();
-        }
-
-        @Override
-        public void run() {
-            android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-            activityMonitoring.update( accelXClone, accelYClone, accelZClone);
-
-            if (localizationMonitoring.update( accelXClone, accelYClone, accelZClone,
-                    magnXClone, magnYClone, magnZClone)) {
-
-                localizationView.setParticles(localizationMonitoring.getParticles());
-
-                localizationView.post(new Runnable() {
-                    public void run() {
-                        localizationView.invalidate();
-                    }
-                });
-            }
-        }
     }
 }
