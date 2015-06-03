@@ -85,8 +85,6 @@ public class ParticleFilter {
         ArrayList<Particle> particleSave = new ArrayList<Particle>(particles.size());
         ArrayList<Particle> cloneParticles = new ArrayList<Particle>(particles.size());
 
-        Log.d("ParticleFilter", "alpha = " + alpha);
-
         // Clone all items from particle to particleSave
         for(Particle p : particles) {
             particleSave.add(new Particle(p.getCurrentLocation(), p.getPreviousLocation()));
