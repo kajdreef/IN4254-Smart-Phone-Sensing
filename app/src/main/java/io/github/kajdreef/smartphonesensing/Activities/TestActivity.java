@@ -8,6 +8,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +28,12 @@ import io.github.kajdreef.smartphonesensing.R;
 public class TestActivity extends ActionBarActivity implements ObserverSensor {
 
     private FloorPlan floorPlan;
+    // GUI
     private LocalizationView localizationView;
+    private TextView activityText;
+    private Button initialBelief;
+    private LinearLayout localizationLayout;
+
     private ParticleFilter pf;
     public int WINDOW_SIZE;
 
@@ -34,9 +43,10 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        executor  = Executors.newSingleThreadExecutor();
-
         floorPlan = new FloorPlan();
+
+        // initialize the thread which will perform all the particle movement calculations
+        executor  = Executors.newSingleThreadExecutor();
 
         // Get resources from the resource folder
         Resources res = this.getResources();
@@ -45,18 +55,44 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
         // Generate x amount of particles
         pf = new ParticleFilter(1000, floorPlan);
 
+        initView();
 
+        this.updateMovement();
+    }
+
+    public void initView(){
         // Get window size;
         Point windowSize = new Point();
         this.getWindowManager().getDefaultDisplay().getSize(windowSize);
 
+        // Set layout
+        setContentView(R.layout.localization_menu);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         // Create the localization view with screen orientation in landscape and set it
         localizationView = new LocalizationView(this, floorPlan.getPath(), pf.getParticles(), windowSize.x, windowSize.y);
 
-        setContentView(localizationView);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        activityText = (TextView)findViewById(R.id.activityText);
+        activityText.setText("Activity: Queuing!!");
 
-        this.updateMovement();
+        localizationLayout = (LinearLayout)findViewById(R.id.floorPlan);
+        localizationLayout.addView(localizationView);
+
+        initialBelief = (Button) findViewById(R.id.initialBelief);
+        initialBelief.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                executor.shutdownNow();
+
+                if(executor.isShutdown()) {
+                    executor = Executors.newSingleThreadExecutor();
+                    pf.resetParticleFilter();
+                    localizationView.setParticles(pf.getParticles());
+                    updateMovement();
+                }
+
+            }
+        });
     }
 
 @Override
@@ -112,7 +148,7 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
                 @Override
                 public void run() {
                     android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-                    pf.movement(0f, 1.0f, 160);
+                    pf.movement(90f, 1.0f, 160);
                     localizationView.setParticles(pf.getParticles());
                     localizationView.post(new Runnable() {
                         public void run() {
@@ -131,7 +167,7 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
                 @Override
                 public void run() {
                     android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-                    pf.movement(90f, 1.0f, 160);
+                    pf.movement(180, 1.0f, 160);
                     localizationView.setParticles(pf.getParticles());
                     localizationView.post(new Runnable() {
                         public void run() {
@@ -150,7 +186,7 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
                 @Override
                 public void run() {
                     android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-                    pf.movement(-90f, 1.0f, 160);
+                    pf.movement(0f, 1.0f, 160);
                     localizationView.setParticles(pf.getParticles());
                     localizationView.post(new Runnable() {
                         public void run() {

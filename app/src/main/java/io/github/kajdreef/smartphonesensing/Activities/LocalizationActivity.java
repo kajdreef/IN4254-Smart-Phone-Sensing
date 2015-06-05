@@ -10,12 +10,17 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
@@ -36,6 +41,9 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
 
     // GUI
     private LocalizationView localizationView;
+    private TextView activityText;
+    private Button initialBelief;
+    private LinearLayout localizationLayout;
 
     // Monitoring classes
     private ActivityMonitoring activityMonitoring;
@@ -48,6 +56,9 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
 
     // Thread Queue
     private ExecutorService executor;
+
+    // Activity List
+    ActivityType activityList = ActivityType.getInstance();
 
     // Window size of the application.
     public int WINDOW_SIZE_ACC;
@@ -81,20 +92,11 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
         // Generate x amount of particles
         localizationMonitoring = new LocalizationMonitoring(1000, this.getApplicationContext());
 
-        // Initialise Sensors;
+        // Initialize Sensors;
         initSensors();
 
-        ArrayList<Particle> particleList = localizationMonitoring.getParticles();
-
-        // Get window size;
-        Point windowSize = new Point();
-        this.getWindowManager().getDefaultDisplay().getSize(windowSize);
-
-        // Create the localization view with screen orientation in landscape and set it
-        localizationView = new LocalizationView(this, floorPlan.getPath(), particleList, windowSize.x, windowSize.y);
-
-        setContentView(localizationView);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        // Initialize View;
+        initView();
 
         accelX = new ArrayList<>();
         accelY = new ArrayList<>();
@@ -104,6 +106,43 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
         magnY = new ArrayList<>();
         magnZ = new ArrayList<>();
     }
+
+    public void initView(){
+        // Get window size;
+        Point windowSize = new Point();
+        this.getWindowManager().getDefaultDisplay().getSize(windowSize);
+
+        // Set layout
+        setContentView(R.layout.localization_menu);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        // Create the localization view with screen orientation in landscape and set it
+        localizationView = new LocalizationView(this, floorPlan.getPath(), localizationMonitoring.getParticles(), windowSize.x, windowSize.y);
+
+        // Text that shows the current activity
+        activityText = (TextView)findViewById(R.id.activityText);
+
+        // add the localization view (floorplan + particles) to the GUI
+        localizationLayout = (LinearLayout)findViewById(R.id.floorPlan);
+        localizationLayout.addView(localizationView);
+
+        // Add functionality to the Button
+        initialBelief = (Button) findViewById(R.id.initialBelief);
+        initialBelief.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                executor.shutdownNow();
+
+                if(executor.isShutdown()) {
+                    executor = Executors.newSingleThreadExecutor();
+                    localizationMonitoring.reset();
+                    localizationView.setParticles(localizationMonitoring.getParticles());
+                }
+
+            }
+        });
+    }
+
 
     /**
      * Initialise the sensors
@@ -193,6 +232,9 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
 
             // Add runnable to queue
             executor.submit(runMovement);
+
+            // Update the text with current activity
+            activityText.setText("Activity: " + activityList.getType(activityList.size()-1).toString());
 
             // Clear data of acceleromter
             accelX.clear();

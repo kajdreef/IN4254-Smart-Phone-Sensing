@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
@@ -28,6 +29,7 @@ public class LocalizationView extends View {
 
     public LocalizationView(Context ctx, Path floorPlan, ArrayList<Particle> allParticles, float width, float height){
         super(ctx);
+
         this.wallPath = floorPlan;
         this.particles = allParticles;
 

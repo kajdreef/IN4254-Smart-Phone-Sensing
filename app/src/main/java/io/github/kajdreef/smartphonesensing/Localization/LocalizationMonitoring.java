@@ -40,6 +40,14 @@ public class LocalizationMonitoring {
         pf = new ParticleFilter(numParticles, floorPlan);
     }
 
+    /**
+     * Reset the localizationMonitoring
+     */
+    public void reset(){
+        pf.resetParticleFilter();
+        activityList.empty();
+    }
+
     public FloorPlan getFloorPlan(){
         return this.floorPlan;
     }
@@ -48,6 +56,16 @@ public class LocalizationMonitoring {
         return pf.getParticles();
     }
 
+    /**
+     * Update the particles based on the data from the sensors
+     * @param aDataX
+     * @param aDataY
+     * @param aDataZ
+     * @param mDataX
+     * @param mDataY
+     * @param mDataZ
+     * @return
+     */
     public boolean update(ArrayList<Float> aDataX, ArrayList<Float> aDataY, ArrayList<Float> aDataZ,
                           ArrayList<Float> mDataX, ArrayList<Float> mDataY, ArrayList<Float> mDataZ){
         if (activityList.getType(activityList.size() - 1) == Type.WALK) {

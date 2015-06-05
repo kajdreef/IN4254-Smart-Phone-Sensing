@@ -24,6 +24,11 @@ public class ActivityType {
         return singleton;
     }
 
+    public void empty(){
+        activityList.clear();
+        speedList.clear();
+    }
+
     public int size(){
         return activityList.size();
     }

@@ -34,6 +34,11 @@ public class ParticleFilter {
         this.generateParticles(N_INIT);
     }
 
+    public void resetParticleFilter(){
+        particles.clear();
+        this.generateParticles(N_INIT);
+    }
+
     /**
      * Generate particles that are uniformly distributed over the map.
      * @param numOfParticles that need to be generated
