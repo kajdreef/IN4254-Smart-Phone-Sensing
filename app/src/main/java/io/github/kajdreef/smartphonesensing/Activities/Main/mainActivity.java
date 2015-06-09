@@ -14,7 +14,7 @@ import io.github.kajdreef.smartphonesensing.R;
 /**
  * Created by kajdreef on 09/06/15.
  */
-public class mainActivity extends Activity {
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

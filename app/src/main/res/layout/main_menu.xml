@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,11 +12,7 @@
         android:text="Localization"
         android:id="@+id/localizationButton"
         android:layout_gravity="center_horizontal"
-        android:onClick="startLocalization"
-        android:layout_marginTop="80dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:onClick="startLocalization" />
 
     <Button
         android:layout_width="match_parent"
@@ -24,11 +20,7 @@
         android:text="Classification"
         android:id="@+id/classificationButton"
         android:layout_gravity="center_horizontal"
-        android:onClick="startClassification"
-        android:layout_above="@+id/testButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="27dp" />
+        android:onClick="startClassification" />
 
     <Button
         android:layout_width="match_parent"
@@ -36,9 +28,6 @@
         android:text="Test Activity"
         android:id="@+id/testButton"
         android:layout_gravity="center_horizontal"
-        android:onClick="startTest"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:onClick="startTest" />
 
-</RelativeLayout>
+</LinearLayout>

@@ -33,6 +33,7 @@ public class RunActivity implements Runnable{
         aX.clear();
         aY.clear();
         aZ.clear();
+
         handler.post(new Runnable() {
             public void run() {
                 stateText.setText(am.getActivity().toString());

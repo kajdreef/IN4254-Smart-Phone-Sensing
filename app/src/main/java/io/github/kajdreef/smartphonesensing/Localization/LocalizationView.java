@@ -23,7 +23,7 @@ public class LocalizationView extends View {
     public ArrayList<Particle> particles;
     private float offSetX;
     private float offSetY;
-    private final float size = 0.8f;
+    private final float size = 0.98f;
     private float scale;
     private Point compassDir;
     private Point compassPlac;
@@ -46,8 +46,8 @@ public class LocalizationView extends View {
         scaleMatrix.setScale(scale, scale, rectF.left, rectF.top);
         this.wallPath.transform(scaleMatrix);
 
-        this.offSetX = (width - width*0.8f)/2;
-        this.offSetY = (height - height*0.8f)/2;
+        this.offSetX = (width - width*size)/2;
+        this.offSetY = (height - height*size)/2;
 
         // Initialise the compass
         compassDir = new Point();

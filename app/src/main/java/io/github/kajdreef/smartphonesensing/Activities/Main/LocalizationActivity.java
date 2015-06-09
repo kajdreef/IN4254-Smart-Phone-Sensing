@@ -42,7 +42,6 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
     // GUI
     private LocalizationView localizationView;
-    private TextView activityText;
     private Button initialBelief;
     private Button startButton;
     private Button stopButton;
@@ -122,9 +121,6 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
         // Create the localization view with screen orientation in landscape and set it
         localizationView = new LocalizationView(this, floorPlan.getPath(), localizationMonitoring.getParticles(), windowSize.x, windowSize.y);
-
-        // Text that shows the current activity
-        activityText = (TextView)findViewById(R.id.activityText);
 
         // add the localization view (floorplan + particles) to the GUI
         localizationLayout = (LinearLayout)findViewById(R.id.floorPlan);
@@ -265,9 +261,6 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
             // Add runnable to queue
             executor.submit(runMovement);
-
-            // Update the text with current activity
-            activityText.setText("Activity: " + activityList.getType(activityList.size()-1).toString());
 
             // Clear data of acceleromter
             accelX.clear();

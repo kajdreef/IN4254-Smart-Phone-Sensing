@@ -5,6 +5,9 @@ import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,24 +33,24 @@ import io.github.kajdreef.smartphonesensing.Utils.QueueMath;
  * Activity monitoring activity
  */
 public class ServiceAndQueueActivity extends Activity implements ObserverSensor {
-    ActivityMonitoring am;
-    SensorManager sm;
-    AbstractSensor accelerometer;
-    public int WINDOW_SIZE_ACC;
+    private ActivityMonitoring am;
+    private SensorManager sm;
+    private AbstractSensor accelerometer;
+    private int WINDOW_SIZE_ACC;
     private int amountOfNewSamples = 0;
 
-    float WINDOW_TIME = WINDOW_SIZE_ACC /200;
+    private float WINDOW_TIME = WINDOW_SIZE_ACC /200;
 
-    float serviceTime;
-    float queueTime;
+    private float serviceTime;
+    private float queueTime;
 
-    ActivityType activityList;
+    private ActivityType activityList;
 
     // GUI
-    Button start, stop;
-    TextView serviceText = (TextView) this.findViewById(R.id.serviceData);
-    TextView queueText = (TextView) this.findViewById(R.id.queueData);
-    TextView stateText = (TextView) this.findViewById(R.id.stateData);
+    private Button start, stop;
+    private TextView serviceText = (TextView) this.findViewById(R.id.serviceData);
+    private TextView queueText = (TextView) this.findViewById(R.id.queueData);
+    private TextView stateText = (TextView) this.findViewById(R.id.stateData);
 
     // Thread Queue
     private ExecutorService executor;
@@ -56,7 +59,7 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     private ArrayList<Float> accelX;
     private ArrayList<Float> accelY;
     private ArrayList<Float> accelZ;
-
+    
     private void initAccelerometerAndButtons(){
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 
@@ -78,6 +81,21 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
         start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 accelerometer.register();
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                float[] result = QueueMath.calculateSQTime(activityList.getTypeList(), WINDOW_SIZE_ACC);
+
+                                serviceText.setText("TBD");
+
+                                queueText.setText("TBD");
+                            }
+                        });
+                    }
+                });
                 serviceTime = 0.0f;
                 queueTime = 0.0f;
             }
@@ -88,10 +106,21 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
         stop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 accelerometer.unregister();
-                float[] result = QueueMath.calculateSQTime(activityList.getTypeList(), WINDOW_SIZE_ACC);
-                serviceTime = result[0];
-                queueTime = result[1];
-                update(0);
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                float[] result = QueueMath.calculateSQTime(activityList.getTypeList(), WINDOW_SIZE_ACC);
+
+                                serviceText.setText("" + result[0] + "s");
+
+                                queueText.setText("" + result[1] + "s");
+                            }
+                        });
+                    }
+                });
             }
         });
 
@@ -123,8 +152,6 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
 
     @Override
     public void update(int SensorType){
-        // First update am so the new speed and activity is available
-//        am.update(SensorType);
         // If the sensor type is Accelerometer than get the new data and put it in the array list.
         if (Sensor.TYPE_ACCELEROMETER == SensorType && accelX.size() < WINDOW_SIZE_ACC) {
             this.accelX.add(Accelerometer.getGravity()[0]);
@@ -140,9 +167,6 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
             accelZ.clear();
         }
 
-        serviceText.setText("" + serviceTime + "s");
-
-        queueText.setText("" + queueTime + "s");
     }
 }
 
