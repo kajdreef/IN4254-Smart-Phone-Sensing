@@ -1,5 +1,6 @@
-package io.github.kajdreef.smartphonesensing.Activities;
+package io.github.kajdreef.smartphonesensing.Activities.Main;
 
+import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -34,7 +35,7 @@ import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
 /**
  * Created by kajdreef on 15/05/15.
  */
-public class LocalizationActivity extends ActionBarActivity implements ObserverSensor {
+public class LocalizationActivity extends Activity implements ObserverSensor {
 
     // Floorplan of the 9th floor of EWI
     private FloorPlan floorPlan;
@@ -43,7 +44,10 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
     private LocalizationView localizationView;
     private TextView activityText;
     private Button initialBelief;
+    private Button startButton;
+    private Button stopButton;
     private LinearLayout localizationLayout;
+
 
     // Monitoring classes
     private ActivityMonitoring activityMonitoring;
@@ -87,24 +91,24 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
         WINDOW_SIZE_ACC = res.getInteger(R.integer.WINDOW_SIZE_ACC);
         WINDOW_SIZE_MAG = res.getInteger(R.integer.WINDOW_SIZE_MAG);
 
-        activityMonitoring = new ActivityMonitoring(this.getApplicationContext());
+        Runnable initMonitoring = new Runnable() {
+            @Override
+            public void run() {
+                // Initialize activity monitoring
+                activityMonitoring = new ActivityMonitoring(getApplicationContext());
 
-        // Generate x amount of particles
-        localizationMonitoring = new LocalizationMonitoring(1000, this.getApplicationContext());
+                // Generate x amount of particles
+                localizationMonitoring = new LocalizationMonitoring(1000, getApplicationContext());
+            }
+        };
+
+        executor.execute(initMonitoring);
 
         // Initialize Sensors;
         initSensors();
 
         // Initialize View;
         initView();
-
-        accelX = new ArrayList<>();
-        accelY = new ArrayList<>();
-        accelZ = new ArrayList<>();
-
-        magnX = new ArrayList<>();
-        magnY = new ArrayList<>();
-        magnZ = new ArrayList<>();
     }
 
     public void initView(){
@@ -126,19 +130,39 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
         localizationLayout = (LinearLayout)findViewById(R.id.floorPlan);
         localizationLayout.addView(localizationView);
 
-        // Add functionality to the Button
+        // Add functionality to the Button (Reset the particle filter)
         initialBelief = (Button) findViewById(R.id.initialBelief);
         initialBelief.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                accelerometer.unregister();
+                magnetometer.unregister();
                 executor.shutdownNow();
 
-                if(executor.isShutdown()) {
+                if (executor.isShutdown()) {
                     executor = Executors.newSingleThreadExecutor();
                     localizationMonitoring.reset();
                     localizationView.setParticles(localizationMonitoring.getParticles());
                 }
 
+            }
+        });
+
+        stopButton = (Button) findViewById(R.id.stopButton);
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                accelerometer.unregister();
+                magnetometer.unregister();
+            }
+        });
+
+        startButton = (Button) findViewById(R.id.startButton);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                accelerometer.register();
+                magnetometer.register();
             }
         });
     }
@@ -148,6 +172,15 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
      * Initialise the sensors
      */
     public void initSensors() {
+        // Init arrays were the sensor data is placed
+        accelX = new ArrayList<>();
+        accelY = new ArrayList<>();
+        accelZ = new ArrayList<>();
+
+        magnX = new ArrayList<>();
+        magnY = new ArrayList<>();
+        magnZ = new ArrayList<>();
+
         sm = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         // Get needed file locations where data needs to be stored.

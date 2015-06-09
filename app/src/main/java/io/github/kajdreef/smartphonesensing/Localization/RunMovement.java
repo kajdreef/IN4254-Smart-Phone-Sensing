@@ -50,7 +50,9 @@ public class RunMovement implements Runnable {
         if (this.lm.update( accelXClone, accelYClone, accelZClone,
                 magnXClone, magnYClone, magnZClone)) {
 
+            // Set values like particles and the direction
             this.localizationView.setParticles(this.lm.getParticles());
+            this.localizationView.setAngle(this.lm.getAngle());
 
             this.localizationView.post(new Runnable() {
                 public void run() {

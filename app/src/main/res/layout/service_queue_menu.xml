@@ -91,6 +91,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="None"
         android:id="@+id/stateData"
         android:layout_alignTop="@+id/textView5"
         android:layout_alignLeft="@+id/queueData"

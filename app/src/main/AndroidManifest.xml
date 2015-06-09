@@ -9,35 +9,43 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity
-            android:name=".Activities.DataCollectingButtons"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".Activities.KNNPerformance"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".Activities.ActivityMonitoringActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".Activities.LocalizationActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name=".Activities.ServiceAndQueueActivity"
-            android:label="@string/app_name" >
-        </activity>
 
-        <!-- Test Activities-->
+        <!-- Main Activities -->
         <activity
-            android:name=".Activities.TestActivity"
+            android:name=".Activities.Main.mainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activities.Main.LocalizationActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".Activities.Main.ServiceAndQueueActivity"
+            android:label="@string/app_name" >
+        </activity>
+
+        <!-- Data Collection -->
+        <activity
+            android:name=".Activities.Test.DataCollectingButtons"
+            android:label="@string/app_name" >
+        </activity>
+
+        <!-- Test Activities-->
+        <activity
+            android:name=".Activities.Test.TestActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".Activities.Test.KNNPerformance"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name=".Activities.Test.ActivityMonitoringActivity"
+            android:label="@string/app_name" >
         </activity>
     </application>
 

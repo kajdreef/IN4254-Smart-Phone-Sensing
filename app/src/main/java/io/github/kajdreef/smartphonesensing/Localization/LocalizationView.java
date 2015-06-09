@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -24,6 +25,9 @@ public class LocalizationView extends View {
     private float offSetY;
     private final float size = 0.8f;
     private float scale;
+    private Point compassDir;
+    private Point compassPlac;
+    private final int compassRadius = 100;
 
     Path wallPath;
 
@@ -45,8 +49,18 @@ public class LocalizationView extends View {
         this.offSetX = (width - width*0.8f)/2;
         this.offSetY = (height - height*0.8f)/2;
 
+        // Initialise the compass
+        compassDir = new Point();
+        compassPlac = new Point((int)(width/2), (int)(height/2));
+        setAngle(0f);
+
         // Offset of the dx and dy
         wallPath.offset(offSetX, offSetY);
+    }
+
+    public void setAngle(float _angle){
+        compassDir.set( compassPlac.x + (int)(compassRadius*Math.cos(Math.toRadians((double) _angle + 90 + FloorPlan.getNorthAngle()))),
+                        compassPlac.y + (int)(compassRadius*Math.sin(Math.toRadians((double) _angle + 90 + FloorPlan.getNorthAngle()))));
 
     }
 
@@ -67,9 +81,19 @@ public class LocalizationView extends View {
         // Draw Walls
         canvas.drawPath(wallPath, paint);
 
-        paint.setStrokeWidth(5);
+        // Draw Compass circle
+        canvas.drawCircle(compassPlac.x, compassPlac.y, compassRadius, paint);
+        paint.setStrokeWidth(20);
+        paint.setColor(Color.BLUE);
+        // Draw Direction of the compass
+        canvas.drawLine(compassPlac.x, compassPlac.y, compassDir.x, compassDir.y, paint);
+        //canvas.drawPoint(compassDir.x, compassDir.y, paint);
 
+        paint.setStrokeWidth(5);
         paint.setColor(Color.RED);
+        // Draw Direction of the compass
+        canvas.drawPoint(compassDir.x, compassDir.y, paint);
+
         // Draw Particles
         for(Particle p : this.particles) {
             canvas.drawPoint(p.getCurrentLocation().getX()*scale + offSetX, p.getCurrentLocation().getY()*scale + offSetY , paint);

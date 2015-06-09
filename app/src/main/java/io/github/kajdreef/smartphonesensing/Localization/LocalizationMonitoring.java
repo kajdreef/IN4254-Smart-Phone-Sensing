@@ -22,6 +22,8 @@ public class LocalizationMonitoring {
     private int WINDOW_SIZE_ACC;
     private int WINDOW_SIZE_MAG;
 
+    private float angle = 0.0f;
+
     //Aquisition frequency
     private static final int f = 200;
 
@@ -56,6 +58,10 @@ public class LocalizationMonitoring {
         return pf.getParticles();
     }
 
+    public float getAngle(){
+        return this.angle;
+    }
+
     /**
      * Update the particles based on the data from the sensors
      * @param aDataX
@@ -69,7 +75,7 @@ public class LocalizationMonitoring {
     public boolean update(ArrayList<Float> aDataX, ArrayList<Float> aDataY, ArrayList<Float> aDataZ,
                           ArrayList<Float> mDataX, ArrayList<Float> mDataY, ArrayList<Float> mDataZ){
         if (activityList.getType(activityList.size() - 1) == Type.WALK) {
-            float angle = 0f;
+            angle = 0f;
             // Take average angle over Window size of samples.
             for (int i = 0; i < WINDOW_SIZE_MAG; i++) {
                 float[] gravity = {aDataX.get(i), aDataY.get(i), aDataZ.get(i)};

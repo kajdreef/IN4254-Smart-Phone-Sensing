@@ -1,5 +1,6 @@
-package io.github.kajdreef.smartphonesensing.Activities;
+package io.github.kajdreef.smartphonesensing.Activities.Test;
 
+import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
@@ -25,13 +26,15 @@ import io.github.kajdreef.smartphonesensing.R;
 /**
  * Created by kajdreef on 27/05/15.
  */
-public class TestActivity extends ActionBarActivity implements ObserverSensor {
+public class TestActivity extends Activity implements ObserverSensor {
 
     private FloorPlan floorPlan;
     // GUI
     private LocalizationView localizationView;
     private TextView activityText;
     private Button initialBelief;
+    private Button startButton;
+    private Button stopButton;
     private LinearLayout localizationLayout;
 
     private ParticleFilter pf;
@@ -84,12 +87,28 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
             public void onClick(View v) {
                 executor.shutdownNow();
 
-                if(executor.isShutdown()) {
+                if (executor.isShutdown()) {
                     executor = Executors.newSingleThreadExecutor();
                     pf.resetParticleFilter();
                     localizationView.setParticles(pf.getParticles());
                     updateMovement();
                 }
+
+            }
+        });
+
+        stopButton = (Button) findViewById(R.id.stopButton);
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        startButton = (Button) findViewById(R.id.startButton);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });
@@ -150,6 +169,7 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
                     android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
                     pf.movement(90f, 1.0f, 160);
                     localizationView.setParticles(pf.getParticles());
+                    localizationView.setAngle(90f);
                     localizationView.post(new Runnable() {
                         public void run() {
                             localizationView.invalidate();
@@ -169,6 +189,7 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
                     android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
                     pf.movement(180, 1.0f, 160);
                     localizationView.setParticles(pf.getParticles());
+                    localizationView.setAngle(180f);
                     localizationView.post(new Runnable() {
                         public void run() {
                             localizationView.invalidate();
@@ -188,6 +209,7 @@ public class TestActivity extends ActionBarActivity implements ObserverSensor {
                     android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
                     pf.movement(0f, 1.0f, 160);
                     localizationView.setParticles(pf.getParticles());
+                    localizationView.setAngle(0f);
                     localizationView.post(new Runnable() {
                         public void run() {
                             localizationView.invalidate();

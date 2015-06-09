@@ -5,6 +5,7 @@
     android:layout_gravity="bottom"
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -23,9 +24,13 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="Initial Belief"
-            android:id="@+id/initialBelief" />
+            android:id="@+id/initialBelief"
+            android:layout_marginLeft="76dp"
+            android:layout_marginStart="76dp"
+            android:layout_alignTop="@+id/startButton"
+            android:layout_toRightOf="@+id/activityText"
+            android:layout_toEndOf="@+id/activityText" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,6 +43,28 @@
             android:layout_alignParentStart="true"
             android:layout_marginLeft="25dp"
             android:layout_marginStart="25dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            android:id="@+id/startButton"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/stopButton"
+            android:layout_toStartOf="@+id/stopButton"
+            android:layout_marginRight="52dp"
+            android:layout_marginEnd="52dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop"
+            android:id="@+id/stopButton"
+            android:layout_marginRight="35dp"
+            android:layout_marginEnd="35dp"
+            android:layout_alignTop="@+id/startButton"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
 
     </RelativeLayout>
