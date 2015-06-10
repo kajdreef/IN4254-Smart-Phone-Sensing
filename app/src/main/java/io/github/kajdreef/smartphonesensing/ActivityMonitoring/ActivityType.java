@@ -41,8 +41,15 @@ public class ActivityType {
         return activityList.get(index);
     }
 
+    public Type getLast(){
+        if(activityList.size()>0)
+            return activityList.get(this.activityList.size()-1);
+        else
+            return Type.NONE;
+    }
+
     public ArrayList<Type> getTypeList(){
-        return activityList;
+        return (ArrayList<Type>)activityList.clone();
     }
 
     public void addSpeed(float speed){

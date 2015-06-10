@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
@@ -45,6 +46,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
     private Button initialBelief;
     private Button startButton;
     private Button stopButton;
+    private TextView activityText;
     private LinearLayout localizationLayout;
 
 
@@ -90,18 +92,12 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         WINDOW_SIZE_ACC = res.getInteger(R.integer.WINDOW_SIZE_ACC);
         WINDOW_SIZE_MAG = res.getInteger(R.integer.WINDOW_SIZE_MAG);
 
-        Runnable initMonitoring = new Runnable() {
-            @Override
-            public void run() {
-                // Initialize activity monitoring
-                activityMonitoring = new ActivityMonitoring(getApplicationContext());
 
-                // Generate x amount of particles
-                localizationMonitoring = new LocalizationMonitoring(1000, getApplicationContext());
-            }
-        };
+        activityMonitoring = new ActivityMonitoring(getApplicationContext());
 
-        executor.execute(initMonitoring);
+        // Generate x amount of particles
+        localizationMonitoring = new LocalizationMonitoring(800, getApplicationContext());
+
 
         // Initialize Sensors;
         initSensors();
@@ -133,14 +129,15 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
             public void onClick(View v) {
                 accelerometer.unregister();
                 magnetometer.unregister();
-                executor.shutdownNow();
 
-                if (executor.isShutdown()) {
-                    executor = Executors.newSingleThreadExecutor();
-                    localizationMonitoring.reset();
-                    localizationView.setParticles(localizationMonitoring.getParticles());
-                }
-
+                localizationMonitoring.reset();
+                localizationView.setParticles(localizationMonitoring.getParticles());
+                localizationView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        localizationView.invalidate();
+                    }
+                });
             }
         });
 
@@ -271,6 +268,9 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
             magnX.clear();
             magnY.clear();
             magnZ.clear();
+
+            activityText = (TextView) findViewById(R.id.activityText);
+            activityText.setText(activityList.getLast().toString());
         }
 
     }

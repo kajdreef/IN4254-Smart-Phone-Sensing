@@ -15,9 +15,9 @@ public class QueueMath {
      * @param WINDOW_TIME
      * @return result[0] is the total queue time; result[1] is the average queue time per person in the queue
      */
-    public static float[] calculateSQTime(ArrayList<Type> activityList, int WINDOW_TIME){
-        float time = 0;
-        float result = 0;
+    public static float[] calculateSQTime(ArrayList<Type> activityList, float WINDOW_TIME){
+        float time = 0f;
+        float result = 0f;
         float[] returnValue = new float[2];
 
         // amount of moving forward steps during the queue.
@@ -28,7 +28,7 @@ public class QueueMath {
             if (time < 10.0f){
                 if (at == Type.QUEUE) {
                     // Update the total queuing time
-                    result+= WINDOW_TIME;
+                    result += WINDOW_TIME;
                     time = 0;
                     previous = Type.QUEUE;
                 } else if(result > 0){
@@ -45,7 +45,10 @@ public class QueueMath {
         }
 
         returnValue[0] = result;
-        returnValue[1] = result/steps;
+        if (steps == 0)
+            returnValue[1] = result;
+        else
+            returnValue[1] = result/steps;
 
         return returnValue;
     }

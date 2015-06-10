@@ -14,15 +14,13 @@ public class RunActivity implements Runnable{
 
     private ArrayList<Float> aX, aY, aZ;
     private ActivityMonitoring am;
-    Handler handler = new Handler();
     TextView stateText;
 
-    public RunActivity(ActivityMonitoring _am, ArrayList<Float> _x, ArrayList<Float> _y, ArrayList<Float> _z, TextView _stateText){
+    public RunActivity(ActivityMonitoring _am, ArrayList<Float> _x, ArrayList<Float> _y, ArrayList<Float> _z){
         this.am = _am;
         this.aX = _x;
         this.aY = _y;
         this.aZ = _z;
-        this.stateText = _stateText;
     };
 
     @Override
@@ -33,11 +31,5 @@ public class RunActivity implements Runnable{
         aX.clear();
         aY.clear();
         aZ.clear();
-
-        handler.post(new Runnable() {
-            public void run() {
-                stateText.setText(am.getActivity().toString());
-            }
-        });
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -37,9 +38,8 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     private SensorManager sm;
     private AbstractSensor accelerometer;
     private int WINDOW_SIZE_ACC;
+    private float WINDOW_TIME;
     private int amountOfNewSamples = 0;
-
-    private float WINDOW_TIME = WINDOW_SIZE_ACC /200;
 
     private float serviceTime;
     private float queueTime;
@@ -48,9 +48,9 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
 
     // GUI
     private Button start, stop;
-    private TextView serviceText = (TextView) this.findViewById(R.id.serviceData);
-    private TextView queueText = (TextView) this.findViewById(R.id.queueData);
-    private TextView stateText = (TextView) this.findViewById(R.id.stateData);
+    private TextView serviceText;
+    private TextView queueText;
+    private TextView stateText;
 
     // Thread Queue
     private ExecutorService executor;
@@ -81,21 +81,14 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
         start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 accelerometer.register();
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                float[] result = QueueMath.calculateSQTime(activityList.getTypeList(), WINDOW_SIZE_ACC);
 
-                                serviceText.setText("TBD");
+                // Initialise displayed text to TTD
+                serviceText = (TextView)findViewById(R.id.serviceData);
+                serviceText.setText("TBD");
+                queueText = (TextView)findViewById(R.id.queueData);
+                queueText.setText("TBD");
+                activityList.empty();
 
-                                queueText.setText("TBD");
-                            }
-                        });
-                    }
-                });
                 serviceTime = 0.0f;
                 queueTime = 0.0f;
             }
@@ -106,21 +99,14 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
         stop.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 accelerometer.unregister();
-                executor.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                float[] result = QueueMath.calculateSQTime(activityList.getTypeList(), WINDOW_SIZE_ACC);
 
-                                serviceText.setText("" + result[0] + "s");
+                float[] result = QueueMath.calculateSQTime(activityList.getTypeList(), WINDOW_TIME);
 
-                                queueText.setText("" + result[1] + "s");
-                            }
-                        });
-                    }
-                });
+                // Show calculated results on screen.
+                serviceText = (TextView)findViewById(R.id.serviceData);
+                serviceText.setText("" + result[0] + "s");
+                queueText = (TextView)findViewById(R.id.queueData);
+                queueText.setText("" + result[1] + "s");
             }
         });
 
@@ -134,9 +120,10 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Set window size
+        // Set window size and Window_time
         Resources res = this.getResources();
         WINDOW_SIZE_ACC = res.getInteger(R.integer.WINDOW_SIZE_ACC);
+        WINDOW_TIME = ((float)WINDOW_SIZE_ACC)/200f;
 
         setContentView(R.layout.service_queue_menu);
         activityList = ActivityType.getInstance();
@@ -160,13 +147,15 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
         }
 
         if (accelX.size() >= WINDOW_SIZE_ACC) {
-            Runnable runActivity = new RunActivity(am, (ArrayList<Float>) accelX.clone(), (ArrayList<Float>) accelY.clone(), (ArrayList<Float>) accelZ.clone(), stateText);
+            Runnable runActivity = new RunActivity(am, (ArrayList<Float>) accelX.clone(), (ArrayList<Float>) accelY.clone(), (ArrayList<Float>) accelZ.clone());
             executor.execute(runActivity);
             accelX.clear();
             accelY.clear();
             accelZ.clear();
-        }
 
+            stateText = (TextView) this.findViewById(R.id.stateData);
+            stateText.setText(activityList.getLast().toString());
+        }
     }
 }
 
