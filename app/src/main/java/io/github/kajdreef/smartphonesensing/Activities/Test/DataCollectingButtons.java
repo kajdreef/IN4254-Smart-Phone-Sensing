@@ -1,4 +1,4 @@
-package io.github.kajdreef.smartphonesensing.Activities;
+package io.github.kajdreef.smartphonesensing.Activities.Test;
 
 import android.content.res.Resources;
 import android.hardware.SensorManager;

@@ -2,7 +2,7 @@
 //
 //import android.test.ActivityUnitTestCase;
 //
-//import io.github.kajdreef.smartphonesensing.Activities.TestActivity;
+//import io.github.kajdreef.smartphonesensing.Activities.Test.TestActivity;
 //
 //public class ParticleFilterTest extends ActivityUnitTestCase<TestActivity> {
 //

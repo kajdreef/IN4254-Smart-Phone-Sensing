@@ -1,5 +1,6 @@
-package io.github.kajdreef.smartphonesensing.Activities;
+package io.github.kajdreef.smartphonesensing.Activities.Test;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -23,7 +24,7 @@ import io.github.kajdreef.smartphonesensing.R;
  * Created by kajdreef on 02/05/15.
  * Activity monitoring activity
  */
-public class ActivityMonitoringActivity extends ActionBarActivity implements ObserverSensor {
+public class ActivityMonitoringActivity extends Activity implements ObserverSensor {
     ActivityMonitoring activityMonitoring;
     SensorManager sm;
     AbstractSensor accelerometer;
@@ -134,7 +135,7 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
             executor.execute(runMovement);
 
             TextView t = (TextView) this.findViewById(R.id.textView2);
-            t.setText(activityMonitoring.getActivity().toString() + " " + Float.toString(activityMonitoring.getSpeed()) + "m/s");
+            t.setText(activityMonitoring.getActivity().toString());
         }
     }
 }

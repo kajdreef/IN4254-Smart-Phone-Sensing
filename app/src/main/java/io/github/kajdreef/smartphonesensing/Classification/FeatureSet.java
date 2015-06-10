@@ -26,6 +26,9 @@ public class FeatureSet {
     public void addFeature(FeatureSet feat){
         data.addAll(feat.getData());
     }
+    public void addFeature(Float f){
+        data.add(f);
+    }
     public float distance(FeatureSet feat){
         float distance = 0;
         for (int i = 0; i < data.size() ; i++) {

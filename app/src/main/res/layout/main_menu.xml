@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/mainMenuLayout">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Localization"
+        android:id="@+id/localizationButton"
+        android:layout_gravity="center_horizontal"
+        android:onClick="startLocalization" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Classification"
+        android:id="@+id/classificationButton"
+        android:layout_gravity="center_horizontal"
+        android:onClick="startClassification" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test Activity"
+        android:id="@+id/testButton"
+        android:layout_gravity="center_horizontal"
+        android:onClick="startTest" />
+
+</LinearLayout>

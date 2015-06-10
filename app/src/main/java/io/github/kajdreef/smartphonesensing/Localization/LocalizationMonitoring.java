@@ -22,6 +22,8 @@ public class LocalizationMonitoring {
     private int WINDOW_SIZE_ACC;
     private int WINDOW_SIZE_MAG;
 
+    private float angle = 0.0f;
+
     //Aquisition frequency
     private static final int f = 200;
 
@@ -40,6 +42,14 @@ public class LocalizationMonitoring {
         pf = new ParticleFilter(numParticles, floorPlan);
     }
 
+    /**
+     * Reset the localizationMonitoring
+     */
+    public void reset(){
+        pf.resetParticleFilter();
+        activityList.empty();
+    }
+
     public FloorPlan getFloorPlan(){
         return this.floorPlan;
     }
@@ -48,10 +58,24 @@ public class LocalizationMonitoring {
         return pf.getParticles();
     }
 
+    public float getAngle(){
+        return this.angle;
+    }
+
+    /**
+     * Update the particles based on the data from the sensors
+     * @param aDataX
+     * @param aDataY
+     * @param aDataZ
+     * @param mDataX
+     * @param mDataY
+     * @param mDataZ
+     * @return
+     */
     public boolean update(ArrayList<Float> aDataX, ArrayList<Float> aDataY, ArrayList<Float> aDataZ,
                           ArrayList<Float> mDataX, ArrayList<Float> mDataY, ArrayList<Float> mDataZ){
         if (activityList.getType(activityList.size() - 1) == Type.WALK) {
-            float angle = 0f;
+            angle = 0f;
             // Take average angle over Window size of samples.
             for (int i = 0; i < WINDOW_SIZE_MAG; i++) {
                 float[] gravity = {aDataX.get(i), aDataY.get(i), aDataZ.get(i)};

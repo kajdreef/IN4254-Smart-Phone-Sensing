@@ -1,8 +1,13 @@
 package io.github.kajdreef.smartphonesensing.Localization;
 
+import android.widget.Button;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.R;
 
 /**
  * Created by kajdreef on 03/06/15.
@@ -50,13 +55,27 @@ public class RunMovement implements Runnable {
         if (this.lm.update( accelXClone, accelYClone, accelZClone,
                 magnXClone, magnYClone, magnZClone)) {
 
+            // Set values like particles and the direction
             this.localizationView.setParticles(this.lm.getParticles());
+            this.localizationView.setAngle(this.lm.getAngle());
 
             this.localizationView.post(new Runnable() {
                 public void run() {
+                    // TODO implement update UI from thread
+//                    TextView activityText = (TextView) localizationView.findViewById(R.id.activityText);
+//                    activityText.setText("Activity: " + am.getActivity().toString());
                     localizationView.invalidate();
                 }
             });
         }
+
+        // TODO implement update UI from thread
+//        this.localizationView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                TextView activityText = (TextView) localizationView.findViewById(R.id.activityText);
+//                activityText.setText("Activity: " + am.getActivity().toString());
+//            }
+//        });
     }
 }
