@@ -134,7 +134,7 @@ public class ActivityMonitoringActivity extends ActionBarActivity implements Obs
             executor.execute(runMovement);
 
             TextView t = (TextView) this.findViewById(R.id.textView2);
-            t.setText(activityMonitoring.getActivity().toString() + " " + Float.toString(activityMonitoring.getSpeed()) + "m/s");
+            t.setText(activityMonitoring.getActivity().toString());
         }
     }
 }

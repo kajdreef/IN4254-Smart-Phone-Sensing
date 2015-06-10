@@ -78,7 +78,7 @@ public class LocalizationActivity extends ActionBarActivity implements ObserverS
         activityMonitoring = new ActivityMonitoring(this.getApplicationContext());
 
         // Generate x amount of particles
-        localizationMonitoring = new LocalizationMonitoring(100,this.getApplicationContext());
+        localizationMonitoring = new LocalizationMonitoring(1000,this.getApplicationContext());
 
         // Initialise Sensors;
         initSensors();

@@ -58,7 +58,7 @@ public class LocalizationMonitoring {
                 float[] mData = {mDataX.get(i), mDataY.get(i), mDataZ.get(i)};
                 angle += Magnetometer.calulateAngle(gravity, mData) / WINDOW_SIZE_MAG;
             }
-            pf.movement(angle, 1f, WINDOW_SIZE_ACC);
+            pf.movement(angle, 1.4f, WINDOW_SIZE_ACC);
 
             return true;
         }
