@@ -96,7 +96,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         activityMonitoring = new ActivityMonitoring(getApplicationContext());
 
         // Generate x amount of particles
-        localizationMonitoring = new LocalizationMonitoring(800, getApplicationContext());
+        localizationMonitoring = new LocalizationMonitoring(1000,this.getApplicationContext());
 
 
         // Initialize Sensors;

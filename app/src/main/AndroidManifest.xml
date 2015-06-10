@@ -40,10 +40,6 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".Activities.Test.KNNPerformance"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name=".Activities.Test.ActivityMonitoringActivity"
             android:label="@string/app_name" >
         </activity>

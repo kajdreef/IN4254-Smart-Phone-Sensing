@@ -135,7 +135,7 @@ public class ActivityMonitoringActivity extends Activity implements ObserverSens
             executor.execute(runMovement);
 
             TextView t = (TextView) this.findViewById(R.id.textView2);
-            t.setText(activityMonitoring.getActivity().toString() + " " + Float.toString(activityMonitoring.getSpeed()) + "m/s");
+            t.setText(activityMonitoring.getActivity().toString());
         }
     }
 }
