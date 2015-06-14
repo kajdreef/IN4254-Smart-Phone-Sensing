@@ -38,8 +38,7 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     private SensorManager sm;
     private AbstractSensor accelerometer;
     private int WINDOW_SIZE_ACC;
-    private float WINDOW_TIME;
-    private int amountOfNewSamples = 0;
+    private float WINDOW_TIME = 0;
 
     private float serviceTime;
     private float queueTime;
@@ -51,6 +50,10 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     private TextView serviceText;
     private TextView queueText;
     private TextView stateText;
+
+
+    private float timeStart;
+    private long numSamples=0;
 
     // Thread Queue
     private ExecutorService executor;
@@ -123,7 +126,6 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
         // Set window size and Window_time
         Resources res = this.getResources();
         WINDOW_SIZE_ACC = res.getInteger(R.integer.WINDOW_SIZE_ACC);
-        WINDOW_TIME = ((float)WINDOW_SIZE_ACC)/200f;
 
         setContentView(R.layout.service_queue_menu);
         activityList = ActivityType.getInstance();
@@ -141,12 +143,21 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     public void update(int SensorType){
         // If the sensor type is Accelerometer than get the new data and put it in the array list.
         if (Sensor.TYPE_ACCELEROMETER == SensorType && accelX.size() < WINDOW_SIZE_ACC) {
+            if(accelX.size() == 0){
+                timeStart = System.currentTimeMillis();
+            }
             this.accelX.add(Accelerometer.getGravity()[0]);
             this.accelY.add(Accelerometer.getGravity()[1]);
             this.accelZ.add(Accelerometer.getGravity()[2]);
         }
 
         if (accelX.size() >= WINDOW_SIZE_ACC) {
+            numSamples++;
+            WINDOW_TIME = (numSamples-1)*WINDOW_TIME/numSamples +
+                    ((System.currentTimeMillis() - timeStart) / 1000f)/numSamples;
+
+            Log.d("SQActivity", "Average time to fill window size = " + WINDOW_TIME + " s");
+
             Runnable runActivity = new RunActivity(am, (ArrayList<Float>) accelX.clone(), (ArrayList<Float>) accelY.clone(), (ArrayList<Float>) accelZ.clone());
             executor.execute(runActivity);
             accelX.clear();

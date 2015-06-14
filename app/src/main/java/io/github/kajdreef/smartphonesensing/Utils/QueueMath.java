@@ -35,13 +35,15 @@ public class QueueMath {
                     // update the walking time if bigger than 10 seconds than we are out of the queue.
                     time += WINDOW_TIME;
                     // Check if the previous one was NOT walk so it can be seen as 1 step.
-                    if(previous != Type.WALK)
+                    if(previous != Type.WALK) {
                         steps++;
+                    }
                     previous = Type.WALK;
                 }
             }
-            else
+            else {
                 break;
+            }
         }
 
         returnValue[0] = result;
