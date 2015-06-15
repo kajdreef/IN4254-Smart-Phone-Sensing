@@ -1,6 +1,7 @@
 package io.github.kajdreef.smartphonesensing.Activities.Main;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -38,7 +39,7 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     private SensorManager sm;
     private AbstractSensor accelerometer;
     private int WINDOW_SIZE_ACC;
-    private float WINDOW_TIME = 0;
+    private double WINDOW_TIME = 0d;
 
     private float serviceTime;
     private float queueTime;
@@ -52,7 +53,7 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     private TextView stateText;
 
 
-    private float timeStart;
+    private long timeStart;
     private long numSamples=0;
 
     // Thread Queue
@@ -103,7 +104,7 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
             public void onClick(View v) {
                 accelerometer.unregister();
 
-                float[] result = QueueMath.calculateSQTime(activityList.getTypeList(), WINDOW_TIME);
+                float[] result = QueueMath.calculateSQTime(activityList.getTypeList(), (float)WINDOW_TIME);
 
                 // Show calculated results on screen.
                 serviceText = (TextView)findViewById(R.id.serviceData);
@@ -128,6 +129,8 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
         WINDOW_SIZE_ACC = res.getInteger(R.integer.WINDOW_SIZE_ACC);
 
         setContentView(R.layout.service_queue_menu);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         activityList = ActivityType.getInstance();
 
         initAccelerometerAndButtons();
@@ -143,7 +146,7 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     public void update(int SensorType){
         // If the sensor type is Accelerometer than get the new data and put it in the array list.
         if (Sensor.TYPE_ACCELEROMETER == SensorType && accelX.size() < WINDOW_SIZE_ACC) {
-            if(accelX.size() == 0){
+            if(this.accelX.size() == 0){
                 timeStart = System.currentTimeMillis();
             }
             this.accelX.add(Accelerometer.getGravity()[0]);
@@ -153,10 +156,15 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
 
         if (accelX.size() >= WINDOW_SIZE_ACC) {
             numSamples++;
-            WINDOW_TIME = (numSamples-1)*WINDOW_TIME/numSamples +
-                    ((System.currentTimeMillis() - timeStart) / 1000f)/numSamples;
 
-            Log.d("SQActivity", "Average time to fill window size = " + WINDOW_TIME + " s");
+            // calculates the time between last window size of data.
+            double deltaTime = Double.valueOf(System.currentTimeMillis() - timeStart)/1000d;
+            double samples = Double.valueOf(numSamples);
+
+            WINDOW_TIME =  ((samples - 1d)/samples)*WINDOW_TIME + deltaTime/samples;
+
+            Log.d("SQActivity", "deltaTime = " + Double.toString(deltaTime) + " s");
+            Log.d("SQActivity", "Average time to fill window size = " + Double.toString(WINDOW_TIME) + " s");
 
             Runnable runActivity = new RunActivity(am, (ArrayList<Float>) accelX.clone(), (ArrayList<Float>) accelY.clone(), (ArrayList<Float>) accelZ.clone());
             executor.execute(runActivity);
