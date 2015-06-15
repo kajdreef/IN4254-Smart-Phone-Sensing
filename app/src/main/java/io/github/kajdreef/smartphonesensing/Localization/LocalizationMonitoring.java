@@ -74,7 +74,9 @@ public class LocalizationMonitoring {
      */
     public boolean update(ArrayList<Float> aDataX, ArrayList<Float> aDataY, ArrayList<Float> aDataZ,
                           ArrayList<Float> mDataX, ArrayList<Float> mDataY, ArrayList<Float> mDataZ){
-        if (activityList.getType(activityList.size() - 1) == Type.WALK) {
+        Type activity = activityList.getType(activityList.size() - 1);
+
+        if (activity == Type.WALK || activity == Type.QUEUE ) {
             angle = 0f;
             // Take average angle over Window size of samples.
             for (int i = 0; i < WINDOW_SIZE_MAG; i++) {
@@ -82,7 +84,11 @@ public class LocalizationMonitoring {
                 float[] mData = {mDataX.get(i), mDataY.get(i), mDataZ.get(i)};
                 angle += Magnetometer.calulateAngle(gravity, mData) / WINDOW_SIZE_MAG;
             }
-            pf.movement(angle, 1.4f, WINDOW_SIZE_ACC);
+
+            // If activity Type update the movement of partcicles
+            if(activity == Type.WALK){
+                pf.movement(angle, 1.4f, WINDOW_SIZE_ACC);
+            }
 
             return true;
         }

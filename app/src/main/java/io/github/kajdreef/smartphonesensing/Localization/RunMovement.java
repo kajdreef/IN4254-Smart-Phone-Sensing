@@ -62,20 +62,12 @@ public class RunMovement implements Runnable {
             this.localizationView.post(new Runnable() {
                 public void run() {
                     // TODO implement update UI from thread
-//                    TextView activityText = (TextView) localizationView.findViewById(R.id.activityText);
-//                    activityText.setText("Activity: " + am.getActivity().toString());
                     localizationView.invalidate();
                 }
             });
         }
 
         // TODO implement update UI from thread
-//        this.localizationView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                TextView activityText = (TextView) localizationView.findViewById(R.id.activityText);
-//                activityText.setText("Activity: " + am.getActivity().toString());
-//            }
-//        });
+
     }
 }
