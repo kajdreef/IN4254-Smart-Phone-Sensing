@@ -61,13 +61,9 @@ public class RunMovement implements Runnable {
 
             this.localizationView.post(new Runnable() {
                 public void run() {
-                    // TODO implement update UI from thread
                     localizationView.invalidate();
                 }
             });
         }
-
-        // TODO implement update UI from thread
-
     }
 }
