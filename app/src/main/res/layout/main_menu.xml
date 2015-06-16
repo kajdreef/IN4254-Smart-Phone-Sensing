@@ -30,4 +30,11 @@
         android:layout_gravity="center_horizontal"
         android:onClick="startTest" />
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Data Collecting"
+        android:id="@+id/dataCollecting"
+        android:onClick="startCollectingData" />
+
 </LinearLayout>

@@ -18,7 +18,7 @@ public class Magnetometer extends AbstractSensor{
     private static float[] geomagnetic = new float[3];
     int numSamples =0;
 
-    public Magnetometer(SensorManager sm, String fileLocation){
+    public Magnetometer(SensorManager sm){
         super(sm);
         type = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 

@@ -72,12 +72,8 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
 
         executor = Executors.newSingleThreadExecutor();
 
-        // Get needed file locations where data needs to be stored.
-        Resources res = this.getResources();
-        String acceleroFileLocation = res.getString(R.string.accelerometer_data_file);
-
         // Start accelerometer and attacht this Activity as Observer
-        accelerometer = new Accelerometer(sm, acceleroFileLocation);
+        accelerometer = new Accelerometer(sm);
         accelerometer.attach(this);
 
         // Create walk button, when clicked on the button state will change state to WALK.

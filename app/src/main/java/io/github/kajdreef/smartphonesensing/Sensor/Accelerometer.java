@@ -18,19 +18,10 @@ import io.github.kajdreef.smartphonesensing.Utils.Writer;
 public class Accelerometer extends AbstractSensor {
 
     private Writer wr;
-    private static Type state = Type.NONE;
     private static float[] gravity = {0f,0f,0f};
-    int numSamples = 0;
+    private int numSamples = 0;
 
-    public static void setState(Type newState){
-        Accelerometer.state = newState;
-    }
-
-    public static Type getState(){
-        return Accelerometer.state;
-    }
-
-    public Accelerometer(SensorManager sm, String fileLocation){
+    public Accelerometer(SensorManager sm){
         super(sm);
         type = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 

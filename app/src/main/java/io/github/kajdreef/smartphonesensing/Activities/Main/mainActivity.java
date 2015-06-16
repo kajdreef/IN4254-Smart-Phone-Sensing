@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import io.github.kajdreef.smartphonesensing.Activities.Test.DataCollectingButtons;
 import io.github.kajdreef.smartphonesensing.Activities.Test.TestActivity;
 import io.github.kajdreef.smartphonesensing.R;
 
@@ -24,23 +25,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main_menu);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,7 +64,12 @@ public class MainActivity extends Activity {
     }
 
     public void startTest(View view){
-        Intent startClass = new Intent(this, TestActivity.class);
-        startActivity(startClass);
+        Intent startTest = new Intent(this, TestActivity.class);
+        startActivity(startTest);
+    }
+
+    public void startCollectingData(View view){
+        Intent startCollecting = new Intent(this, DataCollectingButtons.class);
+        startActivity(startCollecting);
     }
 }
