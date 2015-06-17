@@ -137,6 +137,28 @@ public class ParticleFilter {
                     particleSave.get(index).getPreviousLocation().getY()));
         }
     }
+    public Particle converged(float radius){
+        float xmean = 0f;
+        float ymean = 0f;
+        float xSD = 0f;
+        float ySD = 0f;
+        for (Particle p : particles){
+            xmean += p.getCurrentLocation().getX()/particles.size();
+            ymean += p.getCurrentLocation().getY()/particles.size();
+        }
+        for (Particle p : particles){
+            xSD += (p.getCurrentLocation().getX()-xmean)*(p.getCurrentLocation().getX()-xmean);
+            ySD += (p.getCurrentLocation().getY()-ymean)*(p.getCurrentLocation().getY()-ymean);
+        }
+        xSD = xSD/particles.size();
+        xSD = (float)Math.sqrt(xSD);
+        ySD = ySD/particles.size();
+        ySD = (float)Math.sqrt(ySD);
 
+        if (xSD < radius && ySD < radius ){
+            return new Particle(xmean,ymean);
+        }
+        return null;
+    }
     public ArrayList<Particle> getParticles(){ return this.particles;}
 }

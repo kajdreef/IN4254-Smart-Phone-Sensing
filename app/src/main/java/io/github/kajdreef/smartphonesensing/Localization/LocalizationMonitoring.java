@@ -92,4 +92,7 @@ public class LocalizationMonitoring {
         }
         return false;
     }
+    public Particle hasConverged(){
+        return pf.converged(2f);
+    }
 }

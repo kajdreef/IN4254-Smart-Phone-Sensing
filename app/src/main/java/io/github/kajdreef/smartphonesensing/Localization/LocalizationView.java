@@ -28,6 +28,7 @@ public class LocalizationView extends View {
     private Point compassDir;
     private Point compassPlac;
     private final int compassRadius = 100;
+    private Paint particlePaint;
 
     Path wallPath;
 
@@ -56,6 +57,10 @@ public class LocalizationView extends View {
 
         // Offset of the dx and dy
         wallPath.offset(offSetX, offSetY);
+
+        particlePaint = new Paint();
+        particlePaint.setStrokeWidth(5);
+        particlePaint.setColor(Color.RED);
     }
 
     public void setAngle(float _angle){
@@ -89,18 +94,19 @@ public class LocalizationView extends View {
         canvas.drawLine(compassPlac.x, compassPlac.y, compassDir.x, compassDir.y, paint);
         //canvas.drawPoint(compassDir.x, compassDir.y, paint);
 
-        paint.setStrokeWidth(5);
-        paint.setColor(Color.RED);
         // Draw Direction of the compass
-        canvas.drawPoint(compassDir.x, compassDir.y, paint);
+        canvas.drawPoint(compassDir.x, compassDir.y, particlePaint);
 
         // Draw Particles
         for(Particle p : this.particles) {
-            canvas.drawPoint(p.getCurrentLocation().getX()*scale + offSetX, p.getCurrentLocation().getY()*scale + offSetY , paint);
+            canvas.drawPoint(p.getCurrentLocation().getX()*scale + offSetX, p.getCurrentLocation().getY()*scale + offSetY , particlePaint);
         }
     }
 
     public void setParticles(ArrayList<Particle> newParticles) {
         this.particles = newParticles;
+    }
+    public void setColor(int _color){
+        particlePaint.setColor(_color);
     }
 }

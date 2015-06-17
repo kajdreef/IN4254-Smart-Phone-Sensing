@@ -1,5 +1,6 @@
 package io.github.kajdreef.smartphonesensing.Localization;
 
+import android.graphics.Color;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -57,6 +58,12 @@ public class RunMovement implements Runnable {
 
         if (this.lm.update( accelXClone, accelYClone, accelZClone,
                 magnXClone, magnYClone, magnZClone, deltaTime)) {
+
+            // Check for convergence and change the color of particles
+            Particle converged = lm.hasConverged();
+            if(converged != null) {
+                localizationView.setColor(Color.GREEN);
+            }
 
             // Set values like particles and the direction
             this.localizationView.setParticles(this.lm.getParticles());
