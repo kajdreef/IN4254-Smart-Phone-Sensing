@@ -18,9 +18,7 @@ public class ParticleFilter {
     private FloorPlan floorPlan;
     private final int N_INIT;
     private final float RATIO = 9/(float)10;
-
-    //sampling frequency
-    private final int f = 200;
+    private Random rand;
 
     /**
      * Constructs ParticleFilter with particles that are uniformly distributed over the map.
@@ -32,6 +30,7 @@ public class ParticleFilter {
         this.N_INIT = n;
         this.floorPlan = floorPlan;
         this.generateParticles(N_INIT);
+        this.rand = new Random();
     }
 
     public void resetParticleFilter(){
@@ -66,14 +65,14 @@ public class ParticleFilter {
     protected float[] motionModel(float alpha, float time){
         //Gaussian distribution of mean 1 and SD 0.2m/s
         float v = 1.4f;
-        v = v + (float) new Random().nextGaussian()*v/5f;
+        v = v + (float) rand.nextGaussian()*v/8f;
 
         //Gaussian distribution of mean alpha and SD alphaDeviation
         float alphaDeviation = 20f;
 
         // Add gaussian noise to the angle
         float alphaNoise = alpha + floorPlan.getNorthAngle() + 90f
-                + (float) new Random().nextGaussian()*2*alphaDeviation-alphaDeviation;
+                + (float) rand.nextGaussian()*alphaDeviation;
 
         // Caluclate the dx/dy based on the window size and alpha
         float dx = v*time * (float) Math.cos(Math.toRadians((double)alphaNoise));
@@ -87,7 +86,7 @@ public class ParticleFilter {
      * @param alpha angle of movement w.r.t. north
      * @param time time of window capture of movement
      */
-    public void movement(float alpha,float time){
+    public void movement(float alpha, float time){
         ArrayList<Particle> particleSave = new ArrayList<Particle>(particles.size());
         ArrayList<Particle> cloneParticles = new ArrayList<Particle>(particles.size());
 

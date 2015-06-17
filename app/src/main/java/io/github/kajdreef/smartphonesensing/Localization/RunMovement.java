@@ -32,9 +32,11 @@ public class RunMovement implements Runnable {
     // View that needs to be updated
     private LocalizationView localizationView;
 
+    private float deltaTime;
+
     public RunMovement(ArrayList<Float> xA, ArrayList<Float> yA, ArrayList<Float> zA,
                        ArrayList<Float> xM, ArrayList<Float> yM, ArrayList<Float> zM,
-                       ActivityMonitoring _am, LocalizationMonitoring _lm, LocalizationView _localizationView)
+                       ActivityMonitoring _am, LocalizationMonitoring _lm, LocalizationView _localizationView, float _deltaTime)
     {
         this.accelXClone = (ArrayList<Float>) xA.clone();
         this.accelYClone = (ArrayList<Float>) yA.clone();
@@ -45,6 +47,7 @@ public class RunMovement implements Runnable {
         this.am = _am;
         this.lm = _lm;
         this.localizationView = _localizationView;
+        this.deltaTime = _deltaTime;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class RunMovement implements Runnable {
         this.am.update(accelXClone, accelYClone, accelZClone);
 
         if (this.lm.update( accelXClone, accelYClone, accelZClone,
-                magnXClone, magnYClone, magnZClone)) {
+                magnXClone, magnYClone, magnZClone, deltaTime)) {
 
             // Set values like particles and the direction
             this.localizationView.setParticles(this.lm.getParticles());

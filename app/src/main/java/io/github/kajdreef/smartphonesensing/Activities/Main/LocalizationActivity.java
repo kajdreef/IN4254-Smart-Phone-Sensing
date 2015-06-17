@@ -69,6 +69,9 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
     public int WINDOW_SIZE_ACC;
     public int WINDOW_SIZE_MAG;
 
+    // Time started with filling window.
+    private long timeStart;
+
     // Arrays with the accelerometer data
     private ArrayList<Float> accelX;
     private ArrayList<Float> accelY;
@@ -127,9 +130,6 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         initialBelief.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                accelerometer.unregister();
-                magnetometer.unregister();
-
                 localizationMonitoring.reset();
                 localizationView.setParticles(localizationMonitoring.getParticles());
                 localizationView.post(new Runnable() {
@@ -182,9 +182,6 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
         accelerometer.attach(this);
         magnetometer.attach(this);
-
-        accelerometer.register();
-        magnetometer.register();
     }
 
     @Override
@@ -217,6 +214,10 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
     public void update(final int SensorType) {
 
+        if(this.accelX.size() == 0 && this.magnX.size() == 0){
+            timeStart = System.currentTimeMillis();
+        }
+
         // If the sensor type is Accelerometer than get the new data and put it in the array list.
         if (Sensor.TYPE_ACCELEROMETER == SensorType && accelX.size() <= WINDOW_SIZE_ACC) {
             this.accelX.add(Accelerometer.getGravity()[0]);
@@ -231,9 +232,14 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         }
 
         if (this.accelX.size() >= WINDOW_SIZE_ACC && this.magnX.size() >= WINDOW_SIZE_MAG) {
+
+            float deltaTime = (float)(Double.valueOf(System.currentTimeMillis() - timeStart)/1000d);
+
+            Log.d("LocalizationActivity", "deltaTime = " + Double.toString(deltaTime) + " s");
+
             // Create runnable
             RunMovement runMovement = new RunMovement(accelX, accelY, accelZ, magnX, magnY, magnZ,
-                                                activityMonitoring, localizationMonitoring, localizationView);
+                                                activityMonitoring, localizationMonitoring, localizationView,(float) deltaTime);
 
             // Add runnable to queue
             executor.submit(runMovement);
