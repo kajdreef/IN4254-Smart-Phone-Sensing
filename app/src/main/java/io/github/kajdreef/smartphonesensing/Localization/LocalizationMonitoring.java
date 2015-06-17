@@ -24,9 +24,6 @@ public class LocalizationMonitoring {
 
     private float angle = 0.0f;
 
-    //Aquisition frequency
-    private static final int f = 200;
-
     public LocalizationMonitoring(int numParticles, Context ctx){
 
         Resources res = ctx.getResources();
@@ -70,10 +67,11 @@ public class LocalizationMonitoring {
      * @param mDataX
      * @param mDataY
      * @param mDataZ
+     * @param time
      * @return
      */
     public boolean update(ArrayList<Float> aDataX, ArrayList<Float> aDataY, ArrayList<Float> aDataZ,
-                          ArrayList<Float> mDataX, ArrayList<Float> mDataY, ArrayList<Float> mDataZ){
+                          ArrayList<Float> mDataX, ArrayList<Float> mDataY, ArrayList<Float> mDataZ, float time){
         Type activity = activityList.getType(activityList.size() - 1);
 
         if (activity == Type.WALK || activity == Type.QUEUE ) {
@@ -87,7 +85,7 @@ public class LocalizationMonitoring {
 
             // If activity Type update the movement of partcicles
             if(activity == Type.WALK){
-                pf.movement(angle, 1.4f, WINDOW_SIZE_ACC);
+                pf.movement(angle, time);
             }
 
             return true;
