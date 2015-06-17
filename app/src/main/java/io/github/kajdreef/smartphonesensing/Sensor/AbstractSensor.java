@@ -17,6 +17,7 @@ public abstract class AbstractSensor implements SensorEventListener {
     protected Sensor type;
     protected SensorManager sm;
     protected ArrayList<ObserverSensor> observerSensorList;
+    protected boolean sensorAvailable = false;
 
     public AbstractSensor(SensorManager sm){
         this.sm = sm;
@@ -24,10 +25,20 @@ public abstract class AbstractSensor implements SensorEventListener {
     }
 
     /**
+     * Returns a true if the sensor was initialised well.
+     * False if the sensor is not available.
+     */
+    public boolean available(){
+        return this.sensorAvailable;
+    }
+
+    /**
      * Register the event listener for certain sensor.
      */
     public void register(){
-        sm.registerListener(this, type, SensorManager.SENSOR_DELAY_FASTEST);
+        if(sensorAvailable) {
+            sm.registerListener(this, type, SensorManager.SENSOR_DELAY_FASTEST);
+        }
     }
 
     /**

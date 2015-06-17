@@ -1,6 +1,7 @@
 package io.github.kajdreef.smartphonesensing.Activities.Main;
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -38,8 +39,7 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     private SensorManager sm;
     private AbstractSensor accelerometer;
     private int WINDOW_SIZE_ACC;
-    private float WINDOW_TIME;
-    private int amountOfNewSamples = 0;
+    private double WINDOW_TIME = 0d;
 
     private float serviceTime;
     private float queueTime;
@@ -51,6 +51,10 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     private TextView serviceText;
     private TextView queueText;
     private TextView stateText;
+
+
+    private long timeStart;
+    private long numSamples=0;
 
     // Thread Queue
     private ExecutorService executor;
@@ -68,12 +72,8 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
 
         executor = Executors.newSingleThreadExecutor();
 
-        // Get needed file locations where data needs to be stored.
-        Resources res = this.getResources();
-        String acceleroFileLocation = res.getString(R.string.accelerometer_data_file);
-
         // Start accelerometer and attacht this Activity as Observer
-        accelerometer = new Accelerometer(sm, acceleroFileLocation);
+        accelerometer = new Accelerometer(sm);
         accelerometer.attach(this);
 
         // Create walk button, when clicked on the button state will change state to WALK.
@@ -100,7 +100,7 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
             public void onClick(View v) {
                 accelerometer.unregister();
 
-                float[] result = QueueMath.calculateSQTime(activityList.getTypeList(), WINDOW_TIME);
+                float[] result = QueueMath.calculateSQTime(activityList.getTypeList(), (float)WINDOW_TIME);
 
                 // Show calculated results on screen.
                 serviceText = (TextView)findViewById(R.id.serviceData);
@@ -123,9 +123,10 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
         // Set window size and Window_time
         Resources res = this.getResources();
         WINDOW_SIZE_ACC = res.getInteger(R.integer.WINDOW_SIZE_ACC);
-        WINDOW_TIME = ((float)WINDOW_SIZE_ACC)/200f;
 
         setContentView(R.layout.service_queue_menu);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         activityList = ActivityType.getInstance();
 
         initAccelerometerAndButtons();
@@ -141,12 +142,26 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     public void update(int SensorType){
         // If the sensor type is Accelerometer than get the new data and put it in the array list.
         if (Sensor.TYPE_ACCELEROMETER == SensorType && accelX.size() < WINDOW_SIZE_ACC) {
+            if(this.accelX.size() == 0){
+                timeStart = System.currentTimeMillis();
+            }
             this.accelX.add(Accelerometer.getGravity()[0]);
             this.accelY.add(Accelerometer.getGravity()[1]);
             this.accelZ.add(Accelerometer.getGravity()[2]);
         }
 
         if (accelX.size() >= WINDOW_SIZE_ACC) {
+            numSamples++;
+
+            // calculates the time between last window size of data.
+            double deltaTime = Double.valueOf(System.currentTimeMillis() - timeStart)/1000d;
+            double samples = Double.valueOf(numSamples);
+
+            WINDOW_TIME =  ((samples - 1d)/samples)*WINDOW_TIME + deltaTime/samples;
+
+            Log.d("SQActivity", "deltaTime = " + Double.toString(deltaTime) + " s");
+            Log.d("SQActivity", "Average time to fill window size = " + Double.toString(WINDOW_TIME) + " s");
+
             Runnable runActivity = new RunActivity(am, (ArrayList<Float>) accelX.clone(), (ArrayList<Float>) accelY.clone(), (ArrayList<Float>) accelZ.clone());
             executor.execute(runActivity);
             accelX.clear();

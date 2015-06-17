@@ -18,9 +18,7 @@ public class ParticleFilter {
     private FloorPlan floorPlan;
     private final int N_INIT;
     private final float RATIO = 9/(float)10;
-
-    //sampling frequency
-    private final int f = 200;
+    private Random rand;
 
     /**
      * Constructs ParticleFilter with particles that are uniformly distributed over the map.
@@ -32,6 +30,7 @@ public class ParticleFilter {
         this.N_INIT = n;
         this.floorPlan = floorPlan;
         this.generateParticles(N_INIT);
+        this.rand = new Random();
     }
 
     public void resetParticleFilter(){
@@ -61,22 +60,23 @@ public class ParticleFilter {
     /**
      * Motion model to estimate dx and dy from alpha angle and velocity. Uses Gaussian distributions
      * @param alpha
-     * @param velocity
+     * @param time
      */
-    protected float[] motionModel(float alpha, float velocity,int windowSize){
+    protected float[] motionModel(float alpha, float time){
         //Gaussian distribution of mean 1 and SD 0.2m/s
-        float v = velocity + (float) new Random().nextGaussian()*velocity/5f;
+        float v = 1.4f;
+        v = v + (float) rand.nextGaussian()*v/8f;
 
         //Gaussian distribution of mean alpha and SD alphaDeviation
         float alphaDeviation = 20f;
 
         // Add gaussian noise to the angle
         float alphaNoise = alpha + floorPlan.getNorthAngle() + 90f
-                + (float) new Random().nextGaussian()*2*alphaDeviation-alphaDeviation;
+                + (float) rand.nextGaussian()*alphaDeviation;
 
         // Caluclate the dx/dy based on the window size and alpha
-        float dx = v*windowSize * (float) Math.cos(Math.toRadians((double)alphaNoise))/f;
-        float dy = v*windowSize * (float) Math.sin(Math.toRadians((double)alphaNoise))/f;
+        float dx = v*time * (float) Math.cos(Math.toRadians((double)alphaNoise));
+        float dy = v*time * (float) Math.sin(Math.toRadians((double)alphaNoise));
         float[] out = {dx,dy};
         return out;
     }
@@ -84,9 +84,9 @@ public class ParticleFilter {
     /**
      * Move the particles with a distance of dx in the x-direction and dy in y-direction.
      * @param alpha angle of movement w.r.t. north
-     * @param velocity velocity of movement
+     * @param time time of window capture of movement
      */
-    public void movement(float alpha,float velocity,int windowSize){
+    public void movement(float alpha, float time){
         ArrayList<Particle> particleSave = new ArrayList<Particle>(particles.size());
         ArrayList<Particle> cloneParticles = new ArrayList<Particle>(particles.size());
 
@@ -100,7 +100,7 @@ public class ParticleFilter {
 
         // Check if a particle has collision upon moving the particle
         for (Particle p : cloneParticles){
-            float[] mov = motionModel(alpha,velocity,windowSize);
+            float[] mov = motionModel(alpha,time);
             p.updateLocation(mov[0], mov[1]);
             if(floorPlan.particleCollision(p)){
                 collisionParticles.add(p);

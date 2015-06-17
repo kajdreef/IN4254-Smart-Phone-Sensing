@@ -3,6 +3,7 @@ package io.github.kajdreef.smartphonesensing.Sensor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Utils.Writer;
@@ -17,22 +18,21 @@ import io.github.kajdreef.smartphonesensing.Utils.Writer;
 public class Accelerometer extends AbstractSensor {
 
     private Writer wr;
-    private static Type state = Type.NONE;
     private static float[] gravity = {0f,0f,0f};
-    int numSamples = 0;
+    private int numSamples = 0;
 
-    public static void setState(Type newState){
-        Accelerometer.state = newState;
-    }
-
-    public static Type getState(){
-        return Accelerometer.state;
-    }
-
-    public Accelerometer(SensorManager sm, String fileLocation){
+    public Accelerometer(SensorManager sm){
         super(sm);
-        wr = new Writer(fileLocation);
         type = sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        if(type != null){
+            Log.d("Accelerometer", "Sensor is initialized.");
+            sensorAvailable = true;
+        }
+        else{
+            Log.d("Accelerometer", "Sensor is not available.");
+            sensorAvailable = false;
+        }
     }
 
     @Override
@@ -44,12 +44,10 @@ public class Accelerometer extends AbstractSensor {
     public void onSensorChanged(SensorEvent event){
         // Check if changed sensor is the Accelerometer.
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-            gravity[0] =event.values[0];
-            gravity[1] =event.values[1];
-            gravity[2] =event.values[2];
+            gravity[0] = event.values[0];
+            gravity[1] = event.values[1];
+            gravity[2] = event.values[2];
 
-            // Add data to File (Accelerometer state is NONE when not changed for )
-//            wr.appendData(gravity[0], gravity[1], gravity[2], Accelerometer.state);
             this.notifyObserver(Sensor.TYPE_ACCELEROMETER);
         }
     }

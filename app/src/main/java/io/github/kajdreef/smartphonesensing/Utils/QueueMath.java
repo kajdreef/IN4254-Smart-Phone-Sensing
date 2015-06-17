@@ -17,6 +17,7 @@ public class QueueMath {
      */
     public static float[] calculateSQTime(ArrayList<Type> activityList, float WINDOW_TIME){
         float time = 0f;
+        float tempResult = 0f;
         float result = 0f;
         float[] returnValue = new float[2];
 
@@ -28,27 +29,33 @@ public class QueueMath {
             if (time < 10.0f){
                 if (at == Type.QUEUE) {
                     // Update the total queuing time
-                    result += WINDOW_TIME;
+                    tempResult += WINDOW_TIME;
                     time = 0;
                     previous = Type.QUEUE;
-                } else if(result > 0){
+                } else if(tempResult > 0){
                     // update the walking time if bigger than 10 seconds than we are out of the queue.
                     time += WINDOW_TIME;
                     // Check if the previous one was NOT walk so it can be seen as 1 step.
-                    if(previous != Type.WALK)
+                    if(previous != Type.WALK) {
                         steps++;
+                    }
                     previous = Type.WALK;
                 }
             }
-            else
-                break;
+            else {
+                if(result < tempResult) {
+                    result = tempResult;
+                }
+                time = 0f;
+            }
         }
 
-        returnValue[0] = result;
+        returnValue[0] = tempResult;
+
         if (steps == 0)
-            returnValue[1] = result;
+            returnValue[1] = tempResult;
         else
-            returnValue[1] = result/steps;
+            returnValue[1] = tempResult/steps;
 
         return returnValue;
     }

@@ -161,13 +161,13 @@ public class TestActivity extends Activity implements ObserverSensor {
      */
     public void updateMovement() {
         // Movement in +x direction
-        for (int i = 0; i < 70; i++) {
+        for (int i = 0; i < 15; i++) {
             // Make Runnable and add it to the executor
             Runnable runMovement = new Runnable() {
                 @Override
                 public void run() {
                     android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-                    pf.movement(90f, 1.0f, 160);
+                    pf.movement(90f, 1.6f);
                     localizationView.setParticles(pf.getParticles());
                     localizationView.setAngle(90f);
                     localizationView.post(new Runnable() {
@@ -181,13 +181,13 @@ public class TestActivity extends Activity implements ObserverSensor {
         }
 
         // Movement in -y direction
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             // Make Runnable and add it to the executor
             Runnable runMovement = new Runnable() {
                 @Override
                 public void run() {
                     android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-                    pf.movement(180, 1.0f, 160);
+                    pf.movement(180, 1.6f);
                     localizationView.setParticles(pf.getParticles());
                     localizationView.setAngle(180f);
                     localizationView.post(new Runnable() {
@@ -201,13 +201,13 @@ public class TestActivity extends Activity implements ObserverSensor {
         }
 
         // Movement in +y direction
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             // Make Runnable and add it to the executor
             Runnable runMovement = new Runnable() {
                 @Override
                 public void run() {
                     android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-                    pf.movement(0f, 1.0f, 160);
+                    pf.movement(0f, 1.6f);
                     localizationView.setParticles(pf.getParticles());
                     localizationView.setAngle(0f);
                     localizationView.post(new Runnable() {

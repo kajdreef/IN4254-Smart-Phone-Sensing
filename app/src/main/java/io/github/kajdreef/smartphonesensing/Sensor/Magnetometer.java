@@ -18,10 +18,18 @@ public class Magnetometer extends AbstractSensor{
     private static float[] geomagnetic = new float[3];
     int numSamples =0;
 
-    public Magnetometer(SensorManager sm, String fileLocation){
+    public Magnetometer(SensorManager sm){
         super(sm);
         type = sm.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        wr = new Writer(fileLocation);
+
+        if(type != null){
+            Log.d("Accelerometer", "Sensor is initialized.");
+            sensorAvailable = true;
+        }
+        else{
+            Log.d("Accelerometer", "Sensor is not available.");
+            sensorAvailable = false;
+        }
     }
 
     @Override
@@ -36,7 +44,7 @@ public class Magnetometer extends AbstractSensor{
             geomagnetic[0] = event.values[0];
             geomagnetic[1] = event.values[1];
             geomagnetic[2] = event.values[2];
-//            wr.appendData(geomagnetic[0],geomagnetic[1],geomagnetic[2], Type.NONE);
+
             this.notifyObserver(Sensor.TYPE_MAGNETIC_FIELD);
         }
     }

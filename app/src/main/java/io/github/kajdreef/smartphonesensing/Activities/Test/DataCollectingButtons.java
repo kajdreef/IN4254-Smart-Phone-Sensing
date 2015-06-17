@@ -1,8 +1,10 @@
 package io.github.kajdreef.smartphonesensing.Activities.Test;
 
+import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
+import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,9 +18,10 @@ import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.Reader;
+import io.github.kajdreef.smartphonesensing.Utils.Writer;
 
 
-public class DataCollectingButtons extends ActionBarActivity implements ObserverSensor {
+public class DataCollectingButtons extends Activity implements ObserverSensor {
 
     SensorManager sm;
     AbstractSensor accelerometer;
@@ -28,7 +31,8 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
     TextView t;
 
     boolean initAccel = false;
-    Reader read;
+    Writer writeAccel;
+    Type state = Type.NONE;
 
     private void initAccelerometerAndButtons(){
         initAccel = true;
@@ -38,13 +42,15 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
         Resources res = this.getResources();
         String acceleroFileLocation = res.getString(R.string.accelerometer_data_file);
 
-        accelerometer = new Accelerometer(sm, acceleroFileLocation);
+        writeAccel = new Writer(acceleroFileLocation);
+
+        accelerometer = new Accelerometer(sm);
         accelerometer.attach(this);
         // Create walk button, when clicked on the button state will change state to WALK.
         walking = (Button) findViewById(R.id.walking);
         walking.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Accelerometer.setState(Type.WALK);
+                state = Type.WALK;
                 if(initAccel) {
                     accelerometer.register();
                     initAccel = false;
@@ -52,7 +58,7 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
                 else{
                     accelerometer.unregister();
                     initAccel = true;
-                    Accelerometer.setState(Type.NONE);
+                    state = Type.NONE;
                     update(0);
                 }
             }
@@ -62,57 +68,30 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
         queueing = (Button) findViewById(R.id.queueing);
         queueing.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Accelerometer.setState(Type.QUEUE);
-                if(initAccel) {
+                state = Type.QUEUE;
+                if (initAccel) {
                     accelerometer.register();
                     initAccel = false;
-                }
-                else{
+                } else {
                     accelerometer.unregister();
                     initAccel = true;
-                    Accelerometer.setState(Type.NONE);
+                    state = Type.NONE;
                     update(0);
                 }
             }
         });
     }
 
-
-    public void initReader(){
-        Resources res = this.getResources();
-        String fileLocation = res.getString(R.string.accelerometer_data_file);
-        read = new Reader(this, fileLocation);
-        read.readData();
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.data_collection_menu);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         sm =(SensorManager)getSystemService(SENSOR_SERVICE);
 
-
         initAccelerometerAndButtons();
-
-//        initReader();
     }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-    }
-
-    @Override
-    public void onResume(){
-        super.onResume();
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -144,6 +123,12 @@ public class DataCollectingButtons extends ActionBarActivity implements Observer
     }
 
     public void update(int SensorType){
-        t.setText(Accelerometer.getState().toString());
+        if (Sensor.TYPE_ACCELEROMETER == SensorType) {
+            float[] aData =  Accelerometer.getGravity();
+            writeAccel.appendData(aData[0], aData[1], aData[2], state);
+        }
+
+        t.setText(state.toString());
+
     }
 }
