@@ -1,5 +1,7 @@
 package io.github.kajdreef.smartphonesensing.Utils;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
@@ -29,7 +31,7 @@ public class QueueMath {
             if (time < 10.0f){
                 if (at == Type.QUEUE) {
                     // Update the total queuing time
-                    tempResult += WINDOW_TIME;
+                    tempResult += WINDOW_TIME + time;
                     time = 0;
                     previous = Type.QUEUE;
                 } else if(tempResult > 0){
@@ -45,17 +47,23 @@ public class QueueMath {
             else {
                 if(result < tempResult) {
                     result = tempResult;
+                    tempResult = 0f;
+                    Log.d("QueueMath", "Result: " + result);
                 }
                 time = 0f;
             }
         }
 
-        returnValue[0] = tempResult;
+        if(result < tempResult){
+            result = tempResult;
+        }
+
+        returnValue[0] = result;
 
         if (steps == 0)
-            returnValue[1] = tempResult;
+            returnValue[1] = result;
         else
-            returnValue[1] = tempResult/steps;
+            returnValue[1] = result/steps;
 
         return returnValue;
     }
