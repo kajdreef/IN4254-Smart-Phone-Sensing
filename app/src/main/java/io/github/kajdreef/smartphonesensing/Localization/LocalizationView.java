@@ -14,13 +14,14 @@ import android.view.View;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by kajdreef on 15/05/15.
  */
 public class LocalizationView extends View {
 
-    public ArrayList<Particle> particles;
+    public CopyOnWriteArrayList<Particle> particles;
     private float offSetX;
     private float offSetY;
     private final float size = 0.98f;
@@ -34,7 +35,7 @@ public class LocalizationView extends View {
         super(ctx);
 
         this.wallPath = floorPlan;
-        this.particles = allParticles;
+        this.particles = new CopyOnWriteArrayList<Particle>(allParticles);
 
         // Initialise the walls
         Matrix scaleMatrix = new Matrix();
@@ -95,7 +96,7 @@ public class LocalizationView extends View {
      * @param newParticles
      */
     public void setParticles(ArrayList<Particle> newParticles) {
-        this.particles = newParticles;
+        particles = new CopyOnWriteArrayList<Particle>(newParticles);
     }
 
     /**
