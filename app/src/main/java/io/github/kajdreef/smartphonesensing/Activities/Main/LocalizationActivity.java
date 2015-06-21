@@ -95,12 +95,10 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         WINDOW_SIZE_ACC = res.getInteger(R.integer.WINDOW_SIZE_ACC);
         WINDOW_SIZE_MAG = res.getInteger(R.integer.WINDOW_SIZE_MAG);
 
-
         activityMonitoring = new ActivityMonitoring(getApplicationContext());
 
         // Generate x amount of particles
         localizationMonitoring = new LocalizationMonitoring(1000,this.getApplicationContext());
-
 
         // Initialize Sensors;
         initSensors();
@@ -132,6 +130,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
             public void onClick(View v) {
                 localizationMonitoring.reset();
                 localizationView.setParticles(localizationMonitoring.getParticles());
+                localizationView.reset();
                 localizationView.post(new Runnable() {
                     @Override
                     public void run() {

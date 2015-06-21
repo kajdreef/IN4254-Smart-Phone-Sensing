@@ -14,21 +14,20 @@ import android.view.View;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by kajdreef on 15/05/15.
  */
 public class LocalizationView extends View {
 
-    public ArrayList<Particle> particles;
+    public CopyOnWriteArrayList<Particle> particles;
     private float offSetX;
     private float offSetY;
     private final float size = 0.98f;
     private float scale;
-    private Point compassDir;
-    private Point compassPlac;
-    private final int compassRadius = 100;
-    private Paint particlePaint;
+    private Paint particlePaint, wallPaint;
+    private Compass compass;
 
     Path wallPath;
 
@@ -36,8 +35,9 @@ public class LocalizationView extends View {
         super(ctx);
 
         this.wallPath = floorPlan;
-        this.particles = allParticles;
+        this.particles = new CopyOnWriteArrayList<Particle>(allParticles);
 
+        // Initialise the walls
         Matrix scaleMatrix = new Matrix();
         RectF rectF = new RectF();
         this.wallPath.computeBounds(rectF, true);
@@ -50,52 +50,32 @@ public class LocalizationView extends View {
         this.offSetX = (width - width*size)/2;
         this.offSetY = (height - height*size)/2;
 
-        // Initialise the compass
-        compassDir = new Point();
-        compassPlac = new Point((int)(width/2), (int)(height/2));
-        setAngle(0f);
 
         // Offset of the dx and dy
         wallPath.offset(offSetX, offSetY);
 
+        // Initialise the compass
+        compass = new Compass((int) width, (int) height, 0f, 100);
+
         particlePaint = new Paint();
-        particlePaint.setStrokeWidth(5);
+        particlePaint.setStrokeWidth(3);
         particlePaint.setColor(Color.RED);
-    }
 
-    public void setAngle(float _angle){
-        compassDir.set( compassPlac.x + (int)(compassRadius*Math.cos(Math.toRadians((double) _angle + 90 + FloorPlan.getNorthAngle()))),
-                        compassPlac.y + (int)(compassRadius*Math.sin(Math.toRadians((double) _angle + 90 + FloorPlan.getNorthAngle()))));
-
+        wallPaint = new Paint();
+        wallPaint.setStyle(Paint.Style.STROKE);
+        wallPaint.setColor(Color.BLACK);
+        wallPaint.setStrokeWidth(3);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        Paint paint = new Paint();
-        paint.setStrokeWidth(3);
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
-        canvas.drawPaint(paint);
-
-        // Use Color.parseColor to define HTML colors
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.BLACK);
-
         // Draw Walls
-        canvas.drawPath(wallPath, paint);
+        canvas.drawPath(wallPath, wallPaint);
 
-        // Draw Compass circle
-        canvas.drawCircle(compassPlac.x, compassPlac.y, compassRadius, paint);
-        paint.setStrokeWidth(20);
-        paint.setColor(Color.BLUE);
-        // Draw Direction of the compass
-        canvas.drawLine(compassPlac.x, compassPlac.y, compassDir.x, compassDir.y, paint);
-        //canvas.drawPoint(compassDir.x, compassDir.y, paint);
-
-        // Draw Direction of the compass
-        canvas.drawPoint(compassDir.x, compassDir.y, particlePaint);
+        // Draw the compass
+        compass.draw(canvas);
 
         // Draw Particles
         for(Particle p : this.particles) {
@@ -103,10 +83,34 @@ public class LocalizationView extends View {
         }
     }
 
-    public void setParticles(ArrayList<Particle> newParticles) {
-        this.particles = newParticles;
+    /**
+     * Update the angle of the compass
+     * @param _angle
+     */
+    public void setAngle(float _angle){
+        compass.setAngle(_angle);
     }
+
+    /**
+     * Set the array of particles.
+     * @param newParticles
+     */
+    public void setParticles(ArrayList<Particle> newParticles) {
+        particles = new CopyOnWriteArrayList<Particle>(newParticles);
+    }
+
+    /**
+     * Set the color of the particles (used when particles have converged)
+     * @param _color
+     */
     public void setColor(int _color){
         particlePaint.setColor(_color);
+    }
+
+    /**
+     * Reset the views parameters
+     */
+    public void reset(){
+        particlePaint.setColor(Color.RED);
     }
 }
