@@ -1,4 +1,4 @@
-package io.github.kajdreef.smartphonesensing.Localization;
+package io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -6,15 +6,13 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.RectF;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import io.github.kajdreef.smartphonesensing.Localization.Particle;
 
 /**
  * Created by kajdreef on 15/05/15.

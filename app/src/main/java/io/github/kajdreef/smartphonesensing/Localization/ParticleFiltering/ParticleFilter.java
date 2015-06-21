@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
+import io.github.kajdreef.smartphonesensing.Localization.Location;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
 import io.github.kajdreef.smartphonesensing.R;
 
@@ -137,7 +138,8 @@ public class ParticleFilter {
                     particleSave.get(index).getPreviousLocation().getY()));
         }
     }
-    public Particle converged(float radius){
+
+    public Location converged(float radius){
         float xmean = 0f;
         float ymean = 0f;
         float xSD = 0f;
@@ -156,7 +158,7 @@ public class ParticleFilter {
         ySD = (float)Math.sqrt(ySD);
 
         if (xSD < radius && ySD < radius ){
-            return new Particle(xmean,ymean);
+            return new Location(xmean,ymean);
         }
         return null;
     }

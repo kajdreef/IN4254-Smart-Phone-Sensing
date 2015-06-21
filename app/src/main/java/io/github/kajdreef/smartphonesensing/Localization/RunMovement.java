@@ -1,14 +1,12 @@
 package io.github.kajdreef.smartphonesensing.Localization;
 
 import android.graphics.Color;
-import android.widget.Button;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
-import io.github.kajdreef.smartphonesensing.R;
+import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.LocalizationView;
+import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.WalkedPath;
 
 /**
  * Created by kajdreef on 03/06/15.
@@ -60,10 +58,9 @@ public class RunMovement implements Runnable {
                 magnXClone, magnYClone, magnZClone, deltaTime)) {
 
             // Check for convergence and change the color of particles
-            Particle converged = lm.hasConverged();
-            if(converged != null) {
+            if(lm.hasConverged() != null){
                 localizationView.setColor(Color.GREEN);
-            }
+            };
 
             // Set values like particles and the direction
             this.localizationView.setParticles(this.lm.getParticles());

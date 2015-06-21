@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
+import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.WalkedPath;
 import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
@@ -19,6 +20,7 @@ public class LocalizationMonitoring {
     private ActivityType activityList;
     private ParticleFilter pf;
     private FloorPlan floorPlan;
+    private WalkedPath walkedPath;
     private int WINDOW_SIZE_ACC;
     private int WINDOW_SIZE_MAG;
 
@@ -92,7 +94,7 @@ public class LocalizationMonitoring {
         }
         return false;
     }
-    public Particle hasConverged(){
+    public Location hasConverged(){
         return pf.converged(2f);
     }
 }
