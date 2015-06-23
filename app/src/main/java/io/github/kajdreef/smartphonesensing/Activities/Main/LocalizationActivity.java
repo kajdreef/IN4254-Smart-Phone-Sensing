@@ -137,7 +137,6 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
                 else{
                     registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
                     wifiManager.startScan();
-
                     localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
                 }
                 localizationView.setParticles(localizationMonitoring.getParticles());

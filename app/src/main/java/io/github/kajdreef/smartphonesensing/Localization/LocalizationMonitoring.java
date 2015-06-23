@@ -2,6 +2,7 @@ package io.github.kajdreef.smartphonesensing.Localization;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -90,6 +91,7 @@ public class LocalizationMonitoring {
             // If activity Type update the movement of partcicles
             if(activity == Type.WALK){
                 pf.movement(angle, time);
+               // Log.i("BP TEST", "x=" + pf.bestParticle().getCurrentLocation().getX() + "y=" + pf.bestParticle().getCurrentLocation().getY());
             }
 
             return true;

@@ -2,6 +2,7 @@ package io.github.kajdreef.smartphonesensing.Utils;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,7 +27,17 @@ public class ArrayOperations {
         }
         return max;
     }
-    public static int indexFirstMaximumFrom(int i,ArrayList<Float> in){
+    public static int indexFirstMaximumFromInt(int i,int[] in){
+        int max = in[i];
+        int indexOut = i;
+        for(int index = i;index<in.length;index++){
+            if(in[index]>max)
+                max = in[index];
+            indexOut = index;
+        }
+        return indexOut;
+    }
+    public static int indexFirstMaximumFrom(int i,List<Float> in){
         float max = in.get(i);
         int maxIndex = i;
         for(int index = i;index<in.size();index++){
@@ -37,7 +48,7 @@ public class ArrayOperations {
         }
         return maxIndex;
     }
-    public static int indexFirstMinimumFrom(int i,ArrayList<Integer> in){
+    public static int indexFirstMinimumFrom(int i,List<Integer> in){
         float min = in.get(i);
         int minIndex = i;
         for(int index = i;index<in.size();index++){

@@ -191,10 +191,13 @@ public class ParticleFilter {
     }
     public void initialBelief(ArrayList<ArrayList<Integer>> rssiData){
 
-        particles.clear();
 
         ArrayList<Float> walkedPathX = WalkedPath.getInstance().getPathX();
         ArrayList<Float> walkedPathY = WalkedPath.getInstance().getPathY();
+
+        if (walkedPathX.isEmpty())
+                return;
+
         ArrayList<Integer> distances = new ArrayList<>();
         ArrayList<Integer> last = rssiData.get(rssiData.size()-1);
         rssiData.remove(last);
@@ -214,6 +217,8 @@ public class ParticleFilter {
         float x0 = walkedPathX.get(besti);
         float y0 = walkedPathY.get(besti);
 
+        particles.clear();
+
         int i = 0;
         float sigma = 3f;
         while(i < N_INIT){
@@ -225,4 +230,19 @@ public class ParticleFilter {
         }
     }
     public ArrayList<Particle> getParticles(){ return this.particles;}
+    public Particle bestParticle(){
+        int[] count = new int[particles.size()];
+
+        for (int i = 0; i < particles.size(); i++)
+            count[i] = 0;
+
+        for (int i = 0; i < particles.size(); i++) {
+            for (int j = 0; j < particles.size(); j++) {
+                if (particles.get(i).distance(particles.get(i)) < 1f){
+                    count[i]++;
+                }
+            }
+        }
+        return particles.get(ArrayOperations.indexFirstMaximumFromInt(0,count));
+    }
 }
