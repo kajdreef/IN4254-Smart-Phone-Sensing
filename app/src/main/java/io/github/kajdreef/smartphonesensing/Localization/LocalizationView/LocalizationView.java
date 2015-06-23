@@ -28,7 +28,7 @@ public class LocalizationView extends View {
     private Compass compass;
     private WalkedPath walkedPath;
 
-    Path wallPath;
+    private Path wallPath;
 
     public LocalizationView(Context ctx, Path floorPlan, ArrayList<Particle> allParticles, float _width, float _height){
         super(ctx);

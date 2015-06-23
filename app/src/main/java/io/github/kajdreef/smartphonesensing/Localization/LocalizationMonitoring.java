@@ -45,6 +45,7 @@ public class LocalizationMonitoring {
      * Reset the localizationMonitoring
      */
     public void reset(){
+        WalkedPath.getInstance().reset();
         pf.resetParticleFilter();
         activityList.empty();
     }

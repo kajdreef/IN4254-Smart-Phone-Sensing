@@ -133,6 +133,9 @@ public class ParticleFilter {
         walkedPath.setDx(ArrayOperations.mean(this.dx));
         walkedPath.setDy(ArrayOperations.mean(this.dy));
 
+        dx.clear();
+        dy.clear();
+
         // Remove the collided particles from the particle list.
         cloneParticles.removeAll(collisionParticles);
 
