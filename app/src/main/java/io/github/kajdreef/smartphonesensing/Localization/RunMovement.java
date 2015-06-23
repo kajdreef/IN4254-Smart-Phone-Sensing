@@ -60,8 +60,6 @@ public class RunMovement implements Runnable {
         if (this.lm.update( accelXClone, accelYClone, accelZClone,
                 magnXClone, magnYClone, magnZClone, deltaTime)) {
 
-
-
             // Check for convergence and change the color of particles
             Location convergedLoc = lm.hasConverged();
             if(convergedLoc != null){

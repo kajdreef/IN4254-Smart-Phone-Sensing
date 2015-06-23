@@ -46,9 +46,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
     // GUI
     private LocalizationView localizationView;
-    private Button initialBelief;
-    private Button startButton;
-    private Button stopButton;
+    private Button initialBelief, startButton, stopButton, convButton;
     private TextView activityText;
     private LinearLayout localizationLayout;
 
@@ -172,6 +170,15 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
                 registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
             }
         });
+
+        convButton = (Button) findViewById(R.id.forceConv);
+        convButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+            }
+        });
+
     }
 
 
