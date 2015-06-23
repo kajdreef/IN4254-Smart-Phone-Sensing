@@ -33,10 +33,16 @@ public class WalkedPath {
     private float startX = -1;
     private float startY = -1;
     Paint walkedColor;
+    ArrayList<Float> pathX;
+    ArrayList<Float> pathY;
 
     private WalkedPath(){
         dx = new ArrayList<Float>();
         dy = new ArrayList<Float>();
+
+        pathX = new ArrayList<Float>();
+        pathY = new ArrayList<>();
+
         walkedPath = new Path();
 
         walkedColor = new Paint();
@@ -72,6 +78,8 @@ public class WalkedPath {
                 // Convergence location
                 convergenceLocation = new Location(startX, startY);
                 walkedPath.moveTo(convergenceLocation.getX(), convergenceLocation.getY());
+                pathX.add(convergenceLocation.getX());
+                pathY.add(convergenceLocation.getY());
 
                 float previousX = startX;
                 float previousY = startY;
@@ -83,16 +91,24 @@ public class WalkedPath {
                 while (iteratorX.hasNext() && iteratorY.hasNext()) {
                     float dx = (float) iteratorX.next();
                     float dy = (float) iteratorY.next();
-//                    float x = previousX - (float) iteratorX.next() ;
-//                    float y = previousY - (float) iteratorY.next();
-                    Log.d("WalkedPath", "Relative dx: " + dx + ", dy: " + dy);
-//                    walkedPath.lineTo(x, y);
-                    walkedPath.rLineTo(-dy,-dx);
-//                    Log.d("WalkedPath", "Line to: " + x + ", "+ y);
-//                    previousX = x;
-//                    previousY = y;
 
+                    previousX = previousX - dx;
+                    previousY = previousY - dy;
+
+                    Log.d("WalkedPath", "Relative dx: " + dx + ", dy: " + dy);
+
+                    Log.d("WalkedPath", "position x: " + previousX + ", y: " + previousY);
+
+                    pathX.add(previousX);
+                    pathY.add(previousY);
+
+                    walkedPath.lineTo(previousX, previousY);
+//                    walkedPath.rLineTo(-dx,dy);
                 }
+                Log.d("WalkedPath", pathX.toString());
+                Log.d("WalkedPath", pathY.toString());
+                Log.d("WalkedPath", walkedPath.toString());
+
                 this.transform();
 
             }

@@ -11,6 +11,7 @@ import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.Walked
 import io.github.kajdreef.smartphonesensing.Localization.Location;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
 import io.github.kajdreef.smartphonesensing.R;
+import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
 
 /**
  * Created by Uncle John on 20/05/2015.
@@ -21,6 +22,8 @@ public class ParticleFilter {
     private final int N_INIT;
     private final float RATIO = 9/(float)10;
     private Random rand;
+    private ArrayList<Float> dx;
+    private ArrayList<Float> dy;
 
     /**
      * Constructs ParticleFilter with particles that are uniformly distributed over the map.
@@ -33,6 +36,8 @@ public class ParticleFilter {
         this.floorPlan = floorPlan;
         this.generateParticles(N_INIT);
         this.rand = new Random();
+        this.dx = new ArrayList<>();
+        this.dy = new ArrayList<>();
     }
 
     public void resetParticleFilter(){
@@ -110,6 +115,10 @@ public class ParticleFilter {
             else if (!floorPlan.particleInside(p)){
                 collisionParticles.add(p);
             }
+            else{
+                dx.add(mov[0]);
+                dy.add(mov[1]);
+            }
         }
 
         // If 90% of particles have died than don't update the particleList
@@ -119,8 +128,10 @@ public class ParticleFilter {
 
         // New movement so update the walkedPath.
         WalkedPath walkedPath = WalkedPath.getInstance();
-        walkedPath.setDx(1.4f * time * (float) Math.cos(Math.toRadians((double) alpha)));
-        walkedPath.setDy(1.4f * time * (float) Math.sin(Math.toRadians((double) alpha)));
+
+
+        walkedPath.setDx(ArrayOperations.mean(this.dx));
+        walkedPath.setDy(ArrayOperations.mean(this.dy));
 
         // Remove the collided particles from the particle list.
         cloneParticles.removeAll(collisionParticles);
@@ -150,6 +161,11 @@ public class ParticleFilter {
         }
     }
 
+    /**
+     * Check if the particles have converged, if they have return the location of convergence
+     * @param radius
+     * @return Location, if converged; null, if not.
+     */
     public Location converged(float radius){
         float xmean = 0f;
         float ymean = 0f;
@@ -173,5 +189,6 @@ public class ParticleFilter {
         }
         return null;
     }
+
     public ArrayList<Particle> getParticles(){ return this.particles;}
 }
