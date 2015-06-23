@@ -1,22 +1,17 @@
 package io.github.kajdreef.smartphonesensing.ActivityMonitoring;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.util.Log;
 
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractor;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorAC;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorFFT;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMag;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Classification.KNN;
 import io.github.kajdreef.smartphonesensing.Classification.LabeledFeatureSet;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
-import io.github.kajdreef.smartphonesensing.Utils.Reader;
 import io.github.kajdreef.smartphonesensing.Utils.ReaderTest;
 
 /**
@@ -48,10 +43,10 @@ public class ActivityMonitoring {
     public ActivityMonitoring(Context ctx){
 
         // initialise the readers to train kNN
-        SDReader = new ReaderTest(ctx, R.raw.std_feature);
-//        MagReader = new ReaderTest(ctx, R.raw.max_feature);
-//        ACReader = new ReaderTest(ctx, R.raw.ac_feature);
-        FFTReader = new ReaderTest(ctx, R.raw.fft_feature);
+        SDReader = new ReaderTest(ctx, R.raw.stdfeature);
+//        MagReader = new ReaderTest(ctx, R.raw.maxfeature);
+//        ACReader = new ReaderTest(ctx, R.raw.acfeature);
+        FFTReader = new ReaderTest(ctx, R.raw.fftfeature);
 
         // Choose which features you want
         extractor = new ArrayList<>();

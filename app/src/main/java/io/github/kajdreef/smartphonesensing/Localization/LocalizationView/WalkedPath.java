@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -79,38 +80,40 @@ public class WalkedPath {
                 Iterator iteratorY = dy.iterator();
 
                 // Iterate over all dx to get the walked path so far
-                if (iteratorX.hasNext() && iteratorY.hasNext()) {
+                while (iteratorX.hasNext() && iteratorY.hasNext()) {
+                    float dx = (float) iteratorX.next();
+                    float dy = (float) iteratorY.next();
+//                    float x = previousX - (float) iteratorX.next() ;
+//                    float y = previousY - (float) iteratorY.next();
+                    Log.d("WalkedPath", "Relative dx: " + dx + ", dy: " + dy);
+//                    walkedPath.lineTo(x, y);
+                    walkedPath.rLineTo(-dy,-dx);
+//                    Log.d("WalkedPath", "Line to: " + x + ", "+ y);
+//                    previousX = x;
+//                    previousY = y;
 
-                    float x = previousX - dx.iterator().next();
-                    float y = previousY - dy.iterator().next();
-                    walkedPath.lineTo(x, y);
-                    Log.d("WalkedPath", "Line to: " + x + ", "+ y);
-                    previousX = x;
-                    previousY = y;
-                } else {
-                    dx.clear();
-                    dy.clear();
                 }
-                walkedPath.moveTo(startX, startY);
+                this.transform();
 
-            } else {
-                Iterator iteratorX = dx.iterator();
-                Iterator iteratorY = dy.iterator();
-
-                // Iterate over all dx to get the walked path so far
-                if (iteratorX.hasNext() && iteratorY.hasNext()) {
-                    float x = startX + dx.iterator().next();
-                    float y = startY + dy.iterator().next();
-                    Log.d("WalkedPath", "Added Line");
-                    walkedPath.lineTo(x, y);
-
-                    startX = x;
-                    startY = y;
-                } else {
-                    dx.clear();
-                    dy.clear();
-                }
             }
+//            else {
+//                Iterator iteratorX = dx.iterator();
+//                Iterator iteratorY = dy.iterator();
+//
+//                // Iterate over all dx to get the walked path so far
+//                if (iteratorX.hasNext() && iteratorY.hasNext()) {
+//                    float x = startX + dx.iterator().next();
+//                    float y = startY + dy.iterator().next();
+//                    Log.d("WalkedPath", "Added Line");
+//                    walkedPath.lineTo(x, y);
+//
+//                    startX = x;
+//                    startY = y;
+//                } else {
+//                    dx.clear();
+//                    dy.clear();
+//                }
+//            }
         }
     }
 
@@ -132,8 +135,31 @@ public class WalkedPath {
         return converged;
     }
 
-    public void draw(Canvas canvas){
+    public void initTransform(Matrix _scaleMatrix, float _offSetX, float _offSetY){
+//        RectF rectF = new RectF();
+//        walkedPath.computeBounds(rectF, true);
+//
+//        // Scale the floorplan depending on size of the screen.
+//        float scale = (size*width)/rectF.width();
+//        scaleMatrix  = new Matrix();
+//        scaleMatrix.setScale(scale, scale, rectF.left, rectF.top);
+//
+//        this.offsetX = (width - width*size)/2;
+//        this.offsetY = (height - height*size)/2;
+
+        this.scaleMatrix = new Matrix();
+        scaleMatrix.set(_scaleMatrix);
+
+        this.offsetX = _offSetX;
+        this.offsetY = _offSetY;
+    }
+
+    public void transform(){
+        walkedPath.transform(scaleMatrix);
         walkedPath.offset(offsetX, offsetY);
+    }
+
+    public void draw(Canvas canvas){
         canvas.drawPath(walkedPath, walkedColor);
     }
 }

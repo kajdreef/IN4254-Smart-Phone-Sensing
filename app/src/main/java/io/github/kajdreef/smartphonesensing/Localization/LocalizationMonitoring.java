@@ -95,6 +95,6 @@ public class LocalizationMonitoring {
         return false;
     }
     public Location hasConverged(){
-        return pf.converged(2f);
+        return pf.converged(10f);
     }
 }

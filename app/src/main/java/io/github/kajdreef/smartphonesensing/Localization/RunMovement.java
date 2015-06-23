@@ -33,6 +33,8 @@ public class RunMovement implements Runnable {
 
     private float deltaTime;
 
+    private WalkedPath walkedPath;
+
     public RunMovement(ArrayList<Float> xA, ArrayList<Float> yA, ArrayList<Float> zA,
                        ArrayList<Float> xM, ArrayList<Float> yM, ArrayList<Float> zM,
                        ActivityMonitoring _am, LocalizationMonitoring _lm, LocalizationView _localizationView, float _deltaTime)
@@ -47,6 +49,7 @@ public class RunMovement implements Runnable {
         this.lm = _lm;
         this.localizationView = _localizationView;
         this.deltaTime = _deltaTime;
+        this.walkedPath = WalkedPath.getInstance();
     }
 
     @Override
@@ -57,9 +60,13 @@ public class RunMovement implements Runnable {
         if (this.lm.update( accelXClone, accelYClone, accelZClone,
                 magnXClone, magnYClone, magnZClone, deltaTime)) {
 
+
+
             // Check for convergence and change the color of particles
-            if(lm.hasConverged() != null){
+            Location convergedLoc = lm.hasConverged();
+            if(convergedLoc != null){
                 localizationView.setColor(Color.GREEN);
+                walkedPath.setPath(convergedLoc);
             };
 
             // Set values like particles and the direction

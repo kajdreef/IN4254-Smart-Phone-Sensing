@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
+import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.WalkedPath;
 import io.github.kajdreef.smartphonesensing.Localization.Location;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
 import io.github.kajdreef.smartphonesensing.R;
@@ -110,6 +111,16 @@ public class ParticleFilter {
                 collisionParticles.add(p);
             }
         }
+
+        // If 90% of particles have died than don't update the particleList
+        if(collisionParticles.size() > cloneParticles.size() * 0.9f){
+            return ;
+        }
+
+        // New movement so update the walkedPath.
+        WalkedPath walkedPath = WalkedPath.getInstance();
+        walkedPath.setDx(1.4f * time * (float) Math.cos(Math.toRadians((double) alpha)));
+        walkedPath.setDy(1.4f * time * (float) Math.sin(Math.toRadians((double) alpha)));
 
         // Remove the collided particles from the particle list.
         cloneParticles.removeAll(collisionParticles);

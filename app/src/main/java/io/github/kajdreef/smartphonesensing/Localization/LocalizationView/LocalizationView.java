@@ -26,14 +26,16 @@ public class LocalizationView extends View {
     private float scale;
     private Paint particlePaint, wallPaint;
     private Compass compass;
+    private WalkedPath walkedPath;
 
     Path wallPath;
 
-    public LocalizationView(Context ctx, Path floorPlan, ArrayList<Particle> allParticles, float width, float height){
+    public LocalizationView(Context ctx, Path floorPlan, ArrayList<Particle> allParticles, float _width, float _height){
         super(ctx);
 
         this.wallPath = floorPlan;
         this.particles = new CopyOnWriteArrayList<Particle>(allParticles);
+        this.walkedPath = WalkedPath.getInstance();
 
         // Initialise the walls
         Matrix scaleMatrix = new Matrix();
@@ -41,19 +43,21 @@ public class LocalizationView extends View {
         this.wallPath.computeBounds(rectF, true);
 
         // Scale the floorplan depending on size of the screen.
-        this.scale = (size*width)/rectF.width();
+        this.scale = (size*_width)/rectF.width();
         scaleMatrix.setScale(scale, scale, rectF.left, rectF.top);
         this.wallPath.transform(scaleMatrix);
 
-        this.offSetX = (width - width*size)/2;
-        this.offSetY = (height - height*size)/2;
+        this.offSetX = (_width - _width*size)/2;
+        this.offSetY = (_height - _height*size)/2;
 
 
         // Offset of the dx and dy
         wallPath.offset(offSetX, offSetY);
 
+        walkedPath.initTransform(scaleMatrix, offSetX, offSetY);
+
         // Initialise the compass
-        compass = new Compass((int) width, (int) height, 0f, 100);
+        compass = new Compass((int) _width, (int) _height, 0f, 100);
 
         particlePaint = new Paint();
         particlePaint.setStrokeWidth(3);
@@ -74,6 +78,11 @@ public class LocalizationView extends View {
 
         // Draw the compass
         compass.draw(canvas);
+
+        // Check ift he particles have converged.
+        if(particlePaint.getColor() == Color.GREEN){
+            walkedPath.draw(canvas);
+        }
 
         // Draw Particles
         for(Particle p : this.particles) {
