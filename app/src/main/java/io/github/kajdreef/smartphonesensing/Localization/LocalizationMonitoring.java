@@ -3,6 +3,7 @@ package io.github.kajdreef.smartphonesensing.Localization;
 import android.content.Context;
 import android.content.res.Resources;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
@@ -94,5 +95,13 @@ public class LocalizationMonitoring {
     }
     public Particle hasConverged(){
         return pf.converged(2f);
+    }
+    public void initialBelief(ArrayList<ArrayList<Integer>> rssiData){
+        ArrayList<Float> walkedPathX = new ArrayList<>();
+        ArrayList<Float> walkedPathY = new ArrayList<>();
+
+
+
+
     }
 }

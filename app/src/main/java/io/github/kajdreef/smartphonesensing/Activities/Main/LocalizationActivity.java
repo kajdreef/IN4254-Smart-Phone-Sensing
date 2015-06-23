@@ -1,11 +1,14 @@
 package io.github.kajdreef.smartphonesensing.Activities.Main;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -32,6 +35,7 @@ import io.github.kajdreef.smartphonesensing.Localization.RunMovement;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
+import io.github.kajdreef.smartphonesensing.Sensor.WifiReceiver;
 
 /**
  * Created by kajdreef on 15/05/15.
@@ -58,7 +62,8 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
     private Accelerometer accelerometer;
     private Magnetometer magnetometer;
     private SensorManager sm;
-
+    private WifiManager wifiManager;
+    private WifiReceiver wifiReceiver;
     // Thread Queue
     private ExecutorService executor;
 
@@ -96,7 +101,6 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         WINDOW_SIZE_MAG = res.getInteger(R.integer.WINDOW_SIZE_MAG);
 
         activityMonitoring = new ActivityMonitoring(getApplicationContext());
-
         // Generate x amount of particles
         localizationMonitoring = new LocalizationMonitoring(1000,this.getApplicationContext());
 
@@ -128,7 +132,12 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         initialBelief.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                localizationMonitoring.reset();
+                if(wifiReceiver.getWifiPoints().isEmpty()){
+                    localizationMonitoring.reset();
+                }
+                else{
+                    localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
+                }
                 localizationView.setParticles(localizationMonitoring.getParticles());
                 localizationView.reset();
                 localizationView.post(new Runnable() {
@@ -146,6 +155,10 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
             public void onClick(View v) {
                 accelerometer.unregister();
                 magnetometer.unregister();
+                try {
+                    unregisterReceiver(wifiReceiver);
+                }
+                catch (Exception e){}
             }
         });
 
@@ -155,6 +168,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
             public void onClick(View v) {
                 accelerometer.register();
                 magnetometer.register();
+                registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
             }
         });
     }
@@ -181,6 +195,14 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
         accelerometer.attach(this);
         magnetometer.attach(this);
+
+        //Init wifi
+            wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+            if(!wifiManager.isWifiEnabled()){
+                wifiManager.setWifiEnabled(true);
+            }
+        wifiReceiver = new WifiReceiver(wifiManager);
+            registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
 
     @Override
@@ -208,6 +230,11 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        try {
+            unregisterReceiver(wifiReceiver);
+        }
+        catch (Exception e){
+        }
     }
 
 
@@ -238,12 +265,14 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
             // Create runnable
             RunMovement runMovement = new RunMovement(accelX, accelY, accelZ, magnX, magnY, magnZ,
-                                                activityMonitoring, localizationMonitoring, localizationView,(float) deltaTime);
+                                                activityMonitoring, localizationMonitoring, localizationView, deltaTime);
 
             // Add runnable to queue
             executor.submit(runMovement);
+            wifiManager.startScan();
+            Log.i("Wifi test", wifiReceiver.getRSSI().toString());
 
-            // Clear data of acceleromter
+            // Clear data of accelerometer
             accelX.clear();
             accelY.clear();
             accelZ.clear();
