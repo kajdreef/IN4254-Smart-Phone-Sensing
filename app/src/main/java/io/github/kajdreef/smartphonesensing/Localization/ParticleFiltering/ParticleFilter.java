@@ -110,6 +110,11 @@ public class ParticleFilter {
             }
         }
 
+        // If 90% of particles have died than don't update the particleList
+        if(collisionParticles.size() > cloneParticles.size() * 0.9f){
+            return ;
+        }
+
         // Remove the collided particles from the particle list.
         cloneParticles.removeAll(collisionParticles);
 
