@@ -233,6 +233,7 @@ public class ParticleFilter {
         }
     }
     public ArrayList<Particle> getParticles(){ return this.particles;}
+    
     public Particle bestParticle(){
         int[] count = new int[particles.size()];
 

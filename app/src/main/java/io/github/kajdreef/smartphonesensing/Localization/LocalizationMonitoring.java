@@ -102,6 +102,11 @@ public class LocalizationMonitoring {
     public Location hasConverged(){
         return pf.converged(10f);
     }
+
+    public Particle forceConverge(){
+        return pf.bestParticle();
+    }
+
     public void initialBelief(ArrayList<ArrayList<Integer>> rssiData){
         pf.initialBelief(rssiData);
         activityList.empty();

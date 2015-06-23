@@ -91,7 +91,7 @@ public class WalkedPath {
                     float dy = this.dy.get(i);
 
                     previousX = previousX - dx;
-                    previousY = previousY + dy;
+                    previousY = previousY - dy;
 
                     Log.d("WalkedPath", "Relative dx: " + dx + ", dy: " + dy);
 

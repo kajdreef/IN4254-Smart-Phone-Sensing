@@ -24,9 +24,11 @@ public class LocalizationView extends View {
     private float offSetY;
     private final float size = 0.98f;
     private float scale;
-    private Paint particlePaint, wallPaint;
+    private Paint particlePaint, wallPaint, convergePaint;
     private Compass compass;
     private WalkedPath walkedPath;
+
+    private Particle convergeParticle = null;
 
     private Path wallPath;
 
@@ -67,6 +69,11 @@ public class LocalizationView extends View {
         wallPaint.setStyle(Paint.Style.STROKE);
         wallPaint.setColor(Color.BLACK);
         wallPaint.setStrokeWidth(3);
+
+        convergePaint = new Paint();
+        convergePaint.setStyle(Paint.Style.STROKE);
+        convergePaint.setColor(Color.BLUE);
+        convergePaint.setStrokeWidth(20);
     }
 
     @Override
@@ -82,6 +89,10 @@ public class LocalizationView extends View {
         // Check ift he particles have converged.
         if(particlePaint.getColor() == Color.GREEN){
             walkedPath.draw(canvas);
+        }
+
+        if(convergeParticle != null){
+            canvas.drawPoint(convergeParticle.getCurrentLocation().getX()*scale + offSetX, convergeParticle.getCurrentLocation().getY()*scale + offSetY , convergePaint);
         }
 
         // Draw Particles
@@ -112,6 +123,10 @@ public class LocalizationView extends View {
      */
     public void setColor(int _color){
         particlePaint.setColor(_color);
+    }
+
+    public void setConvergeLocation(Particle _convLocation){
+        this.convergeParticle = _convLocation;
     }
 
     /**

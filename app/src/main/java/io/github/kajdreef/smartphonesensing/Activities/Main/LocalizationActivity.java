@@ -30,6 +30,7 @@ import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.LocalizationView;
+import io.github.kajdreef.smartphonesensing.Localization.Particle;
 import io.github.kajdreef.smartphonesensing.Localization.RunMovement;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
@@ -175,7 +176,21 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         convButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+                Thread convThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Particle convergeLocation = localizationMonitoring.forceConverge();
+                        Log.d("LocalizationActivity","Converge Location: " + convergeLocation.getCurrentLocation().getX() + ", " + convergeLocation.getCurrentLocation().getY() );
+                        localizationView.setConvergeLocation(convergeLocation);
+                        localizationView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                localizationView.invalidate();
+                            }
+                        });
+                    }
+                });
+                convThread.start();
             }
         });
 
