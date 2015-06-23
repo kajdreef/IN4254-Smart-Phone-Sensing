@@ -5,7 +5,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,7 @@ import java.util.concurrent.Executors;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
-import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
+import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.LocalizationView;
 import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.R;
 

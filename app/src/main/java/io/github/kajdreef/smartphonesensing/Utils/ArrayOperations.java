@@ -44,6 +44,11 @@ public class ArrayOperations {
         }
         return s;
     }
+
+    public static float mean(List<Float> in){
+        return sum(in)/in.size();
+    }
+
     public static float standardDeviation(List<Float> in){
         float mean = ArrayOperations.sum(in)/in.size();
 
