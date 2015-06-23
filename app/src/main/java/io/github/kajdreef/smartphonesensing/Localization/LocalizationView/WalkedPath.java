@@ -114,9 +114,6 @@ public class WalkedPath {
         }
     }
 
-    public void setTransform(Matrix _scaleMatrix){
-        this.scaleMatrix = _scaleMatrix;
-    }
     public void setOffset(float _offsetX, float _offSetY){
         this.offsetX = _offsetX;
         this.offsetY = _offSetY;
@@ -137,7 +134,6 @@ public class WalkedPath {
 
     public void draw(Canvas canvas){
         walkedPath.offset(offsetX, offsetY);
-        walkedPath.transform(scaleMatrix);
         canvas.drawPath(walkedPath, walkedColor);
     }
 }
