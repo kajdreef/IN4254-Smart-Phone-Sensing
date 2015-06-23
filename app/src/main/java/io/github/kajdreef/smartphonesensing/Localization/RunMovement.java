@@ -5,6 +5,7 @@ import android.graphics.Color;
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.LocalizationView;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.WalkedPath;
 
@@ -68,7 +69,9 @@ public class RunMovement implements Runnable {
             };
 
             // Set values like particles and the direction
-            this.localizationView.setParticles(this.lm.getParticles());
+            if(am.getActivity() == Type.WALK){
+                this.localizationView.setParticles(this.lm.getParticles());
+            }
             this.localizationView.setAngle(this.lm.getAngle());
 
             this.localizationView.post(new Runnable() {

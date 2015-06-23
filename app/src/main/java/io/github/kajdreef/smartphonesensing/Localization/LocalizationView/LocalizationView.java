@@ -115,6 +115,7 @@ public class LocalizationView extends View {
      */
     public void setParticles(ArrayList<Particle> newParticles) {
         particles = new CopyOnWriteArrayList<Particle>(newParticles);
+        convergeParticle = null;
     }
 
     /**
@@ -133,6 +134,7 @@ public class LocalizationView extends View {
      * Reset the views parameters
      */
     public void reset(){
+        convergeParticle = null;
         particlePaint.setColor(Color.RED);
     }
 }
