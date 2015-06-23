@@ -94,6 +94,13 @@ public class LocalizationMonitoring {
                 pf.movement(angle, time);
                // Log.i("BP TEST", "x=" + pf.bestParticle().getCurrentLocation().getX() + "y=" + pf.bestParticle().getCurrentLocation().getY());
             }
+            else if(activity == Type.QUEUE){
+                // New movement so update the walkedPath.
+                WalkedPath walkedPath = WalkedPath.getInstance();
+
+                walkedPath.setDx(0.0f);
+                walkedPath.setDy(0.0f);
+            }
 
             return true;
         }

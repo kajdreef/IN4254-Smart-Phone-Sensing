@@ -22,7 +22,6 @@ public class WalkedPath {
     private ArrayList<Float> dy;
     private Location convergenceLocation;
     private Path pathWalked;
-    private boolean converged = false;
 
     private Matrix scaleMatrix;
     private float offsetX;
@@ -30,9 +29,6 @@ public class WalkedPath {
 
     private static WalkedPath singleton = null;
 
-    // Store the last known location of the user
-    private float startX;
-    private float startY;
     private Paint walkedColor;
     private ArrayList<Float> pathX;
     private ArrayList<Float> pathY;
@@ -72,36 +68,35 @@ public class WalkedPath {
         if(convergencePoint != null) {
             if (pathWalked.isEmpty()) {
                 // Initial Location
-                startX = convergencePoint.getX();
-                startY = convergencePoint.getY();
+                float x = convergencePoint.getX();
+                float y = convergencePoint.getY();
 
                 // Convergence location
-                convergenceLocation = new Location(startX, startY);
+                convergenceLocation = new Location(x, y);
                 pathWalked.moveTo(convergenceLocation.getX(), convergenceLocation.getY());
 
                 pathX.add(convergenceLocation.getX());
                 pathY.add(convergenceLocation.getY());
 
-                float previousX = startX;
-                float previousY = startY;
+                float previousX = x;
+                float previousY = y;
 
                 // Iterate over all dx to get the walked path so far
                 for(int i = dx.size()-1; i >= 0; i-- ){
                     float dx = this.dx.get(i);
                     float dy = this.dy.get(i);
 
-                    previousX = previousX - dx;
-                    previousY = previousY - dy;
+                    x = x - dx;
+                    y = y + dy;
 
                     Log.d("WalkedPath", "Relative dx: " + dx + ", dy: " + dy);
 
-                    Log.d("WalkedPath", "position x: " + previousX + ", y: " + previousY);
+                    Log.d("WalkedPath", "position x: " + x + ", y: " + y);
 
-                    pathX.add(previousX);
-                    pathY.add(previousY);
+                    pathX.add(x);
+                    pathY.add(y);
 
-                    pathWalked.lineTo(previousX, previousY);
-//                    walkedPath.rLineTo(-dx,dy);
+                    pathWalked.lineTo(x, y);
                 }
 
                 this.transform();
@@ -114,17 +109,12 @@ public class WalkedPath {
         this.offsetY = _offSetY;
     }
 
-    public boolean hasConverged(){
-        return converged;
-    }
-
     public void initTransform(Matrix _scaleMatrix, float _offSetX, float _offSetY){
-
-        this.scaleMatrix = new Matrix();
+        scaleMatrix = new Matrix();
         scaleMatrix.set(_scaleMatrix);
 
-        this.offsetX = _offSetX;
-        this.offsetY = _offSetY;
+        offsetX = _offSetX;
+        offsetY = _offSetY;
     }
 
     public void transform(){

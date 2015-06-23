@@ -129,7 +129,6 @@ public class ParticleFilter {
         // New movement so update the walkedPath.
         WalkedPath walkedPath = WalkedPath.getInstance();
 
-
         walkedPath.setDx(ArrayOperations.mean(this.dx));
         walkedPath.setDy(ArrayOperations.mean(this.dy));
 
@@ -233,7 +232,7 @@ public class ParticleFilter {
         }
     }
     public ArrayList<Particle> getParticles(){ return this.particles;}
-    
+
     public Particle bestParticle(){
         int[] count = new int[particles.size()];
 
