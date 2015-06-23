@@ -189,6 +189,40 @@ public class ParticleFilter {
         }
         return null;
     }
+    public void initialBelief(ArrayList<ArrayList<Integer>> rssiData){
 
+        particles.clear();
+
+        ArrayList<Float> walkedPathX = WalkedPath.getInstance().getPathX();
+        ArrayList<Float> walkedPathY = WalkedPath.getInstance().getPathY();
+        ArrayList<Integer> distances = new ArrayList<>();
+        ArrayList<Integer> last = rssiData.get(rssiData.size()-1);
+        rssiData.remove(last);
+        Log.i("RSSI TEST", "pathsize " + walkedPathX.size() + " rssiSize" + rssiData.size());
+
+        //Calculate distances
+        for (ArrayList<Integer> rssiPoint : rssiData){
+            int dist = 0 ;
+            for (int i = 0; i < rssiPoint.size() ; i++) {
+                dist += rssiPoint.get(i) - last.get(i);
+                dist = dist*dist;
+            }
+            distances.add(dist);
+        }
+        //Find best RSSI point
+        int besti = ArrayOperations.indexFirstMinimumFrom(0, distances);
+        float x0 = walkedPathX.get(besti);
+        float y0 = walkedPathY.get(besti);
+
+        int i = 0;
+        float sigma = 3f;
+        while(i < N_INIT){
+            Particle p = new Particle(x0 + (float)rand.nextGaussian()*sigma,y0 + (float)rand.nextGaussian()*sigma);
+            if(floorPlan.particleInside(p)){
+                particles.add(p);
+                i++;
+            }
+        }
+    }
     public ArrayList<Particle> getParticles(){ return this.particles;}
 }

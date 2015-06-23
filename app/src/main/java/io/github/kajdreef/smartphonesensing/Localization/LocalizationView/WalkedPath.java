@@ -11,6 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.Location;
 
 /**
@@ -178,4 +179,7 @@ public class WalkedPath {
     public void draw(Canvas canvas){
         canvas.drawPath(walkedPath, walkedColor);
     }
+
+    public ArrayList<Float> getPathX(){return this.pathX;}
+    public ArrayList<Float> getPathY(){return this.pathY;}
 }

@@ -37,6 +37,17 @@ public class ArrayOperations {
         }
         return maxIndex;
     }
+    public static int indexFirstMinimumFrom(int i,ArrayList<Integer> in){
+        float min = in.get(i);
+        int minIndex = i;
+        for(int index = i;index<in.size();index++){
+            if(in.get(index)<min) {
+                min = in.get(index);
+                minIndex = index;
+            }
+        }
+        return minIndex;
+    }
     public static float sum(List<Float> in){
         float s = 0 ;
         for(Float f : in){

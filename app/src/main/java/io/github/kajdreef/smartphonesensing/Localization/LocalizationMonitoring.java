@@ -12,6 +12,7 @@ import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.Walked
 import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
+import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
 
 /**
  * Created by kajdreef on 20/05/15.
@@ -99,11 +100,7 @@ public class LocalizationMonitoring {
         return pf.converged(10f);
     }
     public void initialBelief(ArrayList<ArrayList<Integer>> rssiData){
-        ArrayList<Float> walkedPathX = new ArrayList<>();
-        ArrayList<Float> walkedPathY = new ArrayList<>();
-
-
-
-
+        pf.initialBelief(rssiData);
+        activityList.empty();
     }
 }

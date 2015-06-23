@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.github.kajdreef.smartphonesensing.Activities.Test.TestActivity;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.LocalizationView;
@@ -133,6 +135,9 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
                     localizationMonitoring.reset();
                 }
                 else{
+                    registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+                    wifiManager.startScan();
+
                     localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
                 }
                 localizationView.setParticles(localizationMonitoring.getParticles());
@@ -266,9 +271,9 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
             // Add runnable to queue
             executor.submit(runMovement);
-            wifiManager.startScan();
-            Log.i("Wifi test", wifiReceiver.getRSSI().toString());
-
+            if (activityMonitoring.getActivity() == Type.WALK){
+                wifiManager.startScan();
+            }
             // Clear data of accelerometer
             accelX.clear();
             accelY.clear();
