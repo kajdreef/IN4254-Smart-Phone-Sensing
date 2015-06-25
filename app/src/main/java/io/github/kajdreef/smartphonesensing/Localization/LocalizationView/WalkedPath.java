@@ -66,8 +66,9 @@ public class WalkedPath {
 
     public void setPath(Location convergencePoint) {
 
+        pathWalked.reset();
         if(convergencePoint != null) {
-            if (pathWalked.isEmpty()) {
+//            if (pathWalked.isEmpty()) {
                 // Initial Location
                 float x = convergencePoint.getX();
                 float y = convergencePoint.getY();
@@ -101,7 +102,7 @@ public class WalkedPath {
                 }
 
                 this.transform();
-            }
+//            }
         }
     }
 
