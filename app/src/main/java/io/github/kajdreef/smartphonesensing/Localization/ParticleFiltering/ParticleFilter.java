@@ -120,15 +120,17 @@ public class ParticleFilter {
                 dy.add(mov[1]);
             }
         }
+        WalkedPath walkedPath = WalkedPath.getInstance();
 
         // If 90% of particles have died than don't update the particleList
         if(collisionParticles.size() > cloneParticles.size() * 0.9f){
+            // New movement so update the walkedPath.
+            walkedPath.setDx(0f);
+            walkedPath.setDy(0f);
             return ;
         }
 
         // New movement so update the walkedPath.
-        WalkedPath walkedPath = WalkedPath.getInstance();
-
         walkedPath.setDx(ArrayOperations.mean(this.dx));
         walkedPath.setDy(ArrayOperations.mean(this.dy));
 
@@ -196,14 +198,14 @@ public class ParticleFilter {
 
         ArrayList<Float> walkedPathX = WalkedPath.getInstance().getPathX();
         ArrayList<Float> walkedPathY = WalkedPath.getInstance().getPathY();
+        Log.i("RSSI TEST", "pathsize " + walkedPathX.size() + " rssiSize" + rssiData.size());
 
-        if (walkedPathX.isEmpty())
+        if (walkedPathX.isEmpty() || rssiData.isEmpty())
                 return;
 
         ArrayList<Integer> distances = new ArrayList<>();
         ArrayList<Integer> last = rssiData.get(rssiData.size()-1);
         rssiData.remove(last);
-        Log.i("RSSI TEST", "pathsize " + walkedPathX.size() + " rssiSize" + rssiData.size());
 
         //Calculate distances
         for (ArrayList<Integer> rssiPoint : rssiData){
