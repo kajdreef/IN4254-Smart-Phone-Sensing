@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -86,18 +87,21 @@ public class LocalizationView extends View {
         // Draw the compass
         compass.draw(canvas);
 
-        // Check ift he particles have converged.
-        if(particlePaint.getColor() == Color.GREEN){
-            walkedPath.draw(canvas);
-        }
-
-        if(convergeParticle != null){
-            canvas.drawPoint(convergeParticle.getCurrentLocation().getX()*scale + offSetX, convergeParticle.getCurrentLocation().getY()*scale + offSetY , convergePaint);
-        }
-
         // Draw Particles
         for(Particle p : this.particles) {
             canvas.drawPoint(p.getCurrentLocation().getX()*scale + offSetX, p.getCurrentLocation().getY()*scale + offSetY , particlePaint);
+        }
+
+        if(particlePaint.getColor() == Color.GREEN || convergeParticle != null){
+            if(convergeParticle!=null){
+                walkedPath.setPath(convergeParticle.getCurrentLocation());
+            }
+            walkedPath.draw(canvas);
+        }
+
+        // Draw location of the forced converged location on top of the other particles.
+        if(convergeParticle != null){
+            canvas.drawPoint(convergeParticle.getCurrentLocation().getX()*scale + offSetX, convergeParticle.getCurrentLocation().getY()*scale + offSetY , convergePaint);
         }
     }
 

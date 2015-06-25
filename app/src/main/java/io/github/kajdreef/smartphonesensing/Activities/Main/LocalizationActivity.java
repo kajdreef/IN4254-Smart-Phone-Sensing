@@ -30,6 +30,7 @@ import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.LocalizationView;
+import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.WalkedPath;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
 import io.github.kajdreef.smartphonesensing.Localization.RunMovement;
 import io.github.kajdreef.smartphonesensing.R;
@@ -137,6 +138,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
                     registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
                     wifiManager.startScan();
                     localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
+                    WalkedPath.getInstance().reset();
                 }
                 localizationView.setParticles(localizationMonitoring.getParticles());
                 localizationView.reset();

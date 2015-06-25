@@ -100,7 +100,7 @@ public class LocalizationMonitoring {
         return false;
     }
     public Location hasConverged(){
-        return pf.converged(10f);
+        return pf.converged(3f);
     }
 
     public Particle forceConverge(){

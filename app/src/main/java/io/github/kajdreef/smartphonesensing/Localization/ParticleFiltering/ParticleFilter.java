@@ -3,6 +3,7 @@ package io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering;
 import android.content.res.Resources;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -183,6 +184,7 @@ public class ParticleFilter {
             xSD += (p.getCurrentLocation().getX()-xmean)*(p.getCurrentLocation().getX()-xmean);
             ySD += (p.getCurrentLocation().getY()-ymean)*(p.getCurrentLocation().getY()-ymean);
         }
+
         xSD = xSD/particles.size();
         xSD = (float)Math.sqrt(xSD);
         ySD = ySD/particles.size();
@@ -193,9 +195,8 @@ public class ParticleFilter {
         }
         return null;
     }
+
     public void initialBelief(ArrayList<ArrayList<Integer>> rssiData){
-
-
         ArrayList<Float> walkedPathX = WalkedPath.getInstance().getPathX();
         ArrayList<Float> walkedPathY = WalkedPath.getInstance().getPathY();
         Log.i("RSSI TEST", "pathsize " + walkedPathX.size() + " rssiSize" + rssiData.size());
@@ -223,11 +224,17 @@ public class ParticleFilter {
 
         particles.clear();
 
+        ArrayList<Particle> newParticles = new ArrayList<>();
+
         int i = 0;
         float sigma = 3f;
-        while(i < N_INIT){
-            Particle p = new Particle(x0 + (float)rand.nextGaussian()*sigma,y0 + (float)rand.nextGaussian()*sigma);
-            if(floorPlan.particleInside(p)){
+        float width = floorPlan.getWidth();
+        float height = floorPlan.getHeight();
+
+        while(i < N_INIT) {
+            Particle p = new Particle(x0 + (float) rand.nextGaussian() * sigma, y0 + (float) rand.nextGaussian() * sigma);
+            // Check if the particle is inside floor plan.
+            if (floorPlan.particleInside(p)) {
                 particles.add(p);
                 i++;
             }
@@ -238,16 +245,26 @@ public class ParticleFilter {
     public Particle bestParticle(){
         int[] count = new int[particles.size()];
 
-        for (int i = 0; i < particles.size(); i++)
-            count[i] = 0;
-
         for (int i = 0; i < particles.size(); i++) {
-            for (int j = 0; j < particles.size(); j++) {
-                if (particles.get(i).distance(particles.get(j)) < 2f){
+            count[i] = 0;
+        }
+
+
+        ArrayList<Particle> bestParticleList = new ArrayList<>();
+        for(Particle p : particles){
+            bestParticleList.add(new Particle(p.getCurrentLocation(), p.getPreviousLocation()));
+        }
+
+        for (int i = 0; i < bestParticleList.size(); i++) {
+            for (int j = 0; j < bestParticleList.size(); j++) {
+                if (bestParticleList.get(i).distance(bestParticleList.get(j)) < 2f){
                     count[i]++;
                 }
             }
         }
+
+        bestParticleList.clear();
+
         Log.i("BP test","score :"+ count[ArrayOperations.indexFirstMaximumFromInt(0,count)]);
         return particles.get(ArrayOperations.indexFirstMaximumFromInt(0,count));
     }

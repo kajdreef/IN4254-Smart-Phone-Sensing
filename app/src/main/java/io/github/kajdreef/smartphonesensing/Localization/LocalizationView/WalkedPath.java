@@ -65,6 +65,7 @@ public class WalkedPath {
     }
 
     public void setPath(Location convergencePoint) {
+
         if(convergencePoint != null) {
             if (pathWalked.isEmpty()) {
                 // Initial Location
@@ -87,7 +88,7 @@ public class WalkedPath {
                     float dy = this.dy.get(i);
 
                     x = x - dx;
-                    y = y + dy;
+                    y = y - dy;
 
                     Log.d("WalkedPath", "Relative dx: " + dx + ", dy: " + dy);
 
