@@ -26,11 +26,11 @@
             android:layout_height="wrap_content"
             android:text="Initial Belief"
             android:id="@+id/initialBelief"
-            android:layout_marginLeft="58dp"
-            android:layout_marginStart="58dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/activityText"
-            android:layout_toEndOf="@+id/activityText" />
+            android:layout_marginLeft="44dp"
+            android:layout_marginStart="44dp"
+            android:layout_alignTop="@+id/forceConv"
+            android:layout_toRightOf="@+id/convParticles"
+            android:layout_toEndOf="@+id/convParticles" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,11 +38,9 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Activity: "
             android:id="@+id/activityText"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginStart="25dp" />
+            android:layout_alignBottom="@+id/initialBelief"
+            android:layout_alignLeft="@+id/convParticles"
+            android:layout_alignStart="@+id/convParticles" />
 
         <Button
             android:layout_width="wrap_content"
@@ -70,6 +68,16 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/initialBelief"
             android:layout_toEndOf="@+id/initialBelief" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Conv. Quality: "
+            android:id="@+id/convParticles"
+            android:layout_gravity="top"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
 
     </RelativeLayout>

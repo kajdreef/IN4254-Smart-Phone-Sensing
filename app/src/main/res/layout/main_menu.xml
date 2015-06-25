@@ -9,6 +9,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="Localization"
         android:id="@+id/localizationButton"
         android:layout_gravity="center_horizontal"
@@ -17,6 +18,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="Classification"
         android:id="@+id/classificationButton"
         android:layout_gravity="center_horizontal"
@@ -25,6 +27,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="Test Activity"
         android:id="@+id/testButton"
         android:layout_gravity="center_horizontal"
@@ -33,6 +36,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="Data Collecting"
         android:id="@+id/dataCollecting"
         android:onClick="startCollectingData" />
