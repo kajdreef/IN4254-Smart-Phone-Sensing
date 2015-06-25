@@ -243,11 +243,12 @@ public class ParticleFilter {
 
         for (int i = 0; i < particles.size(); i++) {
             for (int j = 0; j < particles.size(); j++) {
-                if (particles.get(i).distance(particles.get(i)) < 1f){
+                if (particles.get(i).distance(particles.get(j)) < 2f){
                     count[i]++;
                 }
             }
         }
+        Log.i("BP test","score :"+ count[ArrayOperations.indexFirstMaximumFromInt(0,count)]);
         return particles.get(ArrayOperations.indexFirstMaximumFromInt(0,count));
     }
 }
