@@ -22,6 +22,7 @@ public class ParticleFilter {
     private FloorPlan floorPlan;
     private final int N_INIT;
     private final float RATIO = 9/(float)10;
+    private final float VELOCITY = 1.2f;
     private Random rand;
     private ArrayList<Float> dx;
     private ArrayList<Float> dy;
@@ -72,8 +73,7 @@ public class ParticleFilter {
      */
     protected float[] motionModel(float alpha, float time){
         //Gaussian distribution of mean 1 and SD 0.2m/s
-        float v = 1.4f;
-        v = v + (float) rand.nextGaussian()*v/8f;
+        float v = VELOCITY + (float) rand.nextGaussian()*VELOCITY/10f;
 
         //Gaussian distribution of mean alpha and SD alphaDeviation
         float alphaDeviation = 20f;
