@@ -136,8 +136,15 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
                 }
                 else{
                     registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+                    int size = wifiReceiver.getRSSI().size();
+
+                    // set var == false;
                     wifiManager.startScan();
-                    localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
+
+                    // if(var == true){do stuff}
+
+                    Log.i("WIFITEST","done :"+ size + " "+ wifiReceiver.getRSSI().size());
+                    //localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
                     WalkedPath.getInstance().reset();
                 }
                 localizationView.setParticles(localizationMonitoring.getParticles());
@@ -255,6 +262,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        wifiReceiver.clear();
         try {
             unregisterReceiver(wifiReceiver);
         }

@@ -57,9 +57,14 @@ public class WifiReceiver extends BroadcastReceiver{
                 }
             }
             RSSI.add(out);
+            Log.i("wifitest", "Scan done");
         }
         catch (Exception e) {
             Log.i("Wifi test","exception " + e.toString() );
         }
+    }
+    public void clear(){
+        this.RSSI.clear();
+        this.wifiPoints.clear();
     }
 }
