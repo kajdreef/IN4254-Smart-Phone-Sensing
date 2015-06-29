@@ -104,9 +104,9 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
 
                 // Show calculated results on screen.
                 serviceText = (TextView)findViewById(R.id.serviceData);
-                serviceText.setText("" + result[0] + "s");
+                serviceText.setText("" + result[1] + "s");
                 queueText = (TextView)findViewById(R.id.queueData);
-                queueText.setText("" + result[1] + "s");
+                queueText.setText("" + result[0] + "s");
             }
         });
 
