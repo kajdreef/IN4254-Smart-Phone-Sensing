@@ -92,12 +92,12 @@ public class LocalizationView extends View {
             canvas.drawPoint(p.getCurrentLocation().getX()*scale + offSetX, p.getCurrentLocation().getY()*scale + offSetY , particlePaint);
         }
 
-        if(particlePaint.getColor() == Color.GREEN || convergeParticle != null){
-            if(convergeParticle!=null){
-                walkedPath.setPath(convergeParticle.getCurrentLocation());
-            }
-            walkedPath.draw(canvas);
-        }
+//        if(particlePaint.getColor() == Color.GREEN || convergeParticle != null){
+//            if(convergeParticle!=null){
+//                walkedPath.setPath(convergeParticle.getCurrentLocation());
+//            }
+//            walkedPath.draw(canvas);
+//        }
 
         // Draw location of the forced converged location on top of the other particles.
         if(convergeParticle != null){

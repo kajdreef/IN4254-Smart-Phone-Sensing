@@ -32,6 +32,7 @@ import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.LocalizationView;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.WalkedPath;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
+import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.Localization.RunMovement;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
@@ -202,9 +203,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
                 convThread.start();
             }
         });
-
     }
-
 
     /**
      * Initialise the sensors
@@ -315,9 +314,11 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
             magnY.clear();
             magnZ.clear();
 
-            activityText = (TextView) findViewById(R.id.activityText);
-            activityText.setText(activityList.getLast().toString());
-        }
+            activityText = (TextView) findViewById(R.id.convParticles);
+            activityText.setText("Conv. Quality: " + (int) ParticleFilter.getScore() + "%");
 
+            activityText = (TextView) findViewById(R.id.activityText);
+            activityText.setText("Activity: " + activityList.getLast().toString());
+        }
     }
 }

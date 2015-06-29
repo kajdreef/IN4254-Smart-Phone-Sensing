@@ -26,6 +26,7 @@ public class ParticleFilter {
     private Random rand;
     private ArrayList<Float> dx;
     private ArrayList<Float> dy;
+    private static float scorePercentate = 0;
 
     /**
      * Constructs ParticleFilter with particles that are uniformly distributed over the map.
@@ -265,7 +266,12 @@ public class ParticleFilter {
 
         bestParticleList.clear();
 
-        Log.i("BP test","score :"+ count[ArrayOperations.indexFirstMaximumFromInt(0,count)]);
+        scorePercentate = (count[ArrayOperations.indexFirstMaximumFromInt(0,count)]*100)/(float)N_INIT;
+        Log.i("BP test","score :"+ scorePercentate);
         return particles.get(ArrayOperations.indexFirstMaximumFromInt(0,count));
+    }
+
+    public static float getScore(){
+        return scorePercentate;
     }
 }

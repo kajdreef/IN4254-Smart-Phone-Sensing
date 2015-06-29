@@ -20,7 +20,6 @@ import io.github.kajdreef.smartphonesensing.Localization.Location;
 public class WalkedPath {
     private ArrayList<Float> dx;
     private ArrayList<Float> dy;
-    private Location convergenceLocation;
     private Path pathWalked;
 
     private Matrix scaleMatrix;
@@ -41,6 +40,8 @@ public class WalkedPath {
         pathY = new ArrayList<>();
 
         pathWalked = new Path();
+
+        scaleMatrix = new Matrix();
 
         walkedColor = new Paint();
         walkedColor.setStrokeWidth(3);
@@ -64,45 +65,39 @@ public class WalkedPath {
         dy.add(_dy);
     }
 
-    public void setPath(Location convergencePoint) {
-
+    public void setPath(Location convergenceLocation) {
         pathWalked.reset();
-        if(convergencePoint != null) {
-//            if (pathWalked.isEmpty()) {
-                // Initial Location
-                float x = convergencePoint.getX();
-                float y = convergencePoint.getY();
+        pathX.clear();
+        pathY.clear();
 
-                // Convergence location
-                convergenceLocation = new Location(x, y);
-                pathWalked.moveTo(convergenceLocation.getX(), convergenceLocation.getY());
+        // Determine the path that has been walked by the user.
+        if(convergenceLocation != null) {
+            float x = convergenceLocation.getX();
+            float y = convergenceLocation.getY();
 
-                pathX.add(convergenceLocation.getX());
-                pathY.add(convergenceLocation.getY());
+            // Convergence location = start location
+            pathWalked.moveTo(convergenceLocation.getX(), convergenceLocation.getY());
 
-                float previousX = x;
-                float previousY = y;
+            pathX.add(convergenceLocation.getX());
+            pathY.add(convergenceLocation.getY());
 
-                // Iterate over all dx to get the walked path so far
-                for(int i = dx.size()-1; i >= 0; i-- ){
-                    float dx = this.dx.get(i);
-                    float dy = this.dy.get(i);
+            // Iterate over all dx to get the walked path so far
+            for(int i = dx.size()-1; i >= 0; i-- ){
+                float dx = this.dx.get(i);
+                float dy = this.dy.get(i);
 
-                    x = x - dx;
-                    y = y - dy;
+                x = x - dx;
+                y = y - dy;
 
-                    Log.d("WalkedPath", "Relative dx: " + dx + ", dy: " + dy);
+                // Create an arraylist with all the positions
+                pathX.add(x);
+                pathY.add(y);
 
-                    Log.d("WalkedPath", "position x: " + x + ", y: " + y);
+                // Create the path that will be drawn
+                pathWalked.lineTo(x, y);
+            }
 
-                    pathX.add(x);
-                    pathY.add(y);
-
-                    pathWalked.lineTo(x, y);
-                }
-
-                this.transform();
-//            }
+            this.transform();
         }
     }
 
@@ -112,7 +107,6 @@ public class WalkedPath {
     }
 
     public void initTransform(Matrix _scaleMatrix, float _offSetX, float _offSetY){
-        scaleMatrix = new Matrix();
         scaleMatrix.set(_scaleMatrix);
 
         offsetX = _offSetX;
