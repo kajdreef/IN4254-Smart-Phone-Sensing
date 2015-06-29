@@ -64,6 +64,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
     private SensorManager sm;
     private WifiManager wifiManager;
     private WifiReceiver wifiReceiver;
+    private boolean scanDone = false;
     // Thread Queue
     private ExecutorService executor;
 
@@ -137,16 +138,15 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
                 }
                 else{
                     registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-                    int size = wifiReceiver.getRSSI().size();
-
-                    // set var == false;
-                    wifiManager.startScan();
-
-                    // if(var == true){do stuff}
-
-                    Log.i("WIFITEST","done :"+ size + " "+ wifiReceiver.getRSSI().size());
-                    //localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
-                    WalkedPath.getInstance().reset();
+                    if(!scanDone) {
+                        wifiManager.startScan();
+                        scanDone = true;
+                    }
+                    else {
+                        localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
+                        WalkedPath.getInstance().reset();
+                        scanDone = false;
+                    }
                 }
                 localizationView.setParticles(localizationMonitoring.getParticles());
                 localizationView.reset();
