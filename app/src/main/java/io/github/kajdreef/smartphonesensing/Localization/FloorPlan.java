@@ -15,6 +15,9 @@ public class FloorPlan {
     private Path wallPath;
     private Region floorRegion;
 
+    private int width;
+    private int height;
+
     private Location    A = new Location(0f,     0f),
                         B = new Location(8f,     0f),
                         C = new Location(8f,     6.1f),
@@ -110,6 +113,9 @@ public class FloorPlan {
         addWall(V, W);
         addWall(W, X);
         addWall(X, A);
+
+        width = floorRegion.getBounds().width();
+        height = floorRegion.getBounds().height();
     }
 
     public Path getPath(){
@@ -134,8 +140,17 @@ public class FloorPlan {
      * @return true = inside or false = not inside
      */
     public boolean particleInside(Particle particle){
+
         Location loc = particle.getCurrentLocation();
-        return floorRegion.contains((int) loc.getX(), (int) loc.getY());
+
+        // Check if particle is inside the boundary of the floorplan
+        if(loc.getX()<this.width && loc.getX()>0 && loc.getY()<this.height && loc.getY()>0 ) {
+            return floorRegion.contains((int) loc.getX(), (int) loc.getY());
+        }
+        else{
+            return false;
+        }
+
     }
 
     /**
@@ -175,11 +190,11 @@ public class FloorPlan {
     }
 
     public int getWidth(){
-        return floorRegion.getBounds().width();
+        return this.width;
     }
 
     public int getHeight(){
-        return floorRegion.getBounds().height();
+        return this.height;
     }
     public static float getNorthAngle(){return northAngle;}
 }

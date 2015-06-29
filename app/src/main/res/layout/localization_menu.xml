@@ -26,11 +26,11 @@
             android:layout_height="wrap_content"
             android:text="Initial Belief"
             android:id="@+id/initialBelief"
-            android:layout_marginLeft="76dp"
-            android:layout_marginStart="76dp"
-            android:layout_alignTop="@+id/startButton"
-            android:layout_toRightOf="@+id/activityText"
-            android:layout_toEndOf="@+id/activityText" />
+            android:layout_marginLeft="44dp"
+            android:layout_marginStart="44dp"
+            android:layout_alignTop="@+id/forceConv"
+            android:layout_toRightOf="@+id/convParticles"
+            android:layout_toEndOf="@+id/convParticles" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,11 +38,9 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Activity: "
             android:id="@+id/activityText"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginStart="25dp" />
+            android:layout_alignBottom="@+id/initialBelief"
+            android:layout_alignLeft="@+id/convParticles"
+            android:layout_alignStart="@+id/convParticles" />
 
         <Button
             android:layout_width="wrap_content"
@@ -50,21 +48,36 @@
             android:text="Start"
             android:id="@+id/startButton"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/stopButton"
-            android:layout_toStartOf="@+id/stopButton"
-            android:layout_marginRight="52dp"
-            android:layout_marginEnd="52dp" />
+            android:layout_toRightOf="@+id/forceConv"
+            android:layout_toEndOf="@+id/forceConv" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stop"
             android:id="@+id/stopButton"
-            android:layout_marginRight="35dp"
-            android:layout_marginEnd="35dp"
-            android:layout_alignTop="@+id/startButton"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/startButton"
+            android:layout_toEndOf="@+id/startButton" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Force Conv"
+            android:id="@+id/forceConv"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/initialBelief"
+            android:layout_toEndOf="@+id/initialBelief" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Conv. Quality: "
+            android:id="@+id/convParticles"
+            android:layout_gravity="top"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
 
     </RelativeLayout>

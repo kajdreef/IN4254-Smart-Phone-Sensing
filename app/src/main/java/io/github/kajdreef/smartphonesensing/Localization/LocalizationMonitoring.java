@@ -2,14 +2,18 @@ package io.github.kajdreef.smartphonesensing.Localization;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
+import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.WalkedPath;
 import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
+import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
 
 /**
  * Created by kajdreef on 20/05/15.
@@ -19,6 +23,7 @@ public class LocalizationMonitoring {
     private ActivityType activityList;
     private ParticleFilter pf;
     private FloorPlan floorPlan;
+    private WalkedPath walkedPath;
     private int WINDOW_SIZE_ACC;
     private int WINDOW_SIZE_MAG;
 
@@ -43,6 +48,7 @@ public class LocalizationMonitoring {
      * Reset the localizationMonitoring
      */
     public void reset(){
+        WalkedPath.getInstance().reset();
         pf.resetParticleFilter();
         activityList.empty();
     }
@@ -86,13 +92,26 @@ public class LocalizationMonitoring {
             // If activity Type update the movement of partcicles
             if(activity == Type.WALK){
                 pf.movement(angle, time);
+               // Log.i("BP TEST", "x=" + pf.bestParticle().getCurrentLocation().getX() + "y=" + pf.bestParticle().getCurrentLocation().getY());
             }
 
             return true;
         }
         return false;
     }
-    public Particle hasConverged(){
-        return pf.converged(2f);
+    public Location hasConverged(){
+        return pf.converged(3f);
+    }
+
+    public Particle forceConverge(){
+        WalkedPath walkedPath = WalkedPath.getInstance();
+        Particle bestParticle = pf.bestParticle();
+        walkedPath.setPath(bestParticle.getCurrentLocation());
+        return bestParticle;
+    }
+
+    public void initialBelief(ArrayList<ArrayList<Integer>> rssiData){
+        pf.initialBelief(rssiData);
+        activityList.empty();
     }
 }

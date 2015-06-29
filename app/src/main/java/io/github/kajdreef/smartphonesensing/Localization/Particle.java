@@ -30,7 +30,13 @@ public class Particle {
         previousLocation.setLocation(currentLocation);
         currentLocation.move(dx, dy);
     }
-
+    public float distance(Particle p){
+        float distX = p.getCurrentLocation().getX() - this.currentLocation.getX();
+        float distY = p.getCurrentLocation().getY() - this.currentLocation.getY();
+        distX = distX*distX;
+        distY = distY*distY;
+        return (float) Math.sqrt(distX+distY);
+    }
     public void setCurrentLocation(Location newLocation){
         this.currentLocation = newLocation;
     }

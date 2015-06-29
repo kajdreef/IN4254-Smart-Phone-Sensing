@@ -1,13 +1,15 @@
 package io.github.kajdreef.smartphonesensing.Activities.Main;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,18 +22,22 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.github.kajdreef.smartphonesensing.Activities.Test.TestActivity;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
 import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationMonitoring;
-import io.github.kajdreef.smartphonesensing.Localization.LocalizationView;
+import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.LocalizationView;
+import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.WalkedPath;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
+import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.Localization.RunMovement;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
+import io.github.kajdreef.smartphonesensing.Sensor.WifiReceiver;
 
 /**
  * Created by kajdreef on 15/05/15.
@@ -43,9 +49,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
     // GUI
     private LocalizationView localizationView;
-    private Button initialBelief;
-    private Button startButton;
-    private Button stopButton;
+    private Button initialBelief, startButton, stopButton, convButton;
     private TextView activityText;
     private LinearLayout localizationLayout;
 
@@ -58,7 +62,8 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
     private Accelerometer accelerometer;
     private Magnetometer magnetometer;
     private SensorManager sm;
-
+    private WifiManager wifiManager;
+    private WifiReceiver wifiReceiver;
     // Thread Queue
     private ExecutorService executor;
 
@@ -96,7 +101,6 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         WINDOW_SIZE_MAG = res.getInteger(R.integer.WINDOW_SIZE_MAG);
 
         activityMonitoring = new ActivityMonitoring(getApplicationContext());
-
         // Generate x amount of particles
         localizationMonitoring = new LocalizationMonitoring(1000,this.getApplicationContext());
 
@@ -128,7 +132,22 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         initialBelief.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                localizationMonitoring.reset();
+                if(wifiReceiver.getWifiPoints().isEmpty()){
+                    localizationMonitoring.reset();
+                }
+                else{
+                    registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+                    int size = wifiReceiver.getRSSI().size();
+
+                    // set var == false;
+                    wifiManager.startScan();
+
+                    // if(var == true){do stuff}
+
+                    Log.i("WIFITEST","done :"+ size + " "+ wifiReceiver.getRSSI().size());
+                    //localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
+                    WalkedPath.getInstance().reset();
+                }
                 localizationView.setParticles(localizationMonitoring.getParticles());
                 localizationView.reset();
                 localizationView.post(new Runnable() {
@@ -146,6 +165,10 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
             public void onClick(View v) {
                 accelerometer.unregister();
                 magnetometer.unregister();
+                try {
+                    unregisterReceiver(wifiReceiver);
+                }
+                catch (Exception e){}
             }
         });
 
@@ -155,10 +178,32 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
             public void onClick(View v) {
                 accelerometer.register();
                 magnetometer.register();
+                registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+            }
+        });
+
+        convButton = (Button) findViewById(R.id.forceConv);
+        convButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Thread convThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Particle convergeLocation = localizationMonitoring.forceConverge();
+                        Log.d("LocalizationActivity","Converge Location: " + convergeLocation.getCurrentLocation().getX() + ", " + convergeLocation.getCurrentLocation().getY() );
+                        localizationView.setConvergeLocation(convergeLocation);
+                        localizationView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                localizationView.invalidate();
+                            }
+                        });
+                    }
+                });
+                convThread.start();
             }
         });
     }
-
 
     /**
      * Initialise the sensors
@@ -181,6 +226,14 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
         accelerometer.attach(this);
         magnetometer.attach(this);
+
+        //Init wifi
+            wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+            if(!wifiManager.isWifiEnabled()){
+                wifiManager.setWifiEnabled(true);
+            }
+        wifiReceiver = new WifiReceiver(wifiManager);
+            registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
     }
 
     @Override
@@ -208,6 +261,12 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        wifiReceiver.clear();
+        try {
+            unregisterReceiver(wifiReceiver);
+        }
+        catch (Exception e){
+        }
     }
 
 
@@ -238,12 +297,14 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
 
             // Create runnable
             RunMovement runMovement = new RunMovement(accelX, accelY, accelZ, magnX, magnY, magnZ,
-                                                activityMonitoring, localizationMonitoring, localizationView,(float) deltaTime);
+                                                activityMonitoring, localizationMonitoring, localizationView, deltaTime);
 
             // Add runnable to queue
             executor.submit(runMovement);
-
-            // Clear data of acceleromter
+            if (activityMonitoring.getActivity() == Type.WALK){
+                wifiManager.startScan();
+            }
+            // Clear data of accelerometer
             accelX.clear();
             accelY.clear();
             accelZ.clear();
@@ -253,9 +314,11 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
             magnY.clear();
             magnZ.clear();
 
-            activityText = (TextView) findViewById(R.id.activityText);
-            activityText.setText(activityList.getLast().toString());
-        }
+            activityText = (TextView) findViewById(R.id.convParticles);
+            activityText.setText("Conv. Quality: " + (int) ParticleFilter.getScore() + "%");
 
+            activityText = (TextView) findViewById(R.id.activityText);
+            activityText.setText("Activity: " + activityList.getLast().toString());
+        }
     }
 }

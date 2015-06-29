@@ -39,7 +39,7 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
     private SensorManager sm;
     private AbstractSensor accelerometer;
     private int WINDOW_SIZE_ACC;
-    private double WINDOW_TIME = 0d;
+    private double WINDOW_TIME = 1.0d;
 
     private float serviceTime;
     private float queueTime;
@@ -104,9 +104,9 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
 
                 // Show calculated results on screen.
                 serviceText = (TextView)findViewById(R.id.serviceData);
-                serviceText.setText("" + result[0] + "s");
+                serviceText.setText("" + result[1] + "s");
                 queueText = (TextView)findViewById(R.id.queueData);
-                queueText.setText("" + result[1] + "s");
+                queueText.setText("" + result[0] + "s");
             }
         });
 
@@ -156,6 +156,10 @@ public class ServiceAndQueueActivity extends Activity implements ObserverSensor 
             // calculates the time between last window size of data.
             double deltaTime = Double.valueOf(System.currentTimeMillis() - timeStart)/1000d;
             double samples = Double.valueOf(numSamples);
+
+            if(deltaTime >= 1.2d * WINDOW_TIME){
+                deltaTime = WINDOW_TIME;
+            }
 
             WINDOW_TIME =  ((samples - 1d)/samples)*WINDOW_TIME + deltaTime/samples;
 
