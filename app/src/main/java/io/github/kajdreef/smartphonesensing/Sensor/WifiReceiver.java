@@ -10,20 +10,23 @@ import android.util.Log;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by Uncle John on 23/06/2015.
  */
-public class WifiReceiver extends BroadcastReceiver{
+public class WifiReceiver extends BroadcastReceiver {
     private WifiManager wifi;
     private ArrayList<String> wifiPoints;
     private ArrayList<ArrayList<Integer>> RSSI;
+    private WifiObservable o;
 
     public WifiReceiver(WifiManager _wifi){
         super();
         this.wifi = _wifi;
         wifiPoints = new ArrayList<>();
         RSSI = new ArrayList<>();
+        o = new WifiObservable();
     }
 
     public ArrayList<ArrayList<Integer>> getRSSI(){
@@ -57,7 +60,7 @@ public class WifiReceiver extends BroadcastReceiver{
                 }
             }
             RSSI.add(out);
-            Log.i("wifitest", "Scan done");
+            o.notifyObservers();
         }
         catch (Exception e) {
             Log.i("Wifi test","exception " + e.toString() );
@@ -67,4 +70,17 @@ public class WifiReceiver extends BroadcastReceiver{
         this.RSSI.clear();
         this.wifiPoints.clear();
     }
+    public WifiObservable getObservable(){
+        return o;
+    }
+    public class WifiObservable extends Observable{
+        public WifiObservable(){
+            super();
+        }
+        public void mySetChanged(){
+            this.setChanged();
+        }
+    }
+
+
 }
