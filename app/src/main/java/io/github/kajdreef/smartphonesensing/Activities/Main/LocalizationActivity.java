@@ -24,7 +24,6 @@ import java.util.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.github.kajdreef.smartphonesensing.Activities.Test.TestActivity;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
@@ -187,6 +186,16 @@ public class LocalizationActivity extends Activity implements ObserverSensor, Ob
                     public void run() {
                         Particle convergeLocation = localizationMonitoring.forceConverge();
                         Log.d("LocalizationActivity", "Converge Location: " + convergeLocation.getCurrentLocation().getX() + ", " + convergeLocation.getCurrentLocation().getY());
+
+                        // Update the convergence quality on the screen corresponding with the convergence location.
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                activityText = (TextView) findViewById(R.id.convParticles);
+                                activityText.setText("Conv. Quality: " + (int) ParticleFilter.getScore() + "%");
+                            }
+                        });
+
                         localizationView.setConvergeLocation(convergeLocation);
                         localizationView.post(new Runnable() {
                             @Override
@@ -312,9 +321,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor, Ob
             magnY.clear();
             magnZ.clear();
 
-            activityText = (TextView) findViewById(R.id.convParticles);
-            activityText.setText("Conv. Quality: " + (int) ParticleFilter.getScore() + "%");
-
+            // Show the activity
             activityText = (TextView) findViewById(R.id.activityText);
             activityText.setText("Activity: " + activityList.getLast().toString());
         }
