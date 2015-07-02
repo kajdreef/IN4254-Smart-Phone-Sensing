@@ -1,9 +1,7 @@
 package io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering;
 
-import android.content.res.Resources;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,7 +9,6 @@ import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.WalkedPath;
 import io.github.kajdreef.smartphonesensing.Localization.Location;
 import io.github.kajdreef.smartphonesensing.Localization.Particle;
-import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
 
 /**

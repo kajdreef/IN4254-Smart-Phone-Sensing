@@ -2,15 +2,10 @@ package io.github.kajdreef.smartphonesensing.Utils;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import io.github.kajdreef.smartphonesensing.Utils.AbstractReader;
 
 /**
  * Created by kajdreef on 29/04/15.

@@ -134,7 +134,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor, Ob
         initialBelief.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(wifiReceiver.getWifiPoints().isEmpty()){
+                if(wifiReceiver.getWifiPoints().isEmpty() || WalkedPath.getInstance().getPathX().isEmpty()){
                     localizationMonitoring.reset();
                 }
                 else{

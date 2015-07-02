@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorMean;
 import io.github.kajdreef.smartphonesensing.Classification.FeatureExtractorSD;
-import io.github.kajdreef.smartphonesensing.Classification.FeatureSet;
 import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
 
 /**

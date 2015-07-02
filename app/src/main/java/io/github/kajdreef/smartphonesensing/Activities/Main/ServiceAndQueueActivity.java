@@ -6,12 +6,7 @@ import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,14 +15,13 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
+import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.RunActivity;
+import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.AbstractSensor;
 import io.github.kajdreef.smartphonesensing.Sensor.Accelerometer;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;
-import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
-import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Utils.QueueMath;
 
 /**

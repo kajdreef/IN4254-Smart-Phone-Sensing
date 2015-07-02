@@ -1,7 +1,5 @@
 package io.github.kajdreef.smartphonesensing.Utils;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.Type;

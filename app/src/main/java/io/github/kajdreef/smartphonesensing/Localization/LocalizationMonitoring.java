@@ -2,9 +2,7 @@ package io.github.kajdreef.smartphonesensing.Localization;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
@@ -13,7 +11,6 @@ import io.github.kajdreef.smartphonesensing.Localization.LocalizationView.Walked
 import io.github.kajdreef.smartphonesensing.Localization.ParticleFiltering.ParticleFilter;
 import io.github.kajdreef.smartphonesensing.R;
 import io.github.kajdreef.smartphonesensing.Sensor.Magnetometer;
-import io.github.kajdreef.smartphonesensing.Utils.ArrayOperations;
 
 /**
  * Created by kajdreef on 20/05/15.
