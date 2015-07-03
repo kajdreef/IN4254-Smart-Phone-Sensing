@@ -5,13 +5,9 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.RectF;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import io.github.kajdreef.smartphonesensing.Localization.FloorPlan;
 import io.github.kajdreef.smartphonesensing.Localization.Location;
 
 /**

@@ -19,10 +19,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.github.kajdreef.smartphonesensing.Activities.Test.TestActivity;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityMonitoring;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ActivityType;
 import io.github.kajdreef.smartphonesensing.ActivityMonitoring.ObserverSensor;
@@ -42,7 +43,7 @@ import io.github.kajdreef.smartphonesensing.Sensor.WifiReceiver;
 /**
  * Created by kajdreef on 15/05/15.
  */
-public class LocalizationActivity extends Activity implements ObserverSensor {
+public class LocalizationActivity extends Activity implements ObserverSensor, Observer {
 
     // Floorplan of the 9th floor of EWI
     private FloorPlan floorPlan;
@@ -133,20 +134,14 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         initialBelief.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(wifiReceiver.getWifiPoints().isEmpty()){
+                if(wifiReceiver.getWifiPoints().isEmpty() || WalkedPath.getInstance().getPathX().isEmpty()){
                     localizationMonitoring.reset();
                 }
                 else{
                     registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-                    if(!scanDone) {
-                        wifiManager.startScan();
-                        scanDone = true;
-                    }
-                    else {
-                        localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
-                        WalkedPath.getInstance().reset();
-                        scanDone = false;
-                    }
+                    wifiReceiver.getObservable().mySetChanged();
+                    wifiManager.startScan();
+                    initialBelief.setText("Scanning");
                 }
                 localizationView.setParticles(localizationMonitoring.getParticles());
                 localizationView.reset();
@@ -190,7 +185,17 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
                     @Override
                     public void run() {
                         Particle convergeLocation = localizationMonitoring.forceConverge();
-                        Log.d("LocalizationActivity","Converge Location: " + convergeLocation.getCurrentLocation().getX() + ", " + convergeLocation.getCurrentLocation().getY() );
+                        Log.d("LocalizationActivity", "Converge Location: " + convergeLocation.getCurrentLocation().getX() + ", " + convergeLocation.getCurrentLocation().getY());
+
+                        // Update the convergence quality on the screen corresponding with the convergence location.
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                activityText = (TextView) findViewById(R.id.convParticles);
+                                activityText.setText("Conv. Quality: " + (int) ParticleFilter.getScore() + "%");
+                            }
+                        });
+
                         localizationView.setConvergeLocation(convergeLocation);
                         localizationView.post(new Runnable() {
                             @Override
@@ -233,7 +238,8 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
                 wifiManager.setWifiEnabled(true);
             }
         wifiReceiver = new WifiReceiver(wifiManager);
-            registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        registerReceiver(wifiReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        wifiReceiver.getObservable().addObserver(this);
     }
 
     @Override
@@ -267,6 +273,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
         }
         catch (Exception e){
         }
+        WalkedPath.getInstance().reset();
     }
 
 
@@ -314,11 +321,24 @@ public class LocalizationActivity extends Activity implements ObserverSensor {
             magnY.clear();
             magnZ.clear();
 
-            activityText = (TextView) findViewById(R.id.convParticles);
-            activityText.setText("Conv. Quality: " + (int) ParticleFilter.getScore() + "%");
-
+            // Show the activity
             activityText = (TextView) findViewById(R.id.activityText);
             activityText.setText("Activity: " + activityList.getLast().toString());
         }
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        localizationMonitoring.initialBelief(wifiReceiver.getRSSI());
+        //WalkedPath.getInstance().reset();
+        localizationView.setParticles(localizationMonitoring.getParticles());
+        localizationView.reset();
+        localizationView.post(new Runnable() {
+            @Override
+            public void run() {
+                localizationView.invalidate();
+            }
+        });
+        initialBelief.setText("INITIAL BELIEF");
     }
 }
