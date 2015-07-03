@@ -308,7 +308,7 @@ public class LocalizationActivity extends Activity implements ObserverSensor, Ob
 
             // Add runnable to queue
             executor.submit(runMovement);
-            if (activityMonitoring.getActivity() == Type.WALK){
+            if (activityList.getLast() == Type.WALK){
                 wifiManager.startScan();
             }
             // Clear data of accelerometer
