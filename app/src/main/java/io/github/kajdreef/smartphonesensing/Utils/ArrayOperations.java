@@ -47,8 +47,8 @@ public class ArrayOperations {
         }
         return maxIndex;
     }
-    public static int indexFirstMinimumFrom(int i,List<Integer> in){
-        float min = in.get(i);
+    public static int indexFirstMinimumFrom(int i,List<Double> in){
+        double min = in.get(i);
         int minIndex = i;
         for(int index = i;index<in.size();index++){
             if(in.get(index)<min) {
